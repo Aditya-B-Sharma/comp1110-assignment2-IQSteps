@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -49,8 +51,42 @@ public class StepsGame {
      */
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
+        ArrayList<String> ugh;
+        ugh = collector(placement);
+
+        if (placement.length() % 3 == 0 && checkDuplicates(ugh) && isPlacementWellFormed(placement)) {
+            return true;
+        }
         return false;
     }
+    // Method collects shapes in the placements.
+    public static ArrayList<String> collector (String in) {
+        ArrayList<String> out = new ArrayList<>();
+        for (int i = 0; i < in.length(); i++) {
+            if (i % 3 == 0)
+                out.add(String.valueOf(in.charAt(i)));
+        }
+        return out;
+    }
+    // checks if input contains any duplicate
+    public static boolean checkDuplicates (ArrayList<String> in) {
+        for (int i = 0; i < in.size(); i++) {
+            int bool = 0;
+            for (int j = 0; j < in.size(); j++) {
+                if (in.get(i).equals(in.get(j))) {
+                    bool++;
+                }
+            }
+            if (bool > 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+//    private static boolean noMoreThanOnce(String in) {
+//        char[] ch = in.toCharArray();
+//
+//    }
 
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
