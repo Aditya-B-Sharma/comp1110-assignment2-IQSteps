@@ -22,7 +22,20 @@ public class StepsGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
-        return false;
+        if (piecePlacement.length() == 3 && isValid(piecePlacement)) {
+            return true;
+        }
+        else return false;
+    }
+
+    // Method checks if a string contains
+    // String first converted to charArray
+    private static boolean isValid(String input) {
+        char[] arr = input.toCharArray();
+        if ((arr[0] >= 65 && arr[0] <= 72) && (arr[1] >= 65 && arr[1] <= 72) && ((arr[2] >= 65 && arr[2] <= 89) || (arr[2] >= 97 && arr[2] <= 122))) {
+            return true;
+        }
+        else return false;
     }
 
     /**
