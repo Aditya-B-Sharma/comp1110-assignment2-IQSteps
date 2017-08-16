@@ -2,6 +2,7 @@ package comp1110.ass2;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -70,8 +71,21 @@ public class StepsGame {
     }
     // checks if input contains any duplicate
     private static boolean checkDuplicates (ArrayList<String> in) {
+        HashMap<String, Integer> dict = new HashMap<>();
         for (int i = 0; i < in.size(); i++) {
-            int bool = 0;
+            String x = in.get(i);
+            if (dict.containsKey(x)) {
+                if (dict.get(x) >= 0) {
+                    return false;
+                }
+            }
+            else {
+                    dict.put(x, dict.get(x) + 1);
+            }
+        }
+        return true;
+    }
+    /*        int bool = 0;
             for (int j = 0; j < in.size(); j++) {
                 if (in.get(i).equals(in.get(j))) {
                     bool++;
@@ -81,8 +95,7 @@ public class StepsGame {
                 return true;
             }
         }
-        return false;
-    }
+       return false; */
 
     //Method that if piece is well formed. I was going to convert the placement into array of strings, each consisting of 3 characters.
     // I was then going to apply the method made in task 2 onto each multiple of 3 strings. Using a loop. Do whatever you think is more efficient.
