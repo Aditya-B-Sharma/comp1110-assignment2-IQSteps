@@ -75,7 +75,7 @@ public class StepsGame {
         for (int i = 0; i < in.size(); i++) {
             String x = in.get(i);
             if (dict.containsKey(x)) {
-                if (dict.get(x) >= 0) {
+                if (dict.get(x) > 0) {
                     return false;
                 }
             }
