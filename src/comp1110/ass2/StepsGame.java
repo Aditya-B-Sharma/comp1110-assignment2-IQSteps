@@ -54,13 +54,13 @@ public class StepsGame {
         ArrayList<String> ugh;
         ugh = collector(placement);
 
-        if (placement.length() % 3 == 0 && checkDuplicates(ugh) && isPlacementWellFormed(placement)) {
+        if (placement.length() % 3 == 0 && checkDuplicates(ugh)) {
             return true;
         }
         return false;
     }
     // Method collects shapes in the placements.
-    public static ArrayList<String> collector (String in) {
+    private static ArrayList<String> collector (String in) {
         ArrayList<String> out = new ArrayList<>();
         for (int i = 0; i < in.length(); i++) {
             if (i % 3 == 0)
@@ -69,7 +69,7 @@ public class StepsGame {
         return out;
     }
     // checks if input contains any duplicate
-    public static boolean checkDuplicates (ArrayList<String> in) {
+    private static boolean checkDuplicates (ArrayList<String> in) {
         for (int i = 0; i < in.size(); i++) {
             int bool = 0;
             for (int j = 0; j < in.size(); j++) {
@@ -83,10 +83,9 @@ public class StepsGame {
         }
         return false;
     }
-//    private static boolean noMoreThanOnce(String in) {
-//        char[] ch = in.toCharArray();
-//
-//    }
+
+    //Method that if piece is well formed. I was going to convert the placement into array of strings, each consisting of 3 characters.
+    // I was then going to apply the method made in task 2 onto each multiple of 3 strings. Using a loop. Do whatever you think is more efficient.
 
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
