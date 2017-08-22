@@ -42,6 +42,32 @@ public class Viewer extends Application {
         // FIXME Task 4: implement the simple placement viewer
     }
 
+    // Remove previous window drawn
+    void removePrevious() {
+
+    }
+
+    // Breaks placement string into its puzzle piece components
+    private static String breakPlacementString(String placement) {
+        return "";
+    }
+
+    // Get x position of piece
+    int getXPos() {
+        return 0;
+    }
+
+    // Get y position of piece
+    int getYPos() {
+        return 0;
+    }
+
+    // Displays image so the origin and orientation is correct
+    private static void displayImage(int x, int y) {
+
+    }
+
+
 
     /**
      * Create a basic text field for input and a refresh button.

@@ -1,7 +1,7 @@
 We declare that the work toward our submission of Stage B was distributed among the group members as follows:
 
-* u2345678 30
-* u3456789 40
-* u0234567 30
+* u6051635 1/3
+* u6080028 1/3
+* u6051965 1/3
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0234567)
+Signed: Stefan Louie (u6051635), Khamis Buol (u6080028), and Aditya Sharma (u6051965)

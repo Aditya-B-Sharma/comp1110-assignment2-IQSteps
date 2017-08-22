@@ -70,7 +70,7 @@ public class StepsGame {
         return out;
     }
     // checks if input contains any duplicate
-    private static boolean checkDuplicates (ArrayList<String> in) {
+/*    private static boolean checkDuplicates (ArrayList<String> in) {
         HashMap<String, Integer> dict = new HashMap<>();
         for (int i = 0; i < in.size(); i++) {
             String x = in.get(i);
@@ -84,18 +84,23 @@ public class StepsGame {
             }
         }
         return true;
+    }*/
+
+
+    // Checks for duplicates in argument ArrayList of strings.
+    private static boolean checkDuplicates(ArrayList<String> inputList) {
+        return false;
     }
-    /*        int bool = 0;
-            for (int j = 0; j < in.size(); j++) {
-                if (in.get(i).equals(in.get(j))) {
-                    bool++;
-                }
-            }
-            if (bool > 1) {
-                return true;
-            }
-        }
-       return false; */
+
+    //
+    private static String[] getPiecePlacements(String placement) {
+        return null;
+    }
+
+    private static boolean mapisPiecePlacementWellFormed(String[] arrayOfPlacements) {
+        return false;
+    }
+
 
     //Method that if piece is well formed. I was going to convert the placement into array of strings, each consisting of 3 characters.
     // I was then going to apply the method made in task 2 onto each multiple of 3 strings. Using a loop. Do whatever you think is more efficient.
@@ -108,11 +113,22 @@ public class StepsGame {
      * @param placement A placement sequence string
      * @return True if the placement sequence is valid
      */
+
+    int[] allPositions = new int[50];
+    ArrayList<Integer> postions = new ArrayList<Integer>( /* allpositions */);
+
     static boolean isPlacementSequenceValid(String placement) {
         // FIXME Task 5: determine whether a placement sequence is valid
         return false;
     }
 
+    private static boolean isValidPlacement(String placement) {
+        return false;
+    }
+
+    private static void updateValidLocations(String placement) {
+
+    }
     /**
      * Given a string describing a placement of pieces and a string describing
      * an (unordered) objective, return a set of all possible next viable

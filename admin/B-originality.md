@@ -6,4 +6,4 @@ We declare that the work we have submitted for Stage B of this assignment and al
 
 *  ....
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+Signed: Stefan Louie (u6051635), Khamis Buol (u6080028), and Aditya Sharma (u6051965)
