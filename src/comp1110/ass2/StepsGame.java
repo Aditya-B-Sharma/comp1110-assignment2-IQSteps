@@ -115,6 +115,7 @@ public class StepsGame {
      */
 
     int[] allPositions = new int[50];
+
     ArrayList<Integer> postions = new ArrayList<Integer>( /* allpositions */);
 
     static boolean isPlacementSequenceValid(String placement) {

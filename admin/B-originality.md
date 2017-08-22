@@ -2,7 +2,7 @@ We declare that the work we have submitted for Stage B of this assignment and al
 
 * The idea of using <...> to make the game run faster came from a discussion with <...> (noted in source code comments)
 
-* The code in class <...> is based on a solution we found when researching the problem (URL provided in source code comments)
+* For the method in class <StepsGame (collector)> help was received from a friend (namely Muhammad Zubayr Khan).
 
 *  ....
 
