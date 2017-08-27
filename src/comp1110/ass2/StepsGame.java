@@ -1,6 +1,5 @@
 package comp1110.ass2;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -69,9 +68,21 @@ public class StepsGame {
     }
 
     // Checks for duplicates in argument ArrayList of strings.
-    private static boolean checkDuplicates(String inputList) {
+    public static boolean checkDuplicates (String in) {
+        for (int i = 0; i < in.length(); i++) {
+            int bool = 0;
+            for (int j = 0; j < in.length(); j++) {
+                if (String.valueOf(i).equals(String.valueOf(j))) {
+                    bool++;
+                }
+            }
+            if (bool > 1) {
+                return true;
+            }
+        }
         return false;
     }
+
 
     //
     private static List<String> getPiecePlacements(String placement) {
@@ -79,6 +90,7 @@ public class StepsGame {
         return Arrays.asList(out);
     }
 
+    // I speculate that this method might be the one causing the issue
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
        for (int i = 0; i < arrayOfPlacements.size(); i++) {
            if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
@@ -101,7 +113,11 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
 
-    int[] allPositions = new int[50];
+    int[] allPositions = {0,1,2,3,4,5,6,7,8,9,
+                         10,11,12,13,14,15,16,17,18,19,
+                         20,21,22,23,24,25,26,27,28,29,
+                         30,31,32,33,34,35,36,37,38,39,
+                         40,41,42,43,44,45,46,47,48,49};
 
     ArrayList<Integer> postions = new ArrayList<>( /* allpositions */);
 
@@ -110,12 +126,35 @@ public class StepsGame {
         return false;
     }
 
-    private static boolean isValidPlacement(String placement) {
-        return false;
+    // placement as String
+    private static boolean isValidPlacement(String placement) { return false;
+
     }
 
     private static void updateValidLocations(String placement) {
 
+    }
+
+    // method to remove 'masked' locations. Returns updated positions.
+    public static int[] remove(int[] numbers, int target) {
+        int count = 0;
+        for (int number: numbers) {
+            if (number == target) {
+                count++;
+            }
+        }
+        if (count == 0) {
+            return numbers;
+        }
+        int[] result = new int[numbers.length - count];
+        int index = 0;
+        for (int value : numbers) {
+            if (value != target) {
+                result[index] = value;
+                index++;
+            }
+        }
+        return result;
     }
     /**
      * Given a string describing a placement of pieces and a string describing
