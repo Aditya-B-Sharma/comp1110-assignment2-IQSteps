@@ -1,9 +1,7 @@
 package comp1110.ass2;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class provides the text interface for the Steps Game
@@ -52,53 +50,42 @@ public class StepsGame {
      */
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
-        ArrayList<String> ugh;
-        ugh = collector(placement);
-
-        if (placement.length() % 3 == 0 && checkDuplicates(ugh)) {
+        if (placement == null) {
+            return false;
+        }
+        else if (placement.length() % 3 == 0 && checkDuplicates(collector(placement)) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
             return true;
         }
         return false;
     }
     // Method collects shapes in the placements.
-    private static ArrayList<String> collector (String in) {
-        ArrayList<String> out = new ArrayList<>();
+    private static String collector (String in) {
+        String initial = "";
         for (int i = 0; i < in.length(); i++) {
             if (i % 3 == 0)
-                out.add(String.valueOf(in.charAt(i)));
+                initial += String.valueOf(in.charAt(i));
         }
-        return out;
+        return initial;
     }
-    // checks if input contains any duplicate
-/*    private static boolean checkDuplicates (ArrayList<String> in) {
-        HashMap<String, Integer> dict = new HashMap<>();
-        for (int i = 0; i < in.size(); i++) {
-            String x = in.get(i);
-            if (dict.containsKey(x)) {
-                if (dict.get(x) > 0) {
-                    return false;
-                }
-            }
-            else {
-                    dict.put(x, dict.get(x) + 1);
-            }
-        }
-        return true;
-    }*/
-
 
     // Checks for duplicates in argument ArrayList of strings.
-    private static boolean checkDuplicates(ArrayList<String> inputList) {
+    private static boolean checkDuplicates(String inputList) {
         return false;
     }
 
     //
-    private static String[] getPiecePlacements(String placement) {
-        return null;
+    private static List<String> getPiecePlacements(String placement) {
+        String[] out = placement.split("(?<=\\G.{3})");
+        return Arrays.asList(out);
     }
 
-    private static boolean mapisPiecePlacementWellFormed(String[] arrayOfPlacements) {
-        return false;
+    private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
+       for (int i = 0; i < arrayOfPlacements.size(); i++) {
+           if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
+               return false;
+           }
+       }
+        return true;
     }
 
 
@@ -116,7 +103,7 @@ public class StepsGame {
 
     int[] allPositions = new int[50];
 
-    ArrayList<Integer> postions = new ArrayList<Integer>( /* allpositions */);
+    ArrayList<Integer> postions = new ArrayList<>( /* allpositions */);
 
     static boolean isPlacementSequenceValid(String placement) {
         // FIXME Task 5: determine whether a placement sequence is valid
