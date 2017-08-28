@@ -115,6 +115,7 @@ public class StepsGame {
     // I speculate that this method might be the one causing the issue
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
        for (int i = 0; i < arrayOfPlacements.size(); i++) {
+           System.out.println(arrayOfPlacements.get(i));
            if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
                return false;
            }
