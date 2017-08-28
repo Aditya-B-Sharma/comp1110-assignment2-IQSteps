@@ -1,10 +1,6 @@
 package comp1110.ass2;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class provides the text interface for the Steps Game
@@ -53,92 +49,55 @@ public class StepsGame {
      */
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
-        ArrayList<String> ugh;
-        ugh = collector(placement);
-
-        if (placement.length() % 3 == 0 && checkDuplicates(ugh)) {
+        if (placement == null) {
+            return false;
+        }
+        else if (placement.length() % 3 == 0 && !containskDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
             return true;
         }
         return false;
     }
     // Method collects shapes in the placements.
-    private static ArrayList<String> collector (String in) {
-        ArrayList<String> out = new ArrayList<>();
-        for (int i = 2; i < in.length(); i = i + 3) {
-            out.add(String.valueOf(in.charAt(i)));
+    private static String collector (String in) {
+        String initial = "";
+        for (int i = 0; i < in.length(); i++) {
+            if (i % 3 == 0)
+                initial += String.valueOf(in.charAt(i));
         }
-        return out;
+        return initial;
     }
-
-    private static boolean checkDuplicates(ArrayList<String> input) {
-        String placement = "";
-        for (String i : input) {
-            placement += i;
-        }
-        HashMap<Character, Integer> dict = new HashMap<>();
-        for (int i = 0; i < placement.length(); i++) {
-            if (dict.containsKey(i)) {
-                if (dict.get(placement.charAt(i)) == null) {
-                    dict.put(placement.charAt(i), 1);
-                }
-                else {
-                    int value = dict.get(placement.charAt(i));
-                    dict.put(placement.charAt(i), value++);
-                }
-
-                if (dict.get(placement.charAt(i)) > 1) {
-                    return false;
-                }
-            }
-/*            else {
-                dict.put(i, dict.get(i) + 1);
-            }*/
-        }
-        return true;
-    }
-
-    //private static
-    // checks if input contains any duplicate
-/*    private static boolean checkDuplicate(ArrayList<String> in) {
-        HashMap<String, Integer> dict = new HashMap<>();
-        for (int i = 0; i < in.size(); i++) {
-            String x = in.get(i);
-            if (dict.containsKey(x)) {
-                if (dict.get(x) > 0) {
-                    return false;
-                }
-            }
-            else {
-                    dict.put(x, dict.get(x) + 1);
-            }
-        }
-        return true;
-    }*/
-
-/*private static boolean checkDuplicates (ArrayList<String> input) {
-        HashSet<String> letterSet = new HashSet<>();
-        for (String i : input) {
-            letterSet.add(i);
-            if (letterSet.add(i) == false) {
-                return false;
-            }
-        }
-        return true;
-    }*/
-
 
     // Checks for duplicates in argument ArrayList of strings.
-//    private static boolean checkDuplicates(ArrayList<String> inputList) {
-//        return false;
-//    }
-
-    //
-    private static String[] getPiecePlacements(String placement) {
-        return null;
+    private static boolean containskDuplicates (String in) {
+        for (int i = 0; i < in.length(); i++) {
+            int bool = 0;
+            for (int j = 0; j < in.length(); j++) {
+                if (String.valueOf(i).equals(String.valueOf(j))) {
+                    bool++;
+                }
+            }
+            if (bool > 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    private static boolean mapisPiecePlacementWellFormed(String[] arrayOfPlacements) {
-        return false;
+
+    //
+    private static List<String> getPiecePlacements(String placement) {
+        String[] out = placement.split("(?<=\\G.{3})");
+        return Arrays.asList(out);
+    }
+
+    // I speculate that this method might be the one causing the issue
+    private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
+       for (int i = 0; i < arrayOfPlacements.size(); i++) {
+           if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
+               return false;
+           }
+       }
+        return true;
     }
 
 
@@ -154,21 +113,46 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
 
-    int[] allPositions = new int[50];
+    int[] allPositions = {0,1,2,3,4,5,6,7,8,9,
+                         10,11,12,13,14,15,16,17,18,19,
+                         20,21,22,23,24,25,26,27,28,29,
+                         30,31,32,33,34,35,36,37,38,39,
+                         40,41,42,43,44,45,46,47,48,49};
 
-    ArrayList<Integer> postions = new ArrayList<Integer>( /* allpositions */);
+    ArrayList<Integer> postions = new ArrayList<>( /* allpositions */);
 
     static boolean isPlacementSequenceValid(String placement) {
         // FIXME Task 5: determine whether a placement sequence is valid
         return false;
     }
 
-    private static boolean isValidPlacement(String placement) {
-        return false;
-    }
+    // placement as String
+    private static boolean isValidPlacement(String placement) { return false; }
 
     private static void updateValidLocations(String placement) {
 
+    }
+
+    // method to remove 'masked' locations. Returns updated positions.
+    public static int[] remove(int[] numbers, int target) {
+        int count = 0;
+        for (int number: numbers) {
+            if (number == target) {
+                count++;
+            }
+        }
+        if (count == 0) {
+            return numbers;
+        }
+        int[] result = new int[numbers.length - count];
+        int index = 0;
+        for (int value : numbers) {
+            if (value != target) {
+                result[index] = value;
+                index++;
+            }
+        }
+        return result;
     }
     /**
      * Given a string describing a placement of pieces and a string describing

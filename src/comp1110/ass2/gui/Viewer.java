@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
 
 /**
  * A very simple viewer for piece placements in the steps game.
@@ -32,13 +33,14 @@ public class Viewer extends Application {
     private final Group controls = new Group();
     TextField textField;
 
-
     /**
      * Draw a placement in the window, removing any previously drawn one
      *
      * @param placement  A valid placement string
      */
     void makePlacement(String placement) {
+        
+
         // FIXME Task 4: implement the simple placement viewer
     }
 
