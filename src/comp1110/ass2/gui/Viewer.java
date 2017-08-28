@@ -111,16 +111,13 @@ public class Viewer extends Application {
                 spinAmount = toCompare%'A';
                 toFetch = "A";
             } else if (toCompare >= 'E' && toCompare <= 'H'){
-                if (toCompare != 'E'){
-                    toFlip = true;
-                }
                 spinAmount = toCompare%'E';
                 toFetch = "E";
             }
         }
         ImageView outputImage = new ImageView();
         outputImage.setImage(new Image(Viewer.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
-        if (toFlip) {outputImage.setScaleX(-1);}
+        //if (toFlip) {outputImage.setScaleX(-1);}
         if (spinAmount!=0){
             outputImage.setRotate(90*spinAmount);
         }
