@@ -53,11 +53,49 @@ public class Viewer extends Application {
      */
 
     void makePlacement(String placement) {
-        drawPegs();
+        makePegs();
         //List<String> traverse = StepsGame.getPiecePlacements(placement);
 
 
         // FIXME Task 4: implement the simple placement viewer
+    }
+    void makePegs() {
+        GridPane gridPane = new GridPane();
+
+        gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
+        //gridPane.setGridLinesVisible(true);
+        gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+
+        gridPane.setPadding(new Insets(15, 0, 0, 25));
+
+        for (int k = 0; k < 10; k ++) {
+            ColumnConstraints column = new ColumnConstraints(70);
+            gridPane.getColumnConstraints().add(column);
+        }
+        for (int l = 0; l < 5; l ++) {
+            RowConstraints row = new RowConstraints(70);
+            gridPane.getRowConstraints().add(row);
+        }
+
+        for (int y = 0; y<10; y++) {
+            for (int z = 0; z<5; z++) {
+                if (y % 2 == 0 && z % 2 == 0 ) {
+                    Circle x = new Circle(20);
+                    x.setOpacity(0.3);
+                    gridPane.add(x, y, z);
+                } else if (y % 2 == 1 && z % 2 == 1) {
+                    Circle x = new Circle(20);
+                    x.setOpacity(0.3);
+                    gridPane.add(x, y, z);
+                }
+            }
+        }
+
+        for (Node node : gridPane.getChildren()) {
+            gridPane.setMargin(node, new Insets(0, 0, 0, 15));
+        }
+
+        pegs.getChildren().addAll(gridPane);
     }
 
     void drawPegs() {
@@ -99,17 +137,6 @@ public class Viewer extends Application {
             gridPane.getRowConstraints().add(row);
         }
 
-        for (int y = 0; y<10; y++) {
-            for (int z = 0; z<5; z++) {
-                if (y % 2 == 0 && z % 2 == 0 ) {
-                    Circle x = new Circle(20);
-                    gridPane.add(x, y, z);
-                } else if (y % 2 == 1 && z % 2 == 1) {
-                    Circle x = new Circle(20);
-                    gridPane.add(x, y, z);
-                }
-            }
-        }
 
         for (Node node : gridPane.getChildren()) {
             gridPane.setMargin(node, new Insets(0, 0, 0, 15));
@@ -129,12 +156,13 @@ public class Viewer extends Application {
         //gridPane.add(i, 1, 1);
         //gridPane.add(j, 2, 2);
 
-        pegs.getChildren().addAll(gridPane);
+        placements.getChildren().addAll(gridPane);
     }
 
     // Remove previous window drawn
     void removePrevious() {
         pegs.getChildren().clear();
+        placements.getChildren().clear();
 
     }
 
@@ -189,9 +217,9 @@ public class Viewer extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
-        drawPegs();
 
-        root.getChildren().addAll(placements, pegs, controls);
+        root.getChildren().addAll(pegs, placements, controls);
+        makePegs();
         makeControls();
 
 
