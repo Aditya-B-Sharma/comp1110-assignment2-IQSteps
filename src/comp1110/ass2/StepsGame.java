@@ -52,7 +52,7 @@ public class StepsGame {
         if (placement == null) {
             return false;
         }
-        else if (placement.length() % 3 == 0 && checkDuplicates(collector(placement)) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
+        else if (placement.length() % 3 == 0 && !containskDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
             return true;
         }
         return false;
@@ -68,7 +68,7 @@ public class StepsGame {
     }
 
     // Checks for duplicates in argument ArrayList of strings.
-    public static boolean checkDuplicates (String in) {
+    private static boolean containskDuplicates (String in) {
         for (int i = 0; i < in.length(); i++) {
             int bool = 0;
             for (int j = 0; j < in.length(); j++) {
@@ -127,9 +127,7 @@ public class StepsGame {
     }
 
     // placement as String
-    private static boolean isValidPlacement(String placement) { return false;
-
-    }
+    private static boolean isValidPlacement(String placement) { return false; }
 
     private static void updateValidLocations(String placement) {
 
