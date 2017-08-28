@@ -46,33 +46,6 @@ public class Viewer extends Application {
     private final Group pegs = new Group();
     TextField textField;
 
-    // Source each root asset we need. Then decide on the image to use and orientation.
-    ImageView decideImage(int y){
-        ImageView AA, BA, CA, DA, EA, FA, GA, HA, AE, BE, CE, DE, EE, FE, GE, HE;
-        AA=BA=CA=DA=EA=FA=GA=HA=AE=BE=CE=DE=EE=FE=GE=HE = new ImageView();
-        AA.setImage(new Image(Viewer.class.getResource(URI_BASE + "AA.png").toString()));
-        BA.setImage(new Image(Viewer.class.getResource(URI_BASE + "BA.png").toString()));
-        CA.setImage(new Image(Viewer.class.getResource(URI_BASE + "CA.png").toString()));
-        DA.setImage(new Image(Viewer.class.getResource(URI_BASE + "DA.png").toString()));
-        EA.setImage(new Image(Viewer.class.getResource(URI_BASE + "EA.png").toString()));
-        FA.setImage(new Image(Viewer.class.getResource(URI_BASE + "FA.png").toString()));
-        GA.setImage(new Image(Viewer.class.getResource(URI_BASE + "GA.png").toString()));
-        HA.setImage(new Image(Viewer.class.getResource(URI_BASE + "HA.png").toString()));
-        AE.setImage(new Image(Viewer.class.getResource(URI_BASE + "AE.png").toString()));
-        BE.setImage(new Image(Viewer.class.getResource(URI_BASE + "BE.png").toString()));
-        CE.setImage(new Image(Viewer.class.getResource(URI_BASE + "CE.png").toString()));
-        DE.setImage(new Image(Viewer.class.getResource(URI_BASE + "DE.png").toString()));
-        EE.setImage(new Image(Viewer.class.getResource(URI_BASE + "EE.png").toString()));
-        FE.setImage(new Image(Viewer.class.getResource(URI_BASE + "FE.png").toString()));
-        GE.setImage(new Image(Viewer.class.getResource(URI_BASE + "GE.png").toString()));
-        HE.setImage(new Image(Viewer.class.getResource(URI_BASE + "HE.png").toString()));
-        if (y == 1) {
-            return BA;
-        } else {
-        return AA;
-        }
-
-    }
 
     /**
      * Draw a placement in the window, removing any previously drawn one
@@ -83,11 +56,11 @@ public class Viewer extends Application {
     void makePlacement(String placement) {
         makePegs();
         List<String> traverse = StepsGame.getPiecePlacements(placement);
-
+        drawPieces(traverse);
 
         // FIXME Task 4: implement the simple placement viewer
     }
-    void makePegs() {
+    private void makePegs() {
         GridPane gridPane = new GridPane();
 
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
@@ -119,6 +92,7 @@ public class Viewer extends Application {
             }
         }
 
+        //set up the pegs properly
         for (Node node : gridPane.getChildren()) {
             gridPane.setMargin(node, new Insets(0, 0, 0, 15));
         }
@@ -126,14 +100,42 @@ public class Viewer extends Application {
         pegs.getChildren().addAll(gridPane);
     }
 
+    // Source each root asset we need. Then decide on the image to use and orientation.
+    private ImageView decideImage(String piece){
+        boolean toFlip = false;
+        String toFetch = "";
+        int spinAmount = 0;
+        Character toCompare = piece.charAt(1);
+        if (piece.charAt(0) >= 'A' && piece.charAt(0) <= 'H') {
+            if (toCompare >= 'A' && toCompare < 'E') {
+                spinAmount = toCompare%'A';
+                toFetch = "A";
+            } else if (toCompare >= 'E' && toCompare <= 'H'){
+                if (toCompare != 'E'){
+                    toFlip = true;
+                }
+                spinAmount = toCompare%'E';
+                toFetch = "E";
+            }
+        }
+        ImageView outputImage = new ImageView();
+        outputImage.setImage(new Image(Viewer.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+        if (toFlip) {outputImage.setScaleX(-1);}
+        if (spinAmount!=0){
+            outputImage.setRotate(90*spinAmount);
+        }
+        return outputImage;
 
+    }
 
-    void drawPieces(List<String> givenPlacements) {
+    private void drawPieces(List<String> givenPlacements) {
 
         GridPane gridPane = new GridPane();
 
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
-        gridPane.setGridLinesVisible(true);
+
+        //Uncomment this if you want to see the gridlines:
+        //gridPane.setGridLinesVisible(true);
         gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
         gridPane.setPadding(new Insets(15, 0, 0, 25));
@@ -153,25 +155,18 @@ public class Viewer extends Application {
         }
 
         Insets valuePadding = new Insets(0, 0, 0, -105);
-        //gridPane.add(a, 0, 0);
-        //ImageView x = decideImage();
-        //gridPane.add(x, 1, 1);
-        //gridPane.setMargin(x, valuePadding);
-        //gridPane.add(c1, 0, 0);
-        //gridPane.add(c2, 2, 1);
-        //gridPane.add(d, 3, 0);
-        //gridPane.add(e, 4, 0);
-        //gridPane.add(f, 5, 0);
-        //gridPane.add(g, 6, 1);
-        //gridPane.add(h, 7, 2);
-        //gridPane.add(i, 1, 1);
-        //gridPane.add(j, 2, 2);
 
+        for (int x = 0; x < givenPlacements.size(); x++) {
+            ImageView image = decideImage(givenPlacements.get(x));
+           //Debugging -> System.out.println(givenPlacements.get(x));
+            gridPane.add(image, getXPos(givenPlacements.get(x)), getYPos(givenPlacements.get(x)));
+            gridPane.setMargin(image, valuePadding);
+        }
         placements.getChildren().addAll(gridPane);
     }
 
     // Remove previous window drawn
-    void removePrevious() {
+    private void removePrevious() {
         pegs.getChildren().clear();
         placements.getChildren().clear();
 
@@ -181,20 +176,46 @@ public class Viewer extends Application {
     private static String breakPlacementString(String placement) {
         return "";
     }
+    // I did this in makePlacement using the public function getPiecePlacements from StepsGame
 
     // Get x position of piece
-    int getXPos() {
-        return 0;
+    private int getXPos(String piece) {
+        int out = 0;
+        Character letter = piece.charAt(2);
+        if (Character.isUpperCase(letter) && letter != 'Z') {
+            out = (letter%'A') % 10;
+          //Debugging ->  System.out.println(out);
+        } else if (Character.isLowerCase(letter) && letter!= 'z') {
+            out = (letter % 92) % 10;
+          //Debugging ->  System.out.println(out);
+        }
+        return out;
     }
 
     // Get y position of piece
-    int getYPos() {
-        return 0;
+    private int getYPos(String piece) {
+        int out = 0;
+        Character letter = piece.charAt(2);
+        if (Character.isUpperCase(letter) && letter != 'Z') {
+            if (letter >= 'A' && letter <= 'J') {
+                out = 0;
+            } else if (letter >= 'K' && letter <= 'T'){
+                out = 1;
+            } else { out = 2; }
+        } else if (Character.isLowerCase(letter) && letter != 'z') {
+            if (letter >= 'a' && letter <= 'e') {
+                out = 2;
+            } else if (letter >= 'f' && letter <= 'o'){
+                out = 3;
+            } else { out = 4; }
+        }
+        //Debugging -> System.out.println(out);
+        return out;
     }
 
     // Displays image so the origin and orientation is correct
     private static void displayImage(int x, int y) {
-
+        //done in make placement
     }
 
 
@@ -232,7 +253,6 @@ public class Viewer extends Application {
         root.getChildren().addAll(pegs, placements, controls);
         makePegs();
         makeControls();
-
 
 
         primaryStage.setScene(scene);
