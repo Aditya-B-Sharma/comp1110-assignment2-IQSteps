@@ -89,17 +89,14 @@ public class Viewer extends Application {
         i.setImage(new Image(Viewer.class.getResource(URI_BASE + "AE.png").toString()));
         ImageView j = new ImageView();
         j.setImage(new Image(Viewer.class.getResource(URI_BASE + "BE.png").toString()));
-        //Circle c1 = new Circle(20);
-        Circle c2 = new Circle(20);
+
         GridPane gridPane = new GridPane();
 
-        //gridPane.setPadding(new Insets(30,30,30,30));
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
         gridPane.setGridLinesVisible(true);
         gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
-        //gridPane.setMargin(c1, new Insets(0,0,0,15));
-        //gridPane.setMargin(c2, new Insets(0,0,0,15));
+        gridPane.setPadding(new Insets(15, 0, 0, 25));
 
         for (int k = 0; k < 10; k ++) {
             ColumnConstraints column = new ColumnConstraints(70);
@@ -121,12 +118,15 @@ public class Viewer extends Application {
                 }
             }
         }
-        gridPane.setPadding(new Insets(15, 0, 0, 25));
+
         for (Node node : gridPane.getChildren()) {
             gridPane.setMargin(node, new Insets(0, 0, 0, 15));
         }
+
+        Insets valuePadding = new Insets(0, 0, 0, -105);
         //gridPane.add(a, 0, 0);
-        //gridPane.add(b, 1, 0);
+        gridPane.add(b, 0, 1);
+        gridPane.setMargin(b, valuePadding);
         //gridPane.add(c1, 0, 0);
         //gridPane.add(c2, 2, 1);
         //gridPane.add(d, 3, 0);
