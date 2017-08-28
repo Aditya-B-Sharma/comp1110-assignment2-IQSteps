@@ -136,17 +136,41 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
 
-    int[] allPositions = {0,1,2,3,4,5,6,7,8,9,
+    int[] allPositions = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                          10,11,12,13,14,15,16,17,18,19,
                          20,21,22,23,24,25,26,27,28,29,
                          30,31,32,33,34,35,36,37,38,39,
                          40,41,42,43,44,45,46,47,48,49};
+    // Empty hashset
 
     ArrayList<Integer> postions = new ArrayList<>( /* allpositions */);
 
+    //For up-facing pieces, the center piece (origin) is facing down () - ORIGIN NOT ON PEGS
+    //Flipped versions of these have the opposite, i.e. origin facing upwards! - ORIGIN ON PEGS
+
+    //TRANSPOSE
+
+    //collect positions method
+    public static String pos(String placement) {
+        String out = "";
+        for (int i = 0; i < placement.length(); i++) {
+            if (i % 3 == 2){
+                out += String.valueOf(placement.charAt(i));
+            }
+        }
+        return out;
+    }
+
+    // Need to use getPiecePlacements method so I can map some other methods onto each pieceplacement
+
     static boolean isPlacementSequenceValid(String placement) {
+        HashSet<Character> init = new HashSet<Character>();
+        init.add('A');
+        String allowedPosDown = "CEGILNPRTUWYbdgikmorstvx";
+        String allowedPosUp = "BDFHKLOQSVXacefhjlnqrsuw";
         // FIXME Task 5: determine whether a placement sequence is valid
-        return false;
+        System.out.println(init.add('a'));
+        return init.add('a');
     }
 
     // placement as String
