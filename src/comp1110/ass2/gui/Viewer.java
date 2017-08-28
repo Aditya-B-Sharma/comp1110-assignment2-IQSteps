@@ -1,6 +1,7 @@
 package comp1110.ass2.gui;
 
 import comp1110.ass2.StepsGame;
+import gittest.A;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import java.util.List;
 
 
 /**
@@ -46,12 +48,16 @@ public class Viewer extends Application {
      */
 
     void makePlacement(String placement) {
-        StepsGame.getPiecePlacements(placement);
-
-
-        ImageView x = new ImageView();
-        x.setImage(new Image(Viewer.class.getResource(URI_BASE + "AA.png").toString()));
-        placements.getChildren().add(x);
+        ImageView y = new ImageView();
+        System.out.println(placement);
+        if (placement.isEmpty()) {
+            y.setImage(new Image(Viewer.class.getResource(URI_BASE + "HA.png").toString()));
+            placements.getChildren().add(y);
+        } else {
+            y.setImage(new Image(Viewer.class.getResource(URI_BASE + "HE.png").toString()));
+            placements.getChildren().add(y);
+        }
+        //List<String> traverse = StepsGame.getPiecePlacements(placement);
 
 
         // FIXME Task 4: implement the simple placement viewer
@@ -59,6 +65,7 @@ public class Viewer extends Application {
 
     // Remove previous window drawn
     void removePrevious() {
+        placements.getChildren().clear();
 
     }
 
@@ -89,16 +96,18 @@ public class Viewer extends Application {
      */
     private void makeControls() {
         Label label1 = new Label("Placement:");
-        textField = new TextField ();
+        textField = new TextField();
         textField.setPrefWidth(300);
         Button button = new Button("Refresh");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                removePrevious();
                 makePlacement(textField.getText());
                 textField.clear();
             }
         });
+
         HBox hb = new HBox();
         hb.getChildren().addAll(label1, textField, button);
         hb.setSpacing(10);
@@ -116,7 +125,6 @@ public class Viewer extends Application {
         root.getChildren().add(placements);
 
         makeControls();
-        makePlacement("AAA");
 
         primaryStage.setScene(scene);
         primaryStage.show();
