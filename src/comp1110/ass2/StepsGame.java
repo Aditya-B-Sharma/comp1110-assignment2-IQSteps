@@ -3,6 +3,7 @@ package comp1110.ass2;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -63,14 +64,42 @@ public class StepsGame {
     // Method collects shapes in the placements.
     private static ArrayList<String> collector (String in) {
         ArrayList<String> out = new ArrayList<>();
-        for (int i = 0; i < in.length(); i++) {
-            if (i % 3 == 0)
-                out.add(String.valueOf(in.charAt(i)));
+        for (int i = 2; i < in.length(); i = i + 3) {
+            out.add(String.valueOf(in.charAt(i)));
         }
         return out;
     }
+
+    private static boolean checkDuplicates(ArrayList<String> input) {
+        String placement = "";
+        for (String i : input) {
+            placement += i;
+        }
+        HashMap<Character, Integer> dict = new HashMap<>();
+        for (int i = 0; i < placement.length(); i++) {
+            if (dict.containsKey(i)) {
+                if (dict.get(placement.charAt(i)) == null) {
+                    dict.put(placement.charAt(i), 1);
+                }
+                else {
+                    int value = dict.get(placement.charAt(i));
+                    dict.put(placement.charAt(i), value++);
+                }
+
+                if (dict.get(placement.charAt(i)) > 1) {
+                    return false;
+                }
+            }
+/*            else {
+                dict.put(i, dict.get(i) + 1);
+            }*/
+        }
+        return true;
+    }
+
+    //private static
     // checks if input contains any duplicate
-/*    private static boolean checkDuplicates (ArrayList<String> in) {
+/*    private static boolean checkDuplicate(ArrayList<String> in) {
         HashMap<String, Integer> dict = new HashMap<>();
         for (int i = 0; i < in.size(); i++) {
             String x = in.get(i);
@@ -86,11 +115,22 @@ public class StepsGame {
         return true;
     }*/
 
+/*private static boolean checkDuplicates (ArrayList<String> input) {
+        HashSet<String> letterSet = new HashSet<>();
+        for (String i : input) {
+            letterSet.add(i);
+            if (letterSet.add(i) == false) {
+                return false;
+            }
+        }
+        return true;
+    }*/
+
 
     // Checks for duplicates in argument ArrayList of strings.
-    private static boolean checkDuplicates(ArrayList<String> inputList) {
-        return false;
-    }
+//    private static boolean checkDuplicates(ArrayList<String> inputList) {
+//        return false;
+//    }
 
     //
     private static String[] getPiecePlacements(String placement) {
