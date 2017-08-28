@@ -53,15 +53,7 @@ public class Viewer extends Application {
      */
 
     void makePlacement(String placement) {
-        ImageView y = new ImageView();
-        System.out.println(placement);
-        if (placement.isEmpty()) {
-            y.setImage(new Image(Viewer.class.getResource(URI_BASE + "HA.png").toString()));
-            placements.getChildren().add(y);
-        } else {
-            y.setImage(new Image(Viewer.class.getResource(URI_BASE + "HE.png").toString()));
-            placements.getChildren().add(y);
-        }
+        drawPegs();
         //List<String> traverse = StepsGame.getPiecePlacements(placement);
 
 
@@ -142,7 +134,7 @@ public class Viewer extends Application {
 
     // Remove previous window drawn
     void removePrevious() {
-        placements.getChildren().clear();
+        pegs.getChildren().clear();
 
     }
 
@@ -198,8 +190,10 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
         drawPegs();
-        root.getChildren().addAll(controls, placements, pegs);
+
+        root.getChildren().addAll(placements, pegs, controls);
         makeControls();
+
 
 
         primaryStage.setScene(scene);
