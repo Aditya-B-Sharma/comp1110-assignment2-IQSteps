@@ -46,6 +46,34 @@ public class Viewer extends Application {
     private final Group pegs = new Group();
     TextField textField;
 
+    // Source each root asset we need. Then decide on the image to use and orientation.
+    ImageView decideImage(int y){
+        ImageView AA, BA, CA, DA, EA, FA, GA, HA, AE, BE, CE, DE, EE, FE, GE, HE;
+        AA=BA=CA=DA=EA=FA=GA=HA=AE=BE=CE=DE=EE=FE=GE=HE = new ImageView();
+        AA.setImage(new Image(Viewer.class.getResource(URI_BASE + "AA.png").toString()));
+        BA.setImage(new Image(Viewer.class.getResource(URI_BASE + "BA.png").toString()));
+        CA.setImage(new Image(Viewer.class.getResource(URI_BASE + "CA.png").toString()));
+        DA.setImage(new Image(Viewer.class.getResource(URI_BASE + "DA.png").toString()));
+        EA.setImage(new Image(Viewer.class.getResource(URI_BASE + "EA.png").toString()));
+        FA.setImage(new Image(Viewer.class.getResource(URI_BASE + "FA.png").toString()));
+        GA.setImage(new Image(Viewer.class.getResource(URI_BASE + "GA.png").toString()));
+        HA.setImage(new Image(Viewer.class.getResource(URI_BASE + "HA.png").toString()));
+        AE.setImage(new Image(Viewer.class.getResource(URI_BASE + "AE.png").toString()));
+        BE.setImage(new Image(Viewer.class.getResource(URI_BASE + "BE.png").toString()));
+        CE.setImage(new Image(Viewer.class.getResource(URI_BASE + "CE.png").toString()));
+        DE.setImage(new Image(Viewer.class.getResource(URI_BASE + "DE.png").toString()));
+        EE.setImage(new Image(Viewer.class.getResource(URI_BASE + "EE.png").toString()));
+        FE.setImage(new Image(Viewer.class.getResource(URI_BASE + "FE.png").toString()));
+        GE.setImage(new Image(Viewer.class.getResource(URI_BASE + "GE.png").toString()));
+        HE.setImage(new Image(Viewer.class.getResource(URI_BASE + "HE.png").toString()));
+        if (y == 1) {
+            return BA;
+        } else {
+        return AA;
+        }
+
+    }
+
     /**
      * Draw a placement in the window, removing any previously drawn one
      *
@@ -54,7 +82,7 @@ public class Viewer extends Application {
 
     void makePlacement(String placement) {
         makePegs();
-        //List<String> traverse = StepsGame.getPiecePlacements(placement);
+        List<String> traverse = StepsGame.getPiecePlacements(placement);
 
 
         // FIXME Task 4: implement the simple placement viewer
@@ -98,27 +126,9 @@ public class Viewer extends Application {
         pegs.getChildren().addAll(gridPane);
     }
 
-    void drawPegs() {
-        ImageView a = new ImageView();
-        a.setImage(new Image(Viewer.class.getResource(URI_BASE + "AA.png").toString()));
-        ImageView b = new ImageView();
-        b.setImage(new Image(Viewer.class.getResource(URI_BASE + "BA.png").toString()));
-        ImageView c = new ImageView();
-        c.setImage(new Image(Viewer.class.getResource(URI_BASE + "CA.png").toString()));
-        ImageView d = new ImageView();
-        d.setImage(new Image(Viewer.class.getResource(URI_BASE + "DA.png").toString()));
-        ImageView e = new ImageView();
-        e.setImage(new Image(Viewer.class.getResource(URI_BASE + "EA.png").toString()));
-        ImageView f = new ImageView();
-        f.setImage(new Image(Viewer.class.getResource(URI_BASE + "FA.png").toString()));
-        ImageView g = new ImageView();
-        g.setImage(new Image(Viewer.class.getResource(URI_BASE + "GA.png").toString()));
-        ImageView h = new ImageView();
-        h.setImage(new Image(Viewer.class.getResource(URI_BASE + "HA.png").toString()));
-        ImageView i = new ImageView();
-        i.setImage(new Image(Viewer.class.getResource(URI_BASE + "AE.png").toString()));
-        ImageView j = new ImageView();
-        j.setImage(new Image(Viewer.class.getResource(URI_BASE + "BE.png").toString()));
+
+
+    void drawPieces(List<String> givenPlacements) {
 
         GridPane gridPane = new GridPane();
 
@@ -144,8 +154,9 @@ public class Viewer extends Application {
 
         Insets valuePadding = new Insets(0, 0, 0, -105);
         //gridPane.add(a, 0, 0);
-        gridPane.add(b, 0, 1);
-        gridPane.setMargin(b, valuePadding);
+        //ImageView x = decideImage();
+        //gridPane.add(x, 1, 1);
+        //gridPane.setMargin(x, valuePadding);
         //gridPane.add(c1, 0, 0);
         //gridPane.add(c2, 2, 1);
         //gridPane.add(d, 3, 0);
