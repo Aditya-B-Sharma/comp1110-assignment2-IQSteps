@@ -52,7 +52,7 @@ public class StepsGame {
         if (placement == null) {
             return false;
         }
-        else if (placement.length() % 3 == 0 && !containskDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
+        else if (placement.length() % 3 == 0 && containskDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
             return true;
         }
         return false;
@@ -68,7 +68,7 @@ public class StepsGame {
     }
 
     // Checks for duplicates in argument ArrayList of strings.
-    private static boolean containskDuplicates (String in) {
+/*    private static boolean containskDuplicates (String in) {
         for (int i = 0; i < in.length(); i++) {
             int bool = 0;
             for (int j = 0; j < in.length(); j++) {
@@ -81,8 +81,30 @@ public class StepsGame {
             }
         }
         return false;
+    }*/
+    private static boolean containskDuplicates (String input) {
+        ArrayList<Character> charList = new ArrayList<Character>();
+        HashSet<Character> letterSet = new HashSet<>();
+        for (int i = 0; i < input.length(); i++) {
+            charList.add(input.charAt(i));
+        }
+        for (Character i : charList) {
+            if (letterSet.add(i) == false) {
+                return false;
+            }
+            else {
+                letterSet.add(i);
+            }
+//        }
+//        for (int i = 0; i < x.length(); i++) {
+//            Character addition = x.charAt(i);
+//            if (letterSet.add(addition) == false) {
+//                return false;
+//            }
+//        }
+        }
+        return true;
     }
-
 
     //
     private static List<String> getPiecePlacements(String placement) {
