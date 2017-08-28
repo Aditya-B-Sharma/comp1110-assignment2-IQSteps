@@ -52,7 +52,7 @@ public class StepsGame {
         if (placement == null) {
             return false;
         }
-        else if (placement.length() % 3 == 0 && containskDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
+        else if (placement.length() % 3 == 0 && containsDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
             return true;
         }
         return false;
@@ -82,7 +82,7 @@ public class StepsGame {
         }
         return false;
     }*/
-    private static boolean containskDuplicates (String input) {
+    private static boolean containsDuplicates (String input) {
         ArrayList<Character> charList = new ArrayList<Character>();
         HashSet<Character> letterSet = new HashSet<>();
         for (int i = 0; i < input.length(); i++) {
@@ -107,7 +107,7 @@ public class StepsGame {
     }
 
     //
-    private static List<String> getPiecePlacements(String placement) {
+    public static List<String> getPiecePlacements(String placement) {
         String[] out = placement.split("(?<=\\G.{3})");
         return Arrays.asList(out);
     }

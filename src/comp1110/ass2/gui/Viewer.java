@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+
 
 /**
  * A very simple viewer for piece placements in the steps game.
@@ -22,6 +25,8 @@ import javafx.scene.image.ImageView;
 public class Viewer extends Application {
 
     /* board layout */
+    private static final int ROWS = 5;
+    private static final int COLS = 10;
     private static final int SQUARE_SIZE = 60;
     private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
     private static final int VIEWER_WIDTH = 750;
@@ -31,6 +36,7 @@ public class Viewer extends Application {
 
     private final Group root = new Group();
     private final Group controls = new Group();
+    private final Group placements = new Group();
     TextField textField;
 
     /**
@@ -38,8 +44,15 @@ public class Viewer extends Application {
      *
      * @param placement  A valid placement string
      */
+
     void makePlacement(String placement) {
-        
+        StepsGame.getPiecePlacements(placement);
+
+
+        ImageView x = new ImageView();
+        x.setImage(new Image(Viewer.class.getResource(URI_BASE + "AA.png").toString()));
+        placements.getChildren().add(x);
+
 
         // FIXME Task 4: implement the simple placement viewer
     }
@@ -100,8 +113,10 @@ public class Viewer extends Application {
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
 
         root.getChildren().add(controls);
+        root.getChildren().add(placements);
 
         makeControls();
+        makePlacement("AAA");
 
         primaryStage.setScene(scene);
         primaryStage.show();
