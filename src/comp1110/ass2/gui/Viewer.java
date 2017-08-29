@@ -215,7 +215,6 @@ public class Viewer extends Application {
     }
 
 
-
     /**
      * Create a basic text field for input and a refresh button.
      */

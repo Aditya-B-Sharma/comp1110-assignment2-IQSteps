@@ -65,7 +65,6 @@ public class StepsGame {
     }
 
     // Method checks if a string contains
-    // String first converted to charArray
     private static boolean isValid(String input) {
         char[] arr = input.toCharArray();
         if ((arr[0] >= 65 && arr[0] <= 72) && (arr[1] >= 65 && arr[1] <= 72) && ((arr[2] >= 65 && arr[2] <= 89) || (arr[2] >= 97 && arr[2] <= 122))) {
@@ -103,21 +102,7 @@ public class StepsGame {
         return initial;
     }
 
-    // Checks for duplicates in argument ArrayList of strings.
-/*    private static boolean containskDuplicates (String in) {
-        for (int i = 0; i < in.length(); i++) {
-            int bool = 0;
-            for (int j = 0; j < in.length(); j++) {
-                if (String.valueOf(i).equals(String.valueOf(j))) {
-                    bool++;
-                }
-            }
-            if (bool > 1) {
-                return true;
-            }
-        }
-        return false;
-    }*/
+    // Checks whether an input contains duplicates, i.e. whether a shape occurs more than once
     private static boolean containsDuplicates (String input) {
         ArrayList<Character> charList = new ArrayList<Character>();
         HashSet<Character> letterSet = new HashSet<>();
@@ -125,30 +110,24 @@ public class StepsGame {
             charList.add(input.charAt(i));
         }
         for (Character i : charList) {
-            if (letterSet.add(i) == false) {
+            if (!letterSet.add(i)) {
                 return false;
             }
             else {
                 letterSet.add(i);
             }
-//        }
-//        for (int i = 0; i < x.length(); i++) {
-//            Character addition = x.charAt(i);
-//            if (letterSet.add(addition) == false) {
-//                return false;
-//            }
-//        }
         }
         return true;
     }
 
-    //
+    //Splits placement input into pieceplacements, each of length 3.
+    // Idea from: https://stackoverflow.com/questions/3760152/split-string-to-equal-length-substrings-in-java
     public static List<String> getPiecePlacements(String placement) {
         String[] out = placement.split("(?<=\\G.{3})");
         return Arrays.asList(out);
     }
 
-    // I speculate that this method might be the one causing the issue
+    // Maps the piecePlacementWellFormed method from task 1 onto the entire each piece placement
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
        for (int i = 0; i < arrayOfPlacements.size(); i++) {
            System.out.println(arrayOfPlacements.get(i));
@@ -158,10 +137,6 @@ public class StepsGame {
        }
         return true;
     }
-
-
-    //Method that if piece is well formed. I was going to convert the placement into array of strings, each consisting of 3 characters.
-    // I was then going to apply the method made in task 2 onto each multiple of 3 strings. Using a loop. Do whatever you think is more efficient.
 
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
@@ -173,7 +148,7 @@ public class StepsGame {
      */
 
 
-    // Need to use getPiecePlacements method so I can map some other methods onto each pieceplacement
+    // String of all possible positions on the board
     static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
     static int[] transpose(int[] turn){
@@ -190,6 +165,7 @@ public class StepsGame {
         return output;
     }
 
+    // flips the int array, i.e. mirrors the array
     static int[] flip(int[] turn){
         int[] output = new int[9];
         output[0] = turn[2];
@@ -221,6 +197,7 @@ public class StepsGame {
         return out;
     }
 
+    // Transposes a piece placement n number of times.
     static int[] transposeAmount(String piece){
         int[] root = new int[9];
         int spinBy = 0;
@@ -283,7 +260,7 @@ public class StepsGame {
         return root;
     }
 
-
+    //checks whether the position of a piece placement is valid or not
     static boolean boundaryCheck(Character pos, int xyPointer) {
         String sideL = "KUf";
         String sideR = "Teo";
