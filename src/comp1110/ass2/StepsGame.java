@@ -67,21 +67,6 @@ public class StepsGame {
         return initial;
     }
 
-    // Checks for duplicates in argument ArrayList of strings.
-/*    private static boolean containskDuplicates (String in) {
-        for (int i = 0; i < in.length(); i++) {
-            int bool = 0;
-            for (int j = 0; j < in.length(); j++) {
-                if (String.valueOf(i).equals(String.valueOf(j))) {
-                    bool++;
-                }
-            }
-            if (bool > 1) {
-                return true;
-            }
-        }
-        return false;
-    }*/
     private static boolean containskDuplicates (String input) {
         ArrayList<Character> charList = new ArrayList<Character>();
         HashSet<Character> letterSet = new HashSet<>();
@@ -95,19 +80,12 @@ public class StepsGame {
             else {
                 letterSet.add(i);
             }
-//        }
-//        for (int i = 0; i < x.length(); i++) {
-//            Character addition = x.charAt(i);
-//            if (letterSet.add(addition) == false) {
-//                return false;
-//            }
-//        }
         }
         return true;
     }
 
     //
-    private static List<String> getPiecePlacements(String placement) {
+    public static List<String> getPiecePlacements(String placement) {
         String[] out = placement.split("(?<=\\G.{3})");
         return Arrays.asList(out);
     }
