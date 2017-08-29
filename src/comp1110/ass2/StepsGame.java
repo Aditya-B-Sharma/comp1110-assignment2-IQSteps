@@ -300,7 +300,7 @@ public class StepsGame {
     }
 
     static boolean isPlacementSequenceValid(String placement) {
-        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};   
+        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
         System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
