@@ -284,6 +284,44 @@ public class StepsGame {
     }
 
 
+    static boolean boundaryCheck(Character pos, int xyPointer) {
+        String sideL = "KUf";
+        String sideR = "Teo";
+        switch (pos) {
+            case 'A':
+                if (xyPointer == 0 ||xyPointer == 1 ||xyPointer == 2 ||xyPointer == 3||xyPointer == 6){
+                    return false;
+                }
+                break;
+            case 'J':
+                if (xyPointer == 0 ||xyPointer == 1 ||xyPointer == 2 ||xyPointer == 5||xyPointer == 8){
+                    return false;
+                }
+                break;
+            case 'p':
+                if (xyPointer == 0 ||xyPointer == 3 ||xyPointer == 6 ||xyPointer == 7||xyPointer == 8){
+                    return false;
+                }
+                break;
+            case 'y':
+                if (xyPointer == 2 ||xyPointer == 5 ||xyPointer == 6 ||xyPointer == 7||xyPointer == 8){
+                    return false;
+                }
+                break;
+
+        }
+        if ((pos % 'B' < 8) &&(xyPointer == 0 || xyPointer == 1 ||xyPointer == 2)){
+            return false;
+        } else if ((pos % 'q' < 8) && (xyPointer == 6 || xyPointer == 7 ||xyPointer == 8)) {
+            return false;
+        } else if ((sideL.contains(pos+"")) && (xyPointer == 0 || xyPointer == 3 ||xyPointer == 6)) {
+            return false;
+        } else if ((sideR.contains(pos+"")) && (xyPointer == 2 || xyPointer == 5 ||xyPointer == 8)) {
+            return false;
+        }
+        return true;
+    }
+
     static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
         System.out.println(toString(flip(AA)));
@@ -299,14 +337,13 @@ public class StepsGame {
                     for (int j = 0; j < 9; j++) {
                         if (transposed[j] != 0) {
                             System.out.println(j);
-                            try {
-                                if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
-                                    checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
-                                    System.out.println(checkList);
-                                } else {
-                                    return false;
-                                }
-                            } catch (StringIndexOutOfBoundsException e) {
+                            if (!boundaryCheck(x.charAt(2), j)) {
+                                System.out.println(x);
+                                return false;
+                            } else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
+                                checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
+                                System.out.println(checkList);
+                            } else {
                                 return false;
                             }
                         }
