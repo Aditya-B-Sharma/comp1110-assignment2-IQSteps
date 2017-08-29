@@ -102,7 +102,6 @@ public class Viewer extends Application {
 
     // Source each root asset we need. Then decide on the image to use and orientation.
     private ImageView decideImage(String piece){
-        boolean toFlip = false;
         String toFetch = "";
         int spinAmount = 0;
         Character toCompare = piece.charAt(1);

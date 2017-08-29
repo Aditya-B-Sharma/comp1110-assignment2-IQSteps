@@ -10,6 +10,42 @@ import java.util.*;
  */
 public class StepsGame {
 
+    static int[] AA = {1,2,0,
+                2,1,2,
+                1,0,0};
+
+    static int[] BA = {0,2,0,
+                0,1,2,
+                0,2,1};
+
+    static int[] CA = {0,2,0,
+                0,1,2,
+                1,2,0};
+
+    static int[] DA = {0,2,0,
+                2,1,0,
+                0,2,1};
+
+    static int[] EA = {0,2,0,
+                2,1,0,
+                1,2,0};
+
+    static int[] FA = {0,0,1,
+                0,1,2,
+                1,2,0};
+
+    static int[] GA = {0,2,1,
+                0,1,2,
+                1,2,0};
+
+    static int[] HA = {0,2,1,
+                2,1,0,
+                0,2,1};
+
+
+
+
+
     /**
      * Determine whether a piece placement is well-formed according to the following:
      * - it consists of exactly three characters
@@ -136,71 +172,151 @@ public class StepsGame {
      * @return True if the placement sequence is valid
      */
 
-    int[] allPositions = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                         10,11,12,13,14,15,16,17,18,19,
-                         20,21,22,23,24,25,26,27,28,29,
-                         30,31,32,33,34,35,36,37,38,39,
-                         40,41,42,43,44,45,46,47,48,49};
-    // Empty hashset
 
-    ArrayList<Integer> postions = new ArrayList<>( /* allpositions */);
+    // Need to use getPiecePlacements method so I can map some other methods onto each pieceplacement
+    static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
-    //For up-facing pieces, the center piece (origin) is facing down () - ORIGIN NOT ON PEGS
-    //Flipped versions of these have the opposite, i.e. origin facing upwards! - ORIGIN ON PEGS
+    static int[] transpose(int[] turn){
+        int[] output = new int[9];
+        output[0] = turn[6];
+        output[1] = turn[3];
+        output[2] = turn[0];
+        output[3] = turn[7];
+        output[4] = turn[4];
+        output[5] = turn[1];
+        output[6] = turn[8];
+        output[7] = turn[5];
+        output[8] = turn[2];
+        return output;
+    }
 
-    //TRANSPOSE
+    static int[] flip(int[] turn){
+        int[] output = new int[9];
+        output[0] = turn[2];
+        output[1] = turn[1];
+        output[2] = turn[0];
+        output[3] = turn[5];
+        output[4] = turn[4];
+        output[5] = turn[3];
+        output[6] = turn[8];
+        output[7] = turn[7];
+        output[8] = turn[6];
 
-    //collect positions method
-    public static String pos(String placement) {
-        String out = "";
-        for (int i = 0; i < placement.length(); i++) {
-            if (i % 3 == 2){
-                out += String.valueOf(placement.charAt(i));
+        for (int i = 0; i<output.length; i++) {
+            if (output[i] == 1) {
+                output[i] = 2;
+            } else if (output[i] == 2) {
+                output[i] = 1;
             }
+        }
+        return output;
+    }
+
+
+    static String toString(int[] list) {
+        String out = "";
+        for (int i : list){
+            out += i;
         }
         return out;
     }
 
-    // Need to use getPiecePlacements method so I can map some other methods onto each pieceplacement
+    static int[] transposeAmount(String piece){
+        int[] root = new int[9];
+        int spinBy = 0;
+        boolean flip = false;
+        Character firstChar = piece.charAt(0);
+        Character secondChar = piece.charAt(1);
+        if (secondChar >= 'E' && secondChar <= 'H') {
+            flip = true;
+        }
+        if (secondChar >= 'A' && secondChar <= 'D') {
+            spinBy = secondChar % 'A';
+        } else if (secondChar >= 'E' && secondChar <= 'H') {
+            spinBy = secondChar % 'E';
+        }
+        switch (firstChar) {
+            case 'A':
+                root = AA;
+                break;
+            case 'B':
+                root = BA;
+                break;
+            case 'C':
+                root = CA;
+                break;
+            case 'D':
+                root = DA;
+                break;
+            case 'E':
+                root = EA;
+                break;
+            case 'F':
+                root = FA;
+                break;
+            case 'G':
+                root = GA;
+                break;
+            case 'H':
+                root = HA;
+                break;
+        }
+        if (flip) {
+            root = flip(root);
+        }
+        switch (spinBy) {
+            case 0:
+                break;
+            case 1:
+                root = transpose(root);
+                break;
+            case 2:
+                root = transpose(root);
+                root = transpose(root);
+                break;
+            case 3:
+                root = transpose(root);
+                root = transpose(root);
+                root = transpose(root);
+                break;
+        }
+        return root;
+    }
+
 
     static boolean isPlacementSequenceValid(String placement) {
-        HashSet<Character> init = new HashSet<Character>();
-        init.add('A');
-        String allowedPosDown = "CEGILNPRTUWYbdgikmorstvx";
-        String allowedPosUp = "BDFHKLOQSVXacefhjlnqrsuw";
-        // FIXME Task 5: determine whether a placement sequence is valid
-        System.out.println(init.add('a'));
-        return init.add('a');
-    }
-
-    // placement as String
-    private static boolean isValidPlacement(String placement) { return false; }
-
-    private static void updateValidLocations(String placement) {
-
-    }
-
-    // method to remove 'masked' locations. Returns updated positions.
-    public static int[] remove(int[] numbers, int target) {
-        int count = 0;
-        for (int number: numbers) {
-            if (number == target) {
-                count++;
+        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
+        System.out.println(toString(flip(AA)));
+        String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
+        String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
+        HashSet<Character> checkList = new HashSet<Character>();
+        List<String> places = getPiecePlacements(placement);
+        if (isPlacementWellFormed(placement)) {
+            for (int i = 0; i < places.size(); i++) {
+                String x = places.get(i);
+                System.out.println(x);
+                int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
+                    for (int j = 0; j < 9; j++) {
+                        if (transposed[j] != 0) {
+                            System.out.println(j);
+                            try {
+                                if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
+                                    checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
+                                    System.out.println(checkList);
+                                } else {
+                                    return false;
+                                }
+                            } catch (StringIndexOutOfBoundsException e) {
+                                return false;
+                            }
+                        }
+                    }
             }
+        } else {return false;}
+        return true;
         }
-        if (count == 0) {
-            return numbers;
-        }
-        int[] result = new int[numbers.length - count];
-        int index = 0;
-        for (int value : numbers) {
-            if (value != target) {
-                result[index] = value;
-                index++;
-            }
-        }
-        return result;
-    }
+    // FIXME Task 5: determine whether a placement sequence is valid
+
     /**
      * Given a string describing a placement of pieces and a string describing
      * an (unordered) objective, return a set of all possible next viable
