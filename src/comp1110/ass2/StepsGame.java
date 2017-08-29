@@ -260,7 +260,7 @@ public class StepsGame {
         return root;
     }
 
-    //checks whether the position of a piece placement is valid or not
+    //Checks whether the position of a piece placement is valid or not
     static boolean boundaryCheck(Character pos, int xyPointer) {
         String sideL = "KUf";
         String sideR = "Teo";
@@ -300,7 +300,7 @@ public class StepsGame {
     }
 
     static boolean isPlacementSequenceValid(String placement) {
-        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
+        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};   
         System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
