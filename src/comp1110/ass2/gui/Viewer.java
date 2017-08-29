@@ -40,6 +40,7 @@ public class Viewer extends Application {
 
     private static final String URI_BASE = "assets/";
 
+    //Create needed groups for different elements
     private final Group root = new Group();
     private final Group controls = new Group();
     private final Group placements = new Group();
@@ -52,6 +53,7 @@ public class Viewer extends Application {
      *
      * @param placement  A valid placement string
      */
+    //we use getPiecePlacements from StepsGame to simplify this
 
     void makePlacement(String placement) {
         makePegs();
@@ -60,15 +62,20 @@ public class Viewer extends Application {
 
         // FIXME Task 4: implement the simple placement viewer
     }
+
+    //create pegs
     private void makePegs() {
         GridPane gridPane = new GridPane();
 
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
         //gridPane.setGridLinesVisible(true);
         gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        //set padding to center gridpane
 
         gridPane.setPadding(new Insets(15, 0, 0, 25));
 
+        //these loops will make a row / column at every iteration for the grid,
+        // since the game is 10 x 5, 10 columns and 5 rows will be made
         for (int k = 0; k < 10; k ++) {
             ColumnConstraints column = new ColumnConstraints(70);
             gridPane.getColumnConstraints().add(column);
@@ -78,6 +85,7 @@ public class Viewer extends Application {
             gridPane.getRowConstraints().add(row);
         }
 
+        //decide our peg positions
         for (int y = 0; y<10; y++) {
             for (int z = 0; z<5; z++) {
                 if (y % 2 == 0 && z % 2 == 0 ) {
@@ -92,15 +100,18 @@ public class Viewer extends Application {
             }
         }
 
+        //fix peg positions as they were underpadded on the left
         //set up the pegs properly
         for (Node node : gridPane.getChildren()) {
             gridPane.setMargin(node, new Insets(0, 0, 0, 15));
         }
+        //add all circles (pegs) to parent group
 
         pegs.getChildren().addAll(gridPane);
     }
 
     // Source each root asset we need. Then decide on the image to use and orientation.
+    //this returns the imageview type to be used, which has the relevant image
     private ImageView decideImage(String piece){
         String toFetch = "";
         int spinAmount = 0;
@@ -124,6 +135,7 @@ public class Viewer extends Application {
 
     }
 
+    //draw the piece given the imageview type we receive, on top of gridpane
     private void drawPieces(List<String> givenPlacements) {
 
         GridPane gridPane = new GridPane();
@@ -135,7 +147,7 @@ public class Viewer extends Application {
         gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
         gridPane.setPadding(new Insets(15, 0, 0, 25));
-
+        //columns and rows again
         for (int k = 0; k < 10; k ++) {
             ColumnConstraints column = new ColumnConstraints(70);
             gridPane.getColumnConstraints().add(column);
@@ -144,14 +156,18 @@ public class Viewer extends Application {
             RowConstraints row = new RowConstraints(70);
             gridPane.getRowConstraints().add(row);
         }
+        //fix padding
 
 
         for (Node node : gridPane.getChildren()) {
             gridPane.setMargin(node, new Insets(0, 0, 0, 15));
         }
 
+        //this will be the padding to ensure the piece is in the right place on the grid
         Insets valuePadding = new Insets(0, 0, 0, -105);
 
+        //place image files (pieces) and set their padding
+        // go through all given placements and do this
         for (int x = 0; x < givenPlacements.size(); x++) {
             ImageView image = decideImage(givenPlacements.get(x));
            //Debugging -> System.out.println(givenPlacements.get(x));
@@ -162,6 +178,7 @@ public class Viewer extends Application {
     }
 
     // Remove previous window drawn
+    //clears the groups
     private void removePrevious() {
         pegs.getChildren().clear();
         placements.getChildren().clear();
