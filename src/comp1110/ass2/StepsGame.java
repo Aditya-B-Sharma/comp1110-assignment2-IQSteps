@@ -313,10 +313,10 @@ public class StepsGame {
     // then look through our ALL string containing all positions and apply the relative index location indices
     //to get the piece at j position from the middle of our piece.
     // the indices work like this:
-    // 0 = top left , 1 = above, 2= top right
+    // -11 = top left , -10 = above, -9= top right
     // -1 = left, 0 = middle piece (origin) , +1 = right
     // +9 = bottom left, +10 = directly below, +11 = bottom right
-    static boolean isPlacementSequenceValid(String placement) {
+    public static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
         System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";

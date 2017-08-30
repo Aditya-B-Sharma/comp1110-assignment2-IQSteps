@@ -265,6 +265,7 @@ public class Viewer extends Application {
         root.getChildren().addAll(pegs, placements, controls);
         makePegs();
         makeControls();
+        System.out.println(StepsGame.isPlacementSequenceValid("CFlAFnGFSBFqFGhHANDDPEFB"));
 
 
         primaryStage.setScene(scene);
