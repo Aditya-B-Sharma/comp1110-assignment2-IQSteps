@@ -360,10 +360,19 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
+        List<String> unusedPieces = getUnusedPieces(placement, objective);
         // FIXME Task 6: determine the correct order of piece placements
         return null;
     }
-
+    static List<String> getUnusedPieces(String placement, String objective) {
+        String[] obj = objective.split("(?<=\\G.{3})");
+        String[] place = placement.split("(?<=\\G.{3})");
+        List<String> out = new ArrayList<String>(Arrays.asList(obj));
+        for (int i = 0; i < place.length; i++) {
+            out.remove(place[i]);
+        }
+        return out;
+    }
     /**
      * Return an array of all solutions to the game, given a starting placement.
      *
