@@ -151,6 +151,10 @@ public class StepsGame {
     // String of all possible positions on the board
     static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
+    //transpose and flip will be used to respectively spin or flip the source image
+    // this uses our explicit definitions of the pieces and changes them to make the piece given in placements
+    // i.e to make AA -> AB or to make AA-> AE
+
     static int[] transpose(int[] turn){
         int[] output = new int[9];
         output[0] = turn[6];
@@ -189,6 +193,7 @@ public class StepsGame {
     }
 
 
+    // toString for debugging
     static String toString(int[] list) {
         String out = "";
         for (int i : list){
@@ -197,7 +202,7 @@ public class StepsGame {
         return out;
     }
 
-    // Transposes a piece placement n number of times.
+    // Transposes or flips a piece placement n number of times.
     static int[] transposeAmount(String piece){
         int[] root = new int[9];
         int spinBy = 0;
@@ -261,6 +266,10 @@ public class StepsGame {
     }
 
     //Checks whether the position of a piece placement is valid or not
+    // i.e if a position B has a piece placed upon it where the pieces coords
+    // for the piece directly above at (i.e piece origin - 10) would be invalid,
+    // we need to make a bounds checker
+    // this is explicit
     static boolean boundaryCheck(Character pos, int xyPointer) {
         String sideL = "KUf";
         String sideR = "Teo";
@@ -299,7 +308,15 @@ public class StepsGame {
         return true;
     }
 
-    static boolean isPlacementSequenceValid(String placement) {
+    // check if a placement is valid by first checking wellformed and then transposing our variable root pieces as needed,
+    // the doing our boundary check wherever our piece has a 1 or 2, (meaning there would be a circle there)
+    // then look through our ALL string containing all positions and apply the relative index location indices
+    //to get the piece at j position from the middle of our piece.
+    // the indices work like this:
+    // -11 = top left , -10 = above, -9= top right
+    // -1 = left, 0 = middle piece (origin) , +1 = right
+    // +9 = bottom left, +10 = directly below, +11 = bottom right
+    public static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
         System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
