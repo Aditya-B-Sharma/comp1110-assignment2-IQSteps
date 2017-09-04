@@ -2,8 +2,8 @@ We declare that the work we have submitted for Stage C of this assignment and al
 
 * The idea of using <...> to make the game run faster came from a discussion with <...> (noted in source code comments)
 
-* The code in class <...> is based on a solution we found when researching the problem (URL provided in source code comments)
+* The implementation of getPiecePlacement in class <StepsGame> is based on a solution we found when researching the problem (URL provided in source code comments)
 
 *  ....
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+Signed: Aditya Sharma (u6051965), Khamis Buol (u6080028), and Stefan Louie (u6051635)

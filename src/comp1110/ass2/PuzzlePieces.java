@@ -12,5 +12,13 @@ public enum PuzzlePieces {
     FA, FB, FC, FD, FE, FF, FG, FH,
     GA, GB, GC, GD, GE, GF, GG, GH,
     HA, HB, HC, HD, HE, HF, HG, HH; */
-    A, B, C, D, E, G, F, H;
+
+    A(1), B(2), C(3), D(4), E(5), G(6), F(7), H(8);
+
+    private final int origin;
+
+    PuzzlePieces(int origin) {
+        this.origin = origin;
+    }
+
 }
