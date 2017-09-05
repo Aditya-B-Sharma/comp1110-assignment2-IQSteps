@@ -367,7 +367,7 @@ public class StepsGame {
     static List<String> getUnusedPieces(String placement, String objective) {
         String[] obj = objective.split("(?<=\\G.{3})");
         String[] place = placement.split("(?<=\\G.{3})");
-        List<String> out = new ArrayList<String>(Arrays.asList(obj));
+        List<String> out = new ArrayList<>(Arrays.asList(obj));
         for (int i = 0; i < place.length; i++) {
             out.remove(place[i]);
         }
