@@ -375,4 +375,10 @@ public class StepsGame {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         return null;
     }
+
+    public static void main(String[] args) {
+        System.out.println(isPlacementSequenceValid("CEQEHS"));
+    }
 }
+
+
