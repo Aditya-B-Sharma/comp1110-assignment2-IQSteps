@@ -385,6 +385,20 @@ public class StepsGame {
      */
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
+       ArrayList<String> solutions = new ArrayList<>();
+       String[] output = new String[solutions.size()];
+       Set<String> viablePiecePlacements = getViablePiecePlacements(placement, solution(placement));
+       return null;
+    }
+
+    private static String solution(String placement) {
         return null;
     }
+
+
+    public static void main(String[] args) {
+        System.out.println(isPlacementSequenceValid("CEQEHS"));
+    }
 }
+
+
