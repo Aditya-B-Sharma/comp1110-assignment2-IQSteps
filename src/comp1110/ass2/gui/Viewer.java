@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -58,10 +60,12 @@ public class Viewer extends Application {
     void makePlacement(String placement) {
         if (placement.isEmpty()){
             removePrevious();
+            makePegs();
         } else {
             List<String> traverse = StepsGame.getPiecePlacements(placement);
-            drawPieces(traverse);}
-        makePegs();
+            drawPieces(traverse);
+            makePegs();
+        }
         // FIXME Task 4: implement the simple placement viewer
     }
 
@@ -248,6 +252,16 @@ public class Viewer extends Application {
                 removePrevious();
                 makePlacement(textField.getText());
                 textField.clear();
+            }
+        });
+        textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)){
+                    removePrevious();
+                    makePlacement(textField.getText());
+                    textField.clear();
+                }
             }
         });
 
