@@ -373,7 +373,7 @@ public class StepsGame {
      */
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        String[] solutions = new String[]
+       ArrayList<String> solutions = new ArrayList<>();
         return null;
     }
 
