@@ -56,10 +56,12 @@ public class Viewer extends Application {
     //we use getPiecePlacements from StepsGame to simplify this
 
     void makePlacement(String placement) {
+        if (placement.isEmpty()){
+            removePrevious();
+        } else {
+            List<String> traverse = StepsGame.getPiecePlacements(placement);
+            drawPieces(traverse);}
         makePegs();
-        List<String> traverse = StepsGame.getPiecePlacements(placement);
-        drawPieces(traverse);
-
         // FIXME Task 4: implement the simple placement viewer
     }
 
