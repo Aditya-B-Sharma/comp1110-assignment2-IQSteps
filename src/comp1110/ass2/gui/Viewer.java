@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -56,10 +58,20 @@ public class Viewer extends Application {
     //we use getPiecePlacements from StepsGame to simplify this
 
     void makePlacement(String placement) {
-        makePegs();
-        List<String> traverse = StepsGame.getPiecePlacements(placement);
-        drawPieces(traverse);
-
+        Label labelx = new Label("Error: Placement must be valid.");
+        if (placement.isEmpty()){
+            removePrevious();
+            pegs.getChildren().add(labelx);
+            makePegs();
+        } else if (!StepsGame.isPlacementSequenceValid(placement)){
+            removePrevious();
+            pegs.getChildren().add(labelx);
+            makePegs();
+        } else {
+            List<String> traverse = StepsGame.getPiecePlacements(placement);
+            drawPieces(traverse);
+            makePegs();
+        }
         // FIXME Task 4: implement the simple placement viewer
     }
 
@@ -246,6 +258,16 @@ public class Viewer extends Application {
                 removePrevious();
                 makePlacement(textField.getText());
                 textField.clear();
+            }
+        });
+        textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.ENTER)){
+                    removePrevious();
+                    makePlacement(textField.getText());
+                    textField.clear();
+                }
             }
         });
 
