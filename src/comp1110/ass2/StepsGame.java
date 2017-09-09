@@ -318,25 +318,43 @@ public class StepsGame {
     // +9 = bottom left, +10 = directly below, +11 = bottom right
     public static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
-        System.out.println(toString(flip(AA)));
+        //System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
+        HashSet<Character> upperList = new HashSet<Character>();
         HashSet<Character> checkList = new HashSet<Character>();
         List<String> places = getPiecePlacements(placement);
         if (isPlacementWellFormed(placement)) {
             for (int i = 0; i < places.size(); i++) {
                 String x = places.get(i);
-                System.out.println(x);
+                //System.out.println(x);
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
                     for (int j = 0; j < 9; j++) {
                         if (transposed[j] != 0) {
-                            System.out.println(j);
+                            //System.out.println(j);
                             if (!boundaryCheck(x.charAt(2), j)) {
-                                System.out.println(x);
+                                //System.out.println(x);
                                 return false;
+                            } else if (transposed[j] == 1 && (j == 1 || j == 3 || j == 5 || j == 7)) {
+                                Character currentChar = all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]);
+                                Character topChar = null;
+                                Character topRight = null;
+                                Character topBottom = null;
+                                Character topLeft = null;
+                                if (boundaryCheck(currentChar, 1)
+                                        && boundaryCheck(currentChar, 3) 
+                                        && boundaryCheck(currentChar, 5)
+                                        && boundaryCheck(currentChar, 7)) {
+
+                                }
+                            }
                             } else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
                                 checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
-                                System.out.println(checkList);
+                                if (transposed[j] == 2) {
+                                    upperList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
+                                    System.out.println(upperList);
+                                }
+                                //System.out.println(checkList);
                             } else {
                                 return false;
                             }
