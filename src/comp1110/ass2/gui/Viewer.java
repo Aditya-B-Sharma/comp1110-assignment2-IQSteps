@@ -58,8 +58,14 @@ public class Viewer extends Application {
     //we use getPiecePlacements from StepsGame to simplify this
 
     void makePlacement(String placement) {
+        Label labelx = new Label("Error: Placement must be valid.");
         if (placement.isEmpty()){
             removePrevious();
+            pegs.getChildren().add(labelx);
+            makePegs();
+        } else if (!StepsGame.isPlacementSequenceValid(placement)){
+            removePrevious();
+            pegs.getChildren().add(labelx);
             makePegs();
         } else {
             List<String> traverse = StepsGame.getPiecePlacements(placement);

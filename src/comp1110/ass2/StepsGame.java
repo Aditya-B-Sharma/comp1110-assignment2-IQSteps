@@ -57,7 +57,6 @@ public class StepsGame {
      * @return True if the piece placement is well-formed
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
-        System.out.println(isPlacementSequenceValid("BGKFCNCFlDBgGAi"));
         // FIXME Task 2: determine whether a piece placement is well-formed
         if (piecePlacement.length() == 3 && isValid(piecePlacement)) {
             return true;
@@ -309,10 +308,6 @@ public class StepsGame {
         return true;
     }
 
-    //static boolean checkLowerPegValid() {
-
-    //};
-
     // check if a placement is valid by first checking wellformed and then transposing our variable root pieces as needed,
     // the doing our boundary check wherever our piece has a 1 or 2, (meaning there would be a circle there)
     // then look through our ALL string containing all positions and apply the relative index location indices
@@ -323,9 +318,9 @@ public class StepsGame {
     // +9 = bottom left, +10 = directly below, +11 = bottom right
     public static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
-        //System.out.println(toString(flip(AA)));
-        //String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
-        //String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
+        System.out.println(toString(flip(AA)));
+        String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
+        String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
         HashSet<Character> checkList = new HashSet<Character>();
         List<String> places = getPiecePlacements(placement);
         if (isPlacementWellFormed(placement)) {
