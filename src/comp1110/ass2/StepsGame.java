@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import gittest.C;
+
 import java.util.*;
 
 /**
@@ -130,7 +132,7 @@ public class StepsGame {
     // Maps the piecePlacementWellFormed method from task 1 onto the entire each piece placement
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
        for (int i = 0; i < arrayOfPlacements.size(); i++) {
-           System.out.println(arrayOfPlacements.get(i));
+           //System.out.println(arrayOfPlacements.get(i));
            if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
                return false;
            }
@@ -327,8 +329,9 @@ public class StepsGame {
         if (isPlacementWellFormed(placement)) {
             for (int i = 0; i < places.size(); i++) {
                 String x = places.get(i);
-                //System.out.println(x);
+                System.out.println(x);
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
+                ArrayList<Character> upchars = new ArrayList<Character>();
                     for (int j = 0; j < 9; j++) {
                         if (transposed[j] != 0) {
                             //System.out.println(j);
@@ -336,33 +339,59 @@ public class StepsGame {
                                 //System.out.println(x);
                                 return false;
                             } else if (transposed[j] == 1) {
+                                //System.out.println(x.charAt(2) + locationIndices[j]);
                                 Character currentChar = all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]);
+                                System.out.println("currentChar: "+ currentChar);
+                                System.out.println("lower peg: " + currentChar);
                                 Character topChar = null;
                                 Character rightChar = null;
                                 Character botChar = null;
                                 Character leftChar = null;
-                                if (boundaryCheck(currentChar, 1)
-                                        && boundaryCheck(currentChar, 3)
-                                        && boundaryCheck(currentChar, 5)
-                                        && boundaryCheck(currentChar, 7)) {
-                                    topChar = all.charAt(all.indexOf(x.charAt(2)) -10);
-                                    rightChar = all.charAt(all.indexOf(x.charAt(2)) - 1 );
-                                    botChar = all.charAt(all.indexOf(x.charAt(2)) + 1 );
-                                    leftChar = all.charAt(all.indexOf(x.charAt(2)) + 10 );
+                                if (boundaryCheck(currentChar, 1)) {
+                                    System.out.println("upperlist at topchar: " + upperList);
+                                    topChar = all.charAt(all.indexOf(currentChar) -10);
+                                    if (upperList.contains(topChar)) {
+                                        System.out.println("topchar false" + ": " + topChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 3)) {
+                                    System.out.println("upperlist at leftchar: " + upperList);
+                                    leftChar = all.charAt(all.indexOf(currentChar) - 1 );
+                                    if (upperList.contains(leftChar)) {
+                                        System.out.println("leftchar false" + ": " + leftChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 5)) {
+                                    System.out.println("upperlist at rightchar: " + upperList);
+                                    rightChar = all.charAt(all.indexOf(currentChar) + 1 );
+                                    if (upperList.contains(rightChar)) {
+                                        System.out.println("rightchar false" + ": " + rightChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 7)) {
+                                    System.out.println("upperlist at botchar: " + upperList);
+                                    botChar = all.charAt(all.indexOf(currentChar) + 10 );
+                                    if (upperList.contains(botChar)) {
+                                        System.out.println("botchar false" + ": " + botChar);
+                                        return false;
+                                    }
                                 }
                             }
                             else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
                                 checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
                                 if (transposed[j] == 2) {
-                                    upperList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
-                                    System.out.println(upperList);
+                                    upchars.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
+                                    System.out.println("list of upper characters: " + upchars.toString());
                                 }
                                 //System.out.println(checkList);
                             } else {
                                 return false;
                             }
                         }
-                    }
+                    } upperList.addAll(upchars);
             }
         } else {return false;}
         return true;
@@ -409,7 +438,7 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-        System.out.println(isPlacementSequenceValid("CEQEHS"));
+        //System.out.println(isPlacementSequenceValid("CEQEHS"));
     }
 }
 
