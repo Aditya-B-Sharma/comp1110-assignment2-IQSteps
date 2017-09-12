@@ -329,18 +329,19 @@ public class StepsGame {
         if (isPlacementWellFormed(placement)) {
             for (int i = 0; i < places.size(); i++) {
                 String x = places.get(i);
+                Character pieceOriginPeg = x.charAt(2);
                 System.out.println(x);
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
                 ArrayList<Character> upchars = new ArrayList<Character>();
                     for (int j = 0; j < 9; j++) {
                         if (transposed[j] != 0) {
                             //System.out.println(j);
-                            if (!boundaryCheck(x.charAt(2), j)) {
+                            if (!boundaryCheck(pieceOriginPeg, j)) {
                                 //System.out.println(x);
                                 return false;
                             } else if (transposed[j] == 1) {
                                 //System.out.println(x.charAt(2) + locationIndices[j]);
-                                Character currentChar = all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]);
+                                Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
                                 System.out.println("currentChar: "+ currentChar);
                                 System.out.println("lower peg: " + currentChar);
                                 Character topChar = null;
@@ -380,18 +381,20 @@ public class StepsGame {
                                     }
                                 }
                             }
-                            else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
-                                checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
+                            else if (checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]))) {
+                                checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
                                 if (transposed[j] == 2) {
-                                    upchars.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
-                                    System.out.println("list of upper characters: " + upchars.toString());
+                                    upchars.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                                    System.out.println("list of upper characters (not appended to upperlist yet) : " + upchars.toString());
                                 }
                                 //System.out.println(checkList);
                             } else {
                                 return false;
                             }
                         }
-                    } upperList.addAll(upchars);
+                    }
+                upperList.addAll(upchars);
+                System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
             }
         } else {return false;}
         return true;
