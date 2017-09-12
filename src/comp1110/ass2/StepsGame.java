@@ -335,20 +335,23 @@ public class StepsGame {
                             if (!boundaryCheck(x.charAt(2), j)) {
                                 //System.out.println(x);
                                 return false;
-                            } else if (transposed[j] == 1 && (j == 1 || j == 3 || j == 5 || j == 7)) {
+                            } else if (transposed[j] == 1) {
                                 Character currentChar = all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]);
                                 Character topChar = null;
-                                Character topRight = null;
-                                Character topBottom = null;
-                                Character topLeft = null;
+                                Character rightChar = null;
+                                Character botChar = null;
+                                Character leftChar = null;
                                 if (boundaryCheck(currentChar, 1)
-                                        && boundaryCheck(currentChar, 3) 
+                                        && boundaryCheck(currentChar, 3)
                                         && boundaryCheck(currentChar, 5)
                                         && boundaryCheck(currentChar, 7)) {
-
+                                    topChar = all.charAt(all.indexOf(x.charAt(2)) -10);
+                                    rightChar = all.charAt(all.indexOf(x.charAt(2)) - 1 );
+                                    botChar = all.charAt(all.indexOf(x.charAt(2)) + 1 );
+                                    leftChar = all.charAt(all.indexOf(x.charAt(2)) + 10 );
                                 }
                             }
-                            } else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
+                            else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
                                 checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
                                 if (transposed[j] == 2) {
                                     upperList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
