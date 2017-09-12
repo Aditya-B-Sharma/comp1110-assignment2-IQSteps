@@ -1,5 +1,7 @@
 package comp1110.ass2;
 
+import gittest.C;
+
 import java.util.*;
 
 /**
@@ -130,7 +132,7 @@ public class StepsGame {
     // Maps the piecePlacementWellFormed method from task 1 onto the entire each piece placement
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
        for (int i = 0; i < arrayOfPlacements.size(); i++) {
-           System.out.println(arrayOfPlacements.get(i));
+           //System.out.println(arrayOfPlacements.get(i));
            if (!(isPiecePlacementWellFormed(arrayOfPlacements.get(i)))) {
                return false;
            }
@@ -318,30 +320,81 @@ public class StepsGame {
     // +9 = bottom left, +10 = directly below, +11 = bottom right
     public static boolean isPlacementSequenceValid(String placement) {
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
-        System.out.println(toString(flip(AA)));
+        //System.out.println(toString(flip(AA)));
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         String exclude = "ABCDEFGHIJKUTfpqrstuvwxyeo";
+        HashSet<Character> upperList = new HashSet<Character>();
         HashSet<Character> checkList = new HashSet<Character>();
         List<String> places = getPiecePlacements(placement);
         if (isPlacementWellFormed(placement)) {
             for (int i = 0; i < places.size(); i++) {
                 String x = places.get(i);
+                Character pieceOriginPeg = x.charAt(2);
                 System.out.println(x);
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
+                ArrayList<Character> upchars = new ArrayList<Character>();
                     for (int j = 0; j < 9; j++) {
                         if (transposed[j] != 0) {
-                            System.out.println(j);
-                            if (!boundaryCheck(x.charAt(2), j)) {
-                                System.out.println(x);
+                            //System.out.println(j);
+                            if (!boundaryCheck(pieceOriginPeg, j)) {
+                                //System.out.println(x);
                                 return false;
-                            } else if (checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]))) {
-                                checkList.add(all.charAt(all.indexOf(x.charAt(2)) + locationIndices[j]));
-                                System.out.println(checkList);
+                            } else if (transposed[j] == 1) {
+                                //System.out.println(x.charAt(2) + locationIndices[j]);
+                                Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
+                                System.out.println("currentChar: "+ currentChar);
+                                System.out.println("lower peg: " + currentChar);
+                                Character topChar = null;
+                                Character rightChar = null;
+                                Character botChar = null;
+                                Character leftChar = null;
+                                if (boundaryCheck(currentChar, 1)) {
+                                    System.out.println("upperlist at topchar: " + upperList);
+                                    topChar = all.charAt(all.indexOf(currentChar) -10);
+                                    if (upperList.contains(topChar)) {
+                                        System.out.println("topchar false" + ": " + topChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 3)) {
+                                    System.out.println("upperlist at leftchar: " + upperList);
+                                    leftChar = all.charAt(all.indexOf(currentChar) - 1 );
+                                    if (upperList.contains(leftChar)) {
+                                        System.out.println("leftchar false" + ": " + leftChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 5)) {
+                                    System.out.println("upperlist at rightchar: " + upperList);
+                                    rightChar = all.charAt(all.indexOf(currentChar) + 1 );
+                                    if (upperList.contains(rightChar)) {
+                                        System.out.println("rightchar false" + ": " + rightChar);
+                                        return false;
+                                    }
+                                }
+                                if (boundaryCheck(currentChar, 7)) {
+                                    System.out.println("upperlist at botchar: " + upperList);
+                                    botChar = all.charAt(all.indexOf(currentChar) + 10 );
+                                    if (upperList.contains(botChar)) {
+                                        System.out.println("botchar false" + ": " + botChar);
+                                        return false;
+                                    }
+                                }
+                            }
+                            else if (checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]))) {
+                                checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                                if (transposed[j] == 2) {
+                                    upchars.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                                    System.out.println("list of upper characters (not appended to upperlist yet) : " + upchars.toString());
+                                }
+                                //System.out.println(checkList);
                             } else {
                                 return false;
                             }
                         }
                     }
+                upperList.addAll(upchars);
+                System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
             }
         } else {return false;}
         return true;
@@ -397,7 +450,7 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-        System.out.println(isPlacementSequenceValid("CEQEHS"));
+        //System.out.println(isPlacementSequenceValid("CEQEHS"));
     }
 }
 

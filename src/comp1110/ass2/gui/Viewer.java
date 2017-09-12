@@ -67,7 +67,8 @@ public class Viewer extends Application {
             removePrevious();
             pegs.getChildren().add(labelx);
             makePegs();
-        } else {
+        }
+         else {
             List<String> traverse = StepsGame.getPiecePlacements(placement);
             drawPieces(traverse);
             makePegs();
