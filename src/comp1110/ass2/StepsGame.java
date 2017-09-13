@@ -1,9 +1,9 @@
 package comp1110.ass2;
 
+import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
 import java.util.*;
-
 /**
  * This class provides the text interface for the Steps Game
  *
@@ -413,8 +413,40 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
+        Set<String> possibleNextMoves = new HashSet<String>();
+        List<String> init = new ArrayList<String>();
+        List<String> end = getPiecePlacements(objective);
+        List<String> remainder = new ArrayList<String>();
+        if (!placement.isEmpty()) {
+            init = getPiecePlacements(placement);
+        }
+        for (int i = 0; i< end.size() ; i++) {
+            if (!init.contains(end.get(i))) {
+                remainder.add(end.get(i));
+            }
+        }
+        System.out.println("initial list: " + init);
+        System.out.println("objective list: " + end);
+        System.out.println("remainder list: " + remainder);
+        for (String piece : remainder) {
+            for (String otherPieces : remainder) {
+                if (piece == otherPieces) {
+                    continue;
+                }
+            }
+        }
+
+        possibleNextMoves.addAll(end);
+
+
         // FIXME Task 6: determine the correct order of piece placements
-        return null;
+        return possibleNextMoves;
+    }
+
+    static String backtrack(List<String> init, List<String> remainder) {
+        String output = init.toString();
+        return output;
+
     }
 
     /**
