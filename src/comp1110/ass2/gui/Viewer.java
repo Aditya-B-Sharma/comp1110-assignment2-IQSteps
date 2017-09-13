@@ -36,9 +36,9 @@ public class Viewer extends Application {
     private static final int COLS = 10;
     private static final int SQUARE_SIZE = 60;
     private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
-    private static final int VIEWER_WIDTH = 750;
+    private static final int VIEWER_WIDTH = 933;
     private static final int MARGINWIDTH = 650;
-    private static final int VIEWER_HEIGHT = 500;
+    private static final int VIEWER_HEIGHT = 700;
 
     private static final String URI_BASE = "assets/";
 
@@ -284,8 +284,10 @@ public class Viewer extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
-
         root.getChildren().addAll(pegs, placements, controls);
+        pegs.relocate(100, 80);
+        placements.relocate(100, 80);
+        controls.relocate(100, 0);
         makePegs();
         makeControls();
 
