@@ -330,7 +330,7 @@ public class StepsGame {
             for (int i = 0; i < places.size(); i++) {
                 String x = places.get(i);
                 Character pieceOriginPeg = x.charAt(2);
-                System.out.println(x);
+                //System.out.println(x);
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
                 ArrayList<Character> upchars = new ArrayList<Character>();
                     for (int j = 0; j < 9; j++) {
@@ -342,41 +342,41 @@ public class StepsGame {
                             } else if (transposed[j] == 1) {
                                 //System.out.println(x.charAt(2) + locationIndices[j]);
                                 Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
-                                System.out.println("currentChar: "+ currentChar);
-                                System.out.println("lower peg: " + currentChar);
+                                //System.out.println("currentChar: "+ currentChar);
+                                //System.out.println("lower peg: " + currentChar);
                                 Character topChar = null;
                                 Character rightChar = null;
                                 Character botChar = null;
                                 Character leftChar = null;
                                 if (boundaryCheck(currentChar, 1)) {
-                                    System.out.println("upperlist at topchar: " + upperList);
+                                    //System.out.println("upperlist at topchar: " + upperList);
                                     topChar = all.charAt(all.indexOf(currentChar) -10);
                                     if (upperList.contains(topChar)) {
-                                        System.out.println("topchar false" + ": " + topChar);
+                                        //System.out.println("topchar false" + ": " + topChar);
                                         return false;
                                     }
                                 }
                                 if (boundaryCheck(currentChar, 3)) {
-                                    System.out.println("upperlist at leftchar: " + upperList);
+                                    //System.out.println("upperlist at leftchar: " + upperList);
                                     leftChar = all.charAt(all.indexOf(currentChar) - 1 );
                                     if (upperList.contains(leftChar)) {
-                                        System.out.println("leftchar false" + ": " + leftChar);
+                                        //System.out.println("leftchar false" + ": " + leftChar);
                                         return false;
                                     }
                                 }
                                 if (boundaryCheck(currentChar, 5)) {
-                                    System.out.println("upperlist at rightchar: " + upperList);
+                                    //System.out.println("upperlist at rightchar: " + upperList);
                                     rightChar = all.charAt(all.indexOf(currentChar) + 1 );
                                     if (upperList.contains(rightChar)) {
-                                        System.out.println("rightchar false" + ": " + rightChar);
+                                        //System.out.println("rightchar false" + ": " + rightChar);
                                         return false;
                                     }
                                 }
                                 if (boundaryCheck(currentChar, 7)) {
-                                    System.out.println("upperlist at botchar: " + upperList);
+                                    //System.out.println("upperlist at botchar: " + upperList);
                                     botChar = all.charAt(all.indexOf(currentChar) + 10 );
                                     if (upperList.contains(botChar)) {
-                                        System.out.println("botchar false" + ": " + botChar);
+                                        //System.out.println("botchar false" + ": " + botChar);
                                         return false;
                                     }
                                 }
@@ -385,7 +385,7 @@ public class StepsGame {
                                 checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
                                 if (transposed[j] == 2) {
                                     upchars.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
-                                    System.out.println("list of upper characters (not appended to upperlist yet) : " + upchars.toString());
+                                    //System.out.println("list of upper characters (not appended to upperlist yet) : " + upchars.toString());
                                 }
                                 //System.out.println(checkList);
                             } else {
@@ -394,7 +394,7 @@ public class StepsGame {
                         }
                     }
                 upperList.addAll(upchars);
-                System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
+                //System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
             }
         } else {return false;}
         return true;
@@ -412,9 +412,92 @@ public class StepsGame {
      * @param objective A valid game objective, but not necessarily a valid placement string
      * @return An set of viable piece placements
      */
+
     static Set<String> getViablePiecePlacements(String placement, String objective) {
+        Set<String> allowedPlacements = new HashSet<>();                  // The Set in which valid next moves are added to
+        ArrayList<String> pos = new ArrayList<>(getPiecePlacements(getUnusedPieces(placement, objective))); // Possible viable pieces as an array
+        String[] posMoves = possibleMoves(permute(pos));                                                    // Array of first pieces of each permutation
+        List<String> unused = new ArrayList<>(getPiecePlacements(getUnusedPieces(placement, objective)));   // Finds unused pieces
+        String[] allPerms = allPermutations(permute(unused));                                               // Finds permutations of unused pieces so they can be tested whether valid or not
+        String[] possibleSolns = possibleSolutions(allPerms, placement);                                    // Placement is appended to each permutation of possible sequences
+        for (int i = 0; i < possibleSolns.length; i++) {
+            if (isPlacementSequenceValid(possibleSolns[i])) {
+                allowedPlacements.add(posMoves[i]);
+            }
+        }
         // FIXME Task 6: determine the correct order of piece placements
-        return null;
+        return allowedPlacements;
+    }
+
+    // Finds all possible next moves
+    static String[] possibleMoves (ArrayList<List<String>> permutations) {
+        String[] out = new String[permutations.size()];
+        for (int i = 0; i < permutations.size(); i++) {
+            out[i] = permutations.get(i).get(0);
+        }
+        return out;
+    }
+
+    // Finds permutations of shapes
+    static ArrayList<List<String>> permute(List<String> unused) {
+        if (unused.size() == 0) {
+            ArrayList<List<String>> result = new ArrayList<>();
+            result.add(new ArrayList<>());
+            return result;
+        }
+        String firstElement = unused.remove(0);
+        ArrayList<List<String>> out = new ArrayList<>();
+        List<List<String>> permutations = permute(unused);
+        for (List<String> smallerPermutated : permutations) {
+            for (int index = 0; index <= smallerPermutated.size(); index++) {
+                List<String> temp = new ArrayList<>(smallerPermutated);
+                temp.add(index, firstElement);
+                out.add(temp);
+            }
+        }
+        return out;
+    }
+
+    //Gives possible solutions
+    static String[] possibleSolutions(String[] permutations, String placement) {
+        String[] out = new String[permutations.length];
+        for (int i = 0; i < permutations.length; i++) {
+            out[i] = placement + permutations[i];
+        }
+        return out;
+    }
+
+    // Puts all the permutations into a string
+    static String[] allPermutations (ArrayList<List<String>> in) {
+        String[] out = new String[in.size()];
+        for (int i = 0; i < in.size(); i++) {
+            out[i] = join(in.get(i));
+        }
+        return out;
+    }
+
+    // Joins set of permutations
+    static String join (List<String> inn) {
+        String out = "";
+        for (String s : inn) {
+            out += s;
+        }
+        return out;
+    }
+
+    //Finds unsed pieces
+    static String getUnusedPieces(String placement, String objective) {
+        String[] obj = objective.split("(?<=\\G.{3})");     //Pieces of in objective
+        String[] place = placement.split("(?<=\\G.{3})");   // Pieces in placement
+        ArrayList<String> out = new ArrayList<>(Arrays.asList(obj));
+        String out2 = "";
+        for (int i = 0; i < place.length; i++) {
+            out.remove(place[i]);
+        }
+        for (int j = 0; j < out.size(); j++) {
+            out2+=out.get(j);
+        }
+        return out2;
     }
 
     /**
@@ -441,7 +524,9 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-        //System.out.println(isPlacementSequenceValid("CEQEHS"));
+        String objective = "DBgGAiFCNBGKCFlAFnHHSECP";
+        String placement = "BGKFCNCFl";
+        System.out.println(getViablePiecePlacements(placement, objective));
     }
 }
 
