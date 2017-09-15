@@ -1,9 +1,9 @@
 package comp1110.ass2;
 
+import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
 import java.util.*;
-
 /**
  * This class provides the text interface for the Steps Game
  *
@@ -413,19 +413,10 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
     static Set<String> getViablePiecePlacements(String placement, String objective) {
-        List<String> unusedPieces = getUnusedPieces(placement, objective);
         // FIXME Task 6: determine the correct order of piece placements
         return null;
     }
-    static List<String> getUnusedPieces(String placement, String objective) {
-        String[] obj = objective.split("(?<=\\G.{3})");
-        String[] place = placement.split("(?<=\\G.{3})");
-        List<String> out = new ArrayList<>(Arrays.asList(obj));
-        for (int i = 0; i < place.length; i++) {
-            out.remove(place[i]);
-        }
-        return out;
-    }
+
     /**
      * Return an array of all unique (unordered) solutions to the game, given a
      * starting placement.   A given unique solution may have more than one than
