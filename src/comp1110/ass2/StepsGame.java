@@ -4,6 +4,8 @@ import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
 import java.util.*;
+import java.util.concurrent.TimeoutException;
+
 /**
  * This class provides the text interface for the Steps Game
  *
@@ -416,62 +418,76 @@ public class StepsGame {
     static Set<String> getViablePiecePlacements(String placement, String objective) {
         Set<String> allowedPlacements = new HashSet<>();                  // The Set in which valid next moves are added to
         ArrayList<String> pos = new ArrayList<>(getPiecePlacements(getUnusedPieces(placement, objective))); // Possible viable pieces as an array
-        String[] posMoves = possibleMoves(permute(pos));                                                    // Array of first pieces of each permutation
+        String[] posMoves = possibleMoves(permute(pos, placement));                                                    // Array of first pieces of each permutation
         List<String> unused = new ArrayList<>(getPiecePlacements(getUnusedPieces(placement, objective)));   // Finds unused pieces
-        String[] allPerms = allPermutations(permute(unused));                                               // Finds permutations of unused pieces so they can be tested whether valid or not
-        String[] possibleSolns = possibleSolutions(allPerms, placement);                                    // Placement is appended to each permutation of possible sequences
-        for (int i = 0; i < possibleSolns.length; i++) {
-            if (isPlacementSequenceValid(possibleSolns[i])) {
+        String[] allPerms = allPermutations(permute(unused, placement), placement);                                               // Finds permutations of unused pieces so they can be tested whether valid or not
+        //String[] possibleSolns = possibleSolutions(allPerms, placement);                                    // Placement is appended to each permutation of possible sequences
+        for (int i = 0; i < allPerms.length; i++) {
+            if (isPlacementSequenceValid(allPerms[i])) {
                 allowedPlacements.add(posMoves[i]);
             }
         }
         // FIXME Task 6: determine the correct order of piece placements
+        //System.out.println("placement string: " + placement + " | allowed placements: " + allowedPlacements + " | objective string: " + objective );
         return allowedPlacements;
     }
 
     // Finds all possible next moves
     static String[] possibleMoves (ArrayList<List<String>> permutations) {
-        String[] out = new String[permutations.size()];
-        for (int i = 0; i < permutations.size(); i++) {
+        int permSize = permutations.size();
+        String[] out = new String[permSize];
+        for (int i = 0; i < permSize; i++) {
             out[i] = permutations.get(i).get(0);
         }
         return out;
     }
 
     // Finds permutations of shapes
-    static ArrayList<List<String>> permute(List<String> unused) {
+    static ArrayList<List<String>> permute(List<String> unused, String placement) {
+        ArrayList<List<String>> out = new ArrayList<>();
         if (unused.size() == 0) {
-            ArrayList<List<String>> result = new ArrayList<>();
-            result.add(new ArrayList<>());
-            return result;
+            out.add(new ArrayList<>());
+            return out;
         }
         String firstElement = unused.remove(0);
-        ArrayList<List<String>> out = new ArrayList<>();
-        List<List<String>> permutations = permute(unused);
+        List<List<String>> permutations = permute(unused, placement);
+        //System.out.println(permutations);
         for (List<String> smallerPermutated : permutations) {
             for (int index = 0; index <= smallerPermutated.size(); index++) {
                 List<String> temp = new ArrayList<>(smallerPermutated);
+                if (!firstElement.isEmpty()) {
                 temp.add(index, firstElement);
+                if (isPlacementSequenceValid(placement + join(temp))) {
+                System.out.println(temp);
                 out.add(temp);
+                }
+                }
             }
         }
+        //System.out.println(out);
         return out;
     }
 
     //Gives possible solutions
     static String[] possibleSolutions(String[] permutations, String placement) {
-        String[] out = new String[permutations.length];
-        for (int i = 0; i < permutations.length; i++) {
+        int length = permutations.length;
+        String[] out = new String[length];
+        for (int i = 0; i < length; i++) {
+            //if (isPlacementSequenceValid(placement + permutations[i])) {
             out[i] = placement + permutations[i];
+            //System.out.println(out[i]);
+            //}
         }
         return out;
     }
 
     // Puts all the permutations into a string
-    static String[] allPermutations (ArrayList<List<String>> in) {
-        String[] out = new String[in.size()];
-        for (int i = 0; i < in.size(); i++) {
-            out[i] = join(in.get(i));
+    static String[] allPermutations (ArrayList<List<String>> in, String placement) {
+        int inSize = in.size();
+        String[] out = new String[inSize];
+        for (int i = 0; i < inSize; i++) {
+            out[i] =  placement + join(in.get(i));
+            //System.out.println(out[i]);
         }
         return out;
     }
