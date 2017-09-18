@@ -3,6 +3,7 @@ package comp1110.ass2;
 import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 
@@ -510,12 +511,15 @@ public class StepsGame {
         // All possible moves each piece can take
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
 
+        //All possible moves each REMAINING piece can take
+        ArrayList<String> remainingMoves = updateRemainingMovies(placement, possibleMoves);
+
         /* STEP 2) INITIALIZE CONTAINERS FOR UPDATING AVAILABLE LOCATIONS AND POSSIBLE MOVE FOR REMAINING PIECES */
 
         // Updated data structures for available locations and possible moves for remaining pieces
         ArrayList<String> availableLocations;
-        ArrayList<String> updatedPossibleMoves;
-
+        ArrayList<String> updatedRemainingMoves;
+        System.out.println(possibleMoves);
         return null;
     }
 
@@ -532,6 +536,19 @@ public class StepsGame {
         return possibleMoves;
     }
 
+    static ArrayList<String> updateRemainingMovies(String placement, ArrayList<String> moves) {
+        /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH REMAINING PIECE */
+        ArrayList<String> remainingMoves = moves;
+        char[] placementChars = placement.toCharArray();
+        for (String p : moves) {
+            char[] characters = p.toCharArray();
+            if (characters[0] == placementChars[0]) {
+                remainingMoves.remove(p);
+            }
+        }
+        return remainingMoves;
+    }
+
 /*//    private static String solution(String placement) {
 //
 //        return null;
@@ -542,6 +559,8 @@ public class StepsGame {
         String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
         String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
         System.out.println(getViablePiecePlacements(placement, objective));
+        getSolutions("BGS");
+        System.out.println(isPlacementSequenceValid("AEg"));
     }
 }
 
