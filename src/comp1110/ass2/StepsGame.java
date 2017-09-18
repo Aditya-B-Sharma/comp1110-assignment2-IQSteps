@@ -491,20 +491,56 @@ public class StepsGame {
      */
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-       ArrayList<String> solutions = new ArrayList<>();
-       String[] output = new String[solutions.size()];
-       Set<String> viablePiecePlacements = getViablePiecePlacements(placement, solution(placement));
-       return null;
-    }
+        String[] output;
 
-    private static String solution(String placement) {
+        /* STEP 1) STORE ALL POSSIBLE PIECE PLACEMENTS IN A DATA STRUCTURE */
+
+        // All the pieces and their variations
+        String[] shapesAndOrientations = {"AA","AB","AC","AD","AE","AF","AG","AH",
+                                          "BA","BB","BC","BD","BE","BF","BG","BH",
+                                          "CA","CB","CC","CD","CE","CF","CG","CH",
+                                          "DA","DB","DC","DD","DE","DF","DG","DH",
+                                          "EA","EB","EC","ED","EE","EF","EG","EH",
+                                          "FA","FB","FC","FD","FE","FF","FG","FH",
+                                          "GA","GB","GC","GD","GE","GF","GG","GH",
+                                          "HA","HB","HC","HD","HE","HF","HG","HH"};
+        // All locations
+        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
+                              "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
+        // All possible moves each piece can take
+        ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
+
+        /* STEP 2) INITIALIZE CONTAINERS FOR UPDATING AVAILABLE LOCATIONS AND POSSIBLE MOVE FOR REMAINING PIECES */
+
+        // Updated data structures for available locations and possible moves for remaining pieces
+        ArrayList<String> availableLocations;
+        ArrayList<String> updatedPossibleMoves;
+
         return null;
     }
 
+    static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
+        /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH INDIVIDUAL PIECE */
+        ArrayList<String> possibleMoves = new ArrayList<>();
+        for (String s : shapesAndOrientations) {
+            for (String l : locations) {
+                if (isPlacementSequenceValid(s + l)) {
+                    possibleMoves.add(s + l);
+                }
+            }
+        }
+        return possibleMoves;
+    }
+
+/*//    private static String solution(String placement) {
+//
+//        return null;
+//    }*/
+
 
     public static void main(String[] args) {
-        String objective = "DBgGAiFCNBGKCFlAFnHHSECP";
-        String placement = "BGKFCNCFl";
+        String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
+        String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
         System.out.println(getViablePiecePlacements(placement, objective));
     }
 }
