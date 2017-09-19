@@ -549,11 +549,6 @@ public class StepsGame {
         return remainingMoves;
     }
 
-/*//    private static String solution(String placement) {
-//
-//        return null;
-//    }*/
-
 
     public static void main(String[] args) {
         String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
