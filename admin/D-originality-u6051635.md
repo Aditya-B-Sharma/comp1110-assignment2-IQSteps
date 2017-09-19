@@ -4,5 +4,5 @@ I declare that the work I have submitted for Stage D of this assignment and all 
 
 * The code in class <...> uses an idea suggested by <...>
 
-Signed: Stefan (u6051635)
+Signed: Stefan Louie (u6051635)
  
