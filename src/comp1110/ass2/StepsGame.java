@@ -92,7 +92,7 @@ public class StepsGame {
         return false;
     }
     // Method collects shapes in the placements.
-    private static String collector (String in) {
+    public static String collector (String in) {
         StringBuilder initial = new StringBuilder();
         for (int i = 0; i < in.length(); i++) {
             if (i % 3 == 0)
@@ -465,7 +465,7 @@ public class StepsGame {
     }
 
     //Finds unused pieces
-    private static String getUnusedPieces(String placement, String objective) {
+    public static String getUnusedPieces(String placement, String objective) {
         String[] obj = objective.split("(?<=\\G.{3})");     //Pieces of in objective
         String[] place = placement.split("(?<=\\G.{3})");   // Pieces in placement
         ArrayList<String> out = new ArrayList<>(Arrays.asList(obj));

@@ -63,10 +63,10 @@ public class Viewer extends Application {
             removePrevious();
             pegs.getChildren().add(labelx);
             makePegs();
-        } else if (!StepsGame.isPlacementSequenceValid(placement)){
-            removePrevious();
-            pegs.getChildren().add(labelx);
-            makePegs();
+//        } else if (!StepsGame.isPlacementSequenceValid(placement)){
+//            removePrevious();
+//            pegs.getChildren().add(labelx);
+//            makePegs();
         }
          else {
             List<String> traverse = StepsGame.getPiecePlacements(placement);
@@ -258,7 +258,7 @@ public class Viewer extends Application {
             public void handle(ActionEvent e) {
                 removePrevious();
                 makePlacement(textField.getText());
-                textField.clear();
+                //textField.clear();
             }
         });
         textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -267,7 +267,7 @@ public class Viewer extends Application {
                 if (event.getCode().equals(KeyCode.ENTER)){
                     removePrevious();
                     makePlacement(textField.getText());
-                    textField.clear();
+                    //textField.clear();
                 }
             }
         });
