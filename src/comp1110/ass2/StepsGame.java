@@ -3,9 +3,7 @@ package comp1110.ass2;
 import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.TimeoutException;
 
 /**
  * This class provides the text interface for the Steps Game
@@ -150,7 +148,7 @@ public class StepsGame {
     // this uses our explicit definitions of the pieces and changes them to make the piece given in placements
     // i.e to make AA -> AB or to make AA-> AE
 
-    private static int[] transpose(int[] turn){
+    public static int[] transpose(int[] turn){
         int[] output = new int[9];
         output[0] = turn[6];
         output[1] = turn[3];
@@ -164,8 +162,12 @@ public class StepsGame {
         return output;
     }
 
+
+
+
+
     // flips the int array, i.e. mirrors the array
-    private static int[] flip(int[] turn){
+    public static int[] flip(int[] turn){
         int[] output = new int[9];
         output[0] = turn[2];
         output[1] = turn[1];
@@ -198,7 +200,7 @@ public class StepsGame {
     }
 
     // Transposes or flips a piece placement n number of times.
-    private static int[] transposeAmount(String piece){
+    public static int[] transposeAmount(String piece){
         int[] root = new int[9];
         int spinBy = 0;
         boolean flip = false;
@@ -548,11 +550,6 @@ public class StepsGame {
         }
         return remainingMoves;
     }
-
-/*//    private static String solution(String placement) {
-//
-//        return null;
-//    }*/
 
 
     public static void main(String[] args) {
