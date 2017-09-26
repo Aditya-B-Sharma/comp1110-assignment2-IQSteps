@@ -21,12 +21,41 @@ public class getPossibleMoves {
     String[] testSimpleMoves2 = {"DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm"};
     String[] testSimpleMoves3 = {"GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
 
+    String[] testMultiple = {"BA","GG","HF"};
+    String[] testMultipleMoves = {"BAL","BAN","BAP","BAR","BAU","BAW","BAY","BAb","BAd","BAg","BAi","BAk","BAm","GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn",
+                                  "HFM","HFO","HFQ","HFS","HFV","HFX","HFa","HFc","HFh","HFj","HFl","HFn"};
+    String[] testMultiple2 = {"AA","DD","GG"};
+    String[] testMultipleMoves2 = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
+                                      "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
+
+    String[] invalidMovesArray = {"AAL","HFQ","AAM", "GGG", "BBB"};
+
     @Test
     public void testSimple() {
-        assertTrue("Failed to get all possible moves, or has an invalid piece placement.", Arrays.equals((StepsGame.getPossibleMoves(testSimple,locations).toArray()),testSimpleMoves));
-        assertTrue("Failed to get all possible moves, or has an invalid piece placement.", Arrays.equals((StepsGame.getPossibleMoves(testSimple2,locations).toArray()),testSimpleMoves2));
-        //assertTrue("Failed to get all possible moves, or has an invalid piece placement.", Arrays.equals((StepsGame.getPossibleMoves(testSimple3,locations).toArray()),testSimpleMoves3));
-        //assertTrue("Failed to get all possible moves, or has an invalid piece placement.", Arrays.equals(testSimpleMovesL2.toArray(),testSimpleMoves2));
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple,locations).toArray()),testSimpleMoves));
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple2,locations).toArray()),testSimpleMoves2));
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves3) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple3,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple3,locations).toArray()),testSimpleMoves3));
+    }
+
+    @Test
+    public void testMultiple() {
+        assertTrue("Expected " + Arrays.toString(testMultipleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple,locations).toArray()),testMultipleMoves));
+        assertTrue("Expected " + Arrays.toString(testMultipleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple2,locations).toArray()),testMultipleMoves2));
+    }
+
+    public boolean isPlacementsValid(String[] possibleMoves) {
+        for (String p : possibleMoves) {
+            if (!StepsGame.isPlacementSequenceValid(p)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Test
+    public void allValidPlacements() {
+        assertFalse("List of possible placements for each shape contains an invalid piece placement.", isPlacementsValid(invalidMovesArray));
+        assertTrue("List of possible placements for each shape contains an invalie piece placement.", isPlacementsValid(testMultipleMoves));
     }
 
 }
