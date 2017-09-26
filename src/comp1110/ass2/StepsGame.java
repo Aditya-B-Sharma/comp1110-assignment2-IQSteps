@@ -314,6 +314,7 @@ public class StepsGame {
         return true;
     }
 
+
     // check if a placement is valid by first checking wellformed and then transposing our variable root pieces as needed,
     // the doing our boundary check wherever our piece has a 1 or 2, (meaning there would be a circle there)
     // then look through our ALL string containing all positions and apply the relative index location indices
@@ -325,6 +326,7 @@ public class StepsGame {
     public static boolean isPlacementSequenceValid(String placement) {
         // String of all possible positions on the board
         String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
+        String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         // Location from origin of piece - depends on indexing tis variable
         int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
         //System.out.println(toString(flip(AA)));
@@ -347,6 +349,9 @@ public class StepsGame {
 
                             else if (transposed[j] == 1) {
                                 Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
+                                if (!pegs.contains(currentChar+"")) {
+                                    return false;
+                                }
                                 if (boundaryCheck(currentChar, 1)) {
                                     Character topChar = all.charAt(all.indexOf(currentChar) -10);
                                     if (upperList.contains(topChar)) {
@@ -568,7 +573,7 @@ public class StepsGame {
         //getSolutions("BGS");
         //System.out.println(isPlacementSequenceValid("AEg"));
         //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
-        System.out.println(isValid("AAO"));
+        System.out.println(isPlacementSequenceValid("AAM"));
     }
 }
 
