@@ -575,6 +575,7 @@ public class StepsGame {
         System.out.println(isPlacementSequenceValid("AAMBGS"));
         //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
         System.out.println(isValid("AAO"));
+
     }
 }
 
