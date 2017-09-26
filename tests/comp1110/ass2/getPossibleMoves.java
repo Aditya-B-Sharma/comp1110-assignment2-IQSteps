@@ -15,7 +15,7 @@ public class getPossibleMoves {
     String[] testSimple = {"AA"};
     String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
             "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
-    String[] testSimpleMoves = {"AAL","AAN","AAP","AAR","AAW","AAY",};
+    String[] testSimpleMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm"};
 
     @Test
     public void testSimple() {
