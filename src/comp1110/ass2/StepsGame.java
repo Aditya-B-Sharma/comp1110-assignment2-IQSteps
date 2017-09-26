@@ -134,6 +134,15 @@ public class StepsGame {
         return true;
     }
 
+    private static boolean mapisValid(List<String> arrayOfPlacements) {
+        for (String item : arrayOfPlacements) {
+            if (!(isValid(item))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
      * sequence must be well-formed and each piece placement must be a valid placement
@@ -534,7 +543,7 @@ public class StepsGame {
                     possibleMoves.add(s + l);
                 }
             }
-        };
+        }
         return possibleMoves;
     }
 
@@ -564,6 +573,8 @@ public class StepsGame {
         System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
         System.out.println(getPossibleMoves(testSimple,locations));
         System.out.println(isPlacementSequenceValid("AAMBGS"));
+        //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+        System.out.println(isValid("AAO"));
     }
 }
 
