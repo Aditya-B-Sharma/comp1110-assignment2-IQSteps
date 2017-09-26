@@ -534,7 +534,7 @@ public class StepsGame {
                     possibleMoves.add(s + l);
                 }
             }
-        }
+        };
         return possibleMoves;
     }
 
@@ -558,7 +558,12 @@ public class StepsGame {
         //System.out.println(getViablePiecePlacements(placement, objective));
         //getSolutions("BGS");
         //System.out.println(isPlacementSequenceValid("AEg"));
+        String[] testSimple = {"AA"};
+        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
+                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
         System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+        System.out.println(getPossibleMoves(testSimple,locations));
+        System.out.println(isPlacementSequenceValid("AAMBGS"));
     }
 }
 
