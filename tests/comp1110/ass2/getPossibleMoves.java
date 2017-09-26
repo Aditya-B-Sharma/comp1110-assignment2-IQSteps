@@ -12,6 +12,7 @@ import java.util.Arrays;
  */
 public class getPossibleMoves {
 
+    /* Sample test cases and their solutions */
     String[] testSimple = {"AA"};
     String[] testSimple2 = {"DD"};
     String[] testSimple3 = {"GG"};
@@ -30,19 +31,7 @@ public class getPossibleMoves {
 
     String[] invalidMovesArray = {"AAL","HFQ","AAM", "GGG", "BBB"};
 
-    @Test
-    public void testSimple() {
-        assertTrue("Expected " + Arrays.toString(testSimpleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple,locations).toArray()),testSimpleMoves));
-        assertTrue("Expected " + Arrays.toString(testSimpleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple2,locations).toArray()),testSimpleMoves2));
-        assertTrue("Expected " + Arrays.toString(testSimpleMoves3) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple3,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple3,locations).toArray()),testSimpleMoves3));
-    }
-
-    @Test
-    public void testMultiple() {
-        assertTrue("Expected " + Arrays.toString(testMultipleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple,locations).toArray()),testMultipleMoves));
-        assertTrue("Expected " + Arrays.toString(testMultipleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple2,locations).toArray()),testMultipleMoves2));
-    }
-
+    /* Checks if each individual piece placement in the array argument is a valid placement */
     public boolean isPlacementsValid(String[] possibleMoves) {
         for (String p : possibleMoves) {
             if (!StepsGame.isPlacementSequenceValid(p)) {
@@ -52,10 +41,25 @@ public class getPossibleMoves {
         return true;
     }
 
+    /* Tests to see if the method in StepsGame actually returns an appropriate list, with all piece placements being valid */
     @Test
     public void allValidPlacements() {
         assertFalse("List of possible placements for each shape contains an invalid piece placement.", isPlacementsValid(invalidMovesArray));
         assertTrue("List of possible placements for each shape contains an invalie piece placement.", isPlacementsValid(testMultipleMoves));
     }
 
+    /* Tests to see if the simple cases gives the list containing all the possible LEGAL piece placements */
+    @Test
+    public void testSimple() {
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple,locations).toArray()),testSimpleMoves));
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple2,locations).toArray()),testSimpleMoves2));
+        assertTrue("Expected " + Arrays.toString(testSimpleMoves3) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testSimple3,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testSimple3,locations).toArray()),testSimpleMoves3));
+    }
+
+    /* Tests to see if the cases with multiple shapes gives the list containing all the possible LEGAL piece placements */
+    @Test
+    public void testMultiple() {
+        assertTrue("Expected " + Arrays.toString(testMultipleMoves) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple,locations).toArray()),testMultipleMoves));
+        assertTrue("Expected " + Arrays.toString(testMultipleMoves2) + " but got" + Arrays.toString(StepsGame.getPossibleMoves(testMultiple2,locations).toArray()), Arrays.equals((StepsGame.getPossibleMoves(testMultiple2,locations).toArray()),testMultipleMoves2));
+    }
 }
