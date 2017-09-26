@@ -554,15 +554,15 @@ public class StepsGame {
 
     static ArrayList<String> updateRemainingMovies(String placement, ArrayList<String> moves) {
         /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH REMAINING PIECE */
-        ArrayList<String> remainingMoves = moves;
+        //ArrayList<String> remainingMoves = moves;
         char[] placementChars = placement.toCharArray();
         for (String p : moves) {
             char[] characters = p.toCharArray();
             if (characters[0] == placementChars[0]) {
-                remainingMoves.remove(p);
+                moves.remove(p);
             }
         }
-        return remainingMoves;
+        return moves;
     }
 
 
@@ -582,6 +582,11 @@ public class StepsGame {
         System.out.println(isValid("AAO"));
 
         System.out.println(isPlacementSequenceValid("AAM"));
+        String test = "AAL";
+        String[] originalMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
+                "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
+        ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
+        System.out.println(updateRemainingMovies(test,testList));
     }
 }
 
