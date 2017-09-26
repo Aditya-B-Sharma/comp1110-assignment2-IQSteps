@@ -40,14 +40,14 @@ public class updateRemainingMoves {
     public void testOneStartingPlacement() {
         ArrayList<String> moves = new ArrayList<>(Arrays.asList(original));
         ArrayList<String> moves2 = new ArrayList<>(Arrays.asList(original2));
-        assertTrue("", Arrays.equals(StepsGame.updateRemainingMovies(test,moves).toArray(),remaining));
-        assertTrue("", Arrays.equals(StepsGame.updateRemainingMovies(test2,moves2).toArray(),remaining2));
+        assertTrue("Expected " + Arrays.toString(remaining) + " but got" + Arrays.toString(StepsGame.updateRemainingMovies(test,moves).toArray()), Arrays.equals(StepsGame.updateRemainingMovies(test,moves).toArray(),remaining));
+        assertTrue("Expected " + Arrays.toString(remaining2) + " but got" + Arrays.toString(StepsGame.updateRemainingMovies(test2,moves2).toArray()), Arrays.equals(StepsGame.updateRemainingMovies(test2,moves2).toArray(),remaining2));
     }
 
     /* Test for multiple starting piece placements given. */
     @Test
     public void testMultipleStartingPlacements() {
         ArrayList<String> moves3 = new ArrayList<>(Arrays.asList(original3));
-        assertTrue("", Arrays.equals(StepsGame.updateRemainingMovies(test3,moves3).toArray(),remaining3));
+        assertTrue("Expected " + Arrays.toString(remaining3) + " but got" + Arrays.toString(StepsGame.updateRemainingMovies(test3,moves3).toArray()), Arrays.equals(StepsGame.updateRemainingMovies(test3,moves3).toArray(),remaining3));
     }
 }
