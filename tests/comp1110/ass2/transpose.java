@@ -34,10 +34,10 @@ import static org.junit.Assert.assertFalse;
 
 public class transpose {
 
-    int[] simple = {1,2,3,4,5,6,7,8,9};
-    int[] simpleRotatedOnce = {7,4,1,8,5,2,9,6,3};
-    int[] simpleRotatedTwice = {9,8,7,6,5,4,3,2,1};
-    int[] simpleRotatedThrice = {3,6,9,2,5,8,1,4,7};
+    int[] simple = {1,2,0,2,1,2,1,0,0};
+    int[] simpleRotatedOnce = {1,2,1,0,1,2,0,2,0};
+    int[] simpleRotatedTwice = {0,0,1,2,1,2,0,2,1};
+    int[] simpleRotatedThrice = {0,2,0,2,1,0,1,2,1};
     int[] simpleRotatedFour = simple;
 
     int[] rotOnce = StepsGame.transpose(simple);
@@ -62,6 +62,7 @@ public class transpose {
 
     @Test
     public void testSimple() {
+        System.out.println();
         assertTrue(s + " transposed 90 degrees should be " + s1 + " but was " + r1, Arrays.equals(rotOnce, simpleRotatedOnce));
     }
 

@@ -553,11 +553,12 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-        String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
-        String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
-        System.out.println(getViablePiecePlacements(placement, objective));
-        getSolutions("BGS");
-        System.out.println(isPlacementSequenceValid("AEg"));
+        //String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
+        //String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
+        //System.out.println(getViablePiecePlacements(placement, objective));
+        //getSolutions("BGS");
+        //System.out.println(isPlacementSequenceValid("AEg"));
+        System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
     }
 }
 
