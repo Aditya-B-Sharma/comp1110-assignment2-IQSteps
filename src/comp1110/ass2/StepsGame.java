@@ -134,6 +134,15 @@ public class StepsGame {
         return true;
     }
 
+    private static boolean mapisValid(List<String> arrayOfPlacements) {
+        for (String item : arrayOfPlacements) {
+            if (!(isValid(item))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Determine whether a placement sequence is valid.  To be valid, the placement
      * sequence must be well-formed and each piece placement must be a valid placement
@@ -322,7 +331,7 @@ public class StepsGame {
         HashSet<Character> upperList = new HashSet<>();
         HashSet<Character> checkList = new HashSet<>();
         List<String> places = getPiecePlacements(placement);
-        if (isPlacementWellFormed(placement)) {
+        if (isPlacementWellFormed(placement) && mapisValid(getPiecePlacements(placement))) {
             for (String x : places) {
 
                 Character pieceOriginPeg = x.charAt(2);
@@ -558,7 +567,8 @@ public class StepsGame {
         //System.out.println(getViablePiecePlacements(placement, objective));
         //getSolutions("BGS");
         //System.out.println(isPlacementSequenceValid("AEg"));
-        System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+        //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+        System.out.println(isValid("AAO"));
     }
 }
 
