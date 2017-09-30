@@ -39,5 +39,4 @@ public class GetUnusedPiecesTest {
     public void testEmptyPlacement() {
         assertTrue("For empty placement, expected " + unused3 + " but got: " + StepsGame.getUnusedPieces(emptPlace, obj), unused3.equals(StepsGame.getUnusedPieces(emptPlace, obj)));
     }
-
 }
