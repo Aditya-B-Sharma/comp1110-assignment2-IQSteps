@@ -1,11 +1,21 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
+
+    class Piece extends ImageView {
+
+        public Piece() {
+        }
+
+    }
+
+
 
 
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places

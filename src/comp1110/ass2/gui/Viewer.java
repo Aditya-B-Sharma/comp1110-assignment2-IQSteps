@@ -39,7 +39,6 @@ public class Viewer extends Application {
     private static final int VIEWER_WIDTH = 933;
     private static final int MARGINWIDTH = 650;
     private static final int VIEWER_HEIGHT = 700;
-
     private static final String URI_BASE = "assets/";
 
     //Create needed groups for different elements
