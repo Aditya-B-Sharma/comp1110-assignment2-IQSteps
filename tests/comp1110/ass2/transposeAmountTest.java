@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 
-public class transposeAmount {
+public class transposeAmountTest {
 
     int[] AA = {1,2,0,2,1,2,1,0,0};
     int[] AE = {0, 1, 2, 1, 2, 1, 0, 0, 2};

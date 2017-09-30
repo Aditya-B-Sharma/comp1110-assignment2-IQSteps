@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 
-public class flip {
+public class flipTest {
 
     int[] simple = {1,2,0,2,1,2,1,0,0};
     int[] simpleFlippedOnce = {0, 1, 2, 1, 2, 1, 0, 0, 2};
