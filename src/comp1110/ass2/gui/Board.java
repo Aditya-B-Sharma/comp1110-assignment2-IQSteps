@@ -33,7 +33,7 @@ public class Board extends Application {
             if (!(shape.charAt(0) >= 'A' && shape.charAt(0) <= 'H')) {
                 throw new IllegalArgumentException("Bad shape: \"" + shape + "\"");
             }
-            setImage(new Image(ViewerTesting.class.getResourceAsStream(URI_BASE + shape + ".png").toString()));
+            setImage(new Image(Board.class.getResourceAsStream(URI_BASE + shape + ".png").toString()));
 //                this.shape = shape-65;
             setFitHeight(PIECE_IMAGE_SIZE);
             setFitWidth(PIECE_IMAGE_SIZE);
