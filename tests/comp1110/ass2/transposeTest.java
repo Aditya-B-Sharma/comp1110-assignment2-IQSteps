@@ -32,7 +32,7 @@ import static org.junit.Assert.assertFalse;
  */
 
 
-public class transpose {
+public class transposeTest {
 
     int[] simple = {1,2,0,2,1,2,1,0,0};
     int[] simpleRotatedOnce = {1,2,1,0,1,2,0,2,0};
@@ -62,7 +62,6 @@ public class transpose {
 
     @Test
     public void testSimple() {
-        System.out.println();
         assertTrue(s + " transposed 90 degrees should be " + s1 + " but was " + r1, Arrays.equals(rotOnce, simpleRotatedOnce));
     }
 
