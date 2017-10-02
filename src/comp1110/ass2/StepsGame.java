@@ -13,40 +13,37 @@ import java.util.*;
  */
 public class StepsGame {
 
-    private static int[] AA = {1,2,0,
-                2,1,2,
-                1,0,0};
+    private static int[] AA = {1, 2, 0,
+            2, 1, 2,
+            1, 0, 0};
 
-    private static int[] BA = {0,2,0,
-                0,1,2,
-                0,2,1};
+    private static int[] BA = {0, 2, 0,
+            0, 1, 2,
+            0, 2, 1};
 
-    private static int[] CA = {0,2,0,
-                0,1,2,
-                1,2,0};
+    private static int[] CA = {0, 2, 0,
+            0, 1, 2,
+            1, 2, 0};
 
-    private static int[] DA = {0,2,0,
-                2,1,0,
-                0,2,1};
+    private static int[] DA = {0, 2, 0,
+            2, 1, 0,
+            0, 2, 1};
 
-    private static int[] EA = {0,2,0,
-                2,1,0,
-                1,2,0};
+    private static int[] EA = {0, 2, 0,
+            2, 1, 0,
+            1, 2, 0};
 
-    private static int[] FA = {0,0,1,
-                0,1,2,
-                1,2,0};
+    private static int[] FA = {0, 0, 1,
+            0, 1, 2,
+            1, 2, 0};
 
-    private static int[] GA = {0,2,1,
-                0,1,2,
-                1,2,0};
+    private static int[] GA = {0, 2, 1,
+            0, 1, 2,
+            1, 2, 0};
 
-    private static int[] HA = {0,2,1,
-                2,1,0,
-                0,2,1};
-
-
-
+    private static int[] HA = {0, 2, 1,
+            2, 1, 0,
+            0, 2, 1};
 
 
     /**
@@ -61,7 +58,7 @@ public class StepsGame {
      */
     static boolean isPiecePlacementWellFormed(String piecePlacement) {
         // FIXME Task 2: determine whether a piece placement is well-formed
-        return  (piecePlacement.length() == 3 && isValid(piecePlacement));
+        return (piecePlacement.length() == 3 && isValid(piecePlacement));
     }
 
     // Method checks if a string contains
@@ -72,9 +69,9 @@ public class StepsGame {
 
     /**
      * Determine whether a placement string is well-formed:
-     *  - it consists of exactly N three-character piece placements (where N = 1 .. 8);
-     *  - each piece placement is well-formed
-     *  - no shape appears more than once in the placement
+     * - it consists of exactly N three-character piece placements (where N = 1 .. 8);
+     * - each piece placement is well-formed
+     * - no shape appears more than once in the placement
      *
      * @param placement A string describing a placement of one or more pieces
      * @return True if the placement is well-formed
@@ -83,14 +80,14 @@ public class StepsGame {
         // FIXME Task 3: determine whether a placement is well-formed
         if (placement == null) {
             return false;
-        }
-        else if (placement.length() % 3 == 0 && containsDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))){
+        } else if (placement.length() % 3 == 0 && containsDuplicates((collector(placement))) && mapisPiecePlacementWellFormed(getPiecePlacements(placement))) {
             return true;
         }
         return false;
     }
+
     // Method collects shapes in the placements.
-    public static String collector (String in) {
+    public static String collector(String in) {
         StringBuilder initial = new StringBuilder();
         for (int i = 0; i < in.length(); i++) {
             if (i % 3 == 0)
@@ -100,7 +97,7 @@ public class StepsGame {
     }
 
     // Checks whether an input contains duplicates, i.e. whether a shape occurs more than once
-    private static boolean containsDuplicates (String input) {
+    private static boolean containsDuplicates(String input) {
         ArrayList<Character> charList = new ArrayList<>();
         HashSet<Character> letterSet = new HashSet<>();
         for (int i = 0; i < input.length(); i++) {
@@ -109,8 +106,7 @@ public class StepsGame {
         for (Character i : charList) {
             if (!letterSet.add(i)) {
                 return false;
-            }
-            else {
+            } else {
                 letterSet.add(i);
             }
         }
@@ -126,11 +122,11 @@ public class StepsGame {
 
     // Maps the piecePlacementWellFormed method from task 1 onto the entire each piece placement
     private static boolean mapisPiecePlacementWellFormed(List<String> arrayOfPlacements) {
-       for (String item : arrayOfPlacements) {
-           if (!(isPiecePlacementWellFormed(item))) {
-               return false;
-           }
-       }
+        for (String item : arrayOfPlacements) {
+            if (!(isPiecePlacementWellFormed(item))) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -156,8 +152,7 @@ public class StepsGame {
     //transpose and flip will be used to respectively spin or flip the source image
     // this uses our explicit definitions of the pieces and changes them to make the piece given in placements
     // i.e to make AA -> AB or to make AA-> AE
-
-    public static int[] transpose(int[] turn){
+    public static int[] transpose(int[] turn) {
         int[] output = new int[9];
         output[0] = turn[6];
         output[1] = turn[3];
@@ -172,11 +167,8 @@ public class StepsGame {
     }
 
 
-
-
-
     // flips the int array, i.e. mirrors the array
-    public static int[] flip(int[] turn){
+    public static int[] flip(int[] turn) {
         int[] output = new int[9];
         output[0] = turn[2];
         output[1] = turn[1];
@@ -188,7 +180,7 @@ public class StepsGame {
         output[7] = turn[7];
         output[8] = turn[6];
 
-        for (int i = 0; i<output.length; i++) {
+        for (int i = 0; i < output.length; i++) {
             if (output[i] == 1) {
                 output[i] = 2;
             } else if (output[i] == 2) {
@@ -202,14 +194,14 @@ public class StepsGame {
     // toString for debugging
     static String toString(int[] list) {
         StringBuilder out = new StringBuilder();
-        for (int i : list){
+        for (int i : list) {
             out.append(i);
         }
         return out.toString();
     }
 
     // Transposes or flips a piece placement n number of times.
-    public static int[] transposeAmount(String piece){
+    public static int[] transposeAmount(String piece) {
         int[] root = new int[9];
         int spinBy = 0;
         boolean flip = false;
@@ -281,34 +273,34 @@ public class StepsGame {
         String sideR = "Teo";
         switch (pos) {
             case 'A':
-                if (xyPointer == 0 ||xyPointer == 1 ||xyPointer == 2 ||xyPointer == 3||xyPointer == 6){
+                if (xyPointer == 0 || xyPointer == 1 || xyPointer == 2 || xyPointer == 3 || xyPointer == 6) {
                     return false;
                 }
                 break;
             case 'J':
-                if (xyPointer == 0 ||xyPointer == 1 ||xyPointer == 2 ||xyPointer == 5||xyPointer == 8){
+                if (xyPointer == 0 || xyPointer == 1 || xyPointer == 2 || xyPointer == 5 || xyPointer == 8) {
                     return false;
                 }
                 break;
             case 'p':
-                if (xyPointer == 0 ||xyPointer == 3 ||xyPointer == 6 ||xyPointer == 7||xyPointer == 8){
+                if (xyPointer == 0 || xyPointer == 3 || xyPointer == 6 || xyPointer == 7 || xyPointer == 8) {
                     return false;
                 }
                 break;
             case 'y':
-                if (xyPointer == 2 ||xyPointer == 5 ||xyPointer == 6 ||xyPointer == 7||xyPointer == 8){
+                if (xyPointer == 2 || xyPointer == 5 || xyPointer == 6 || xyPointer == 7 || xyPointer == 8) {
                     return false;
                 }
                 break;
 
         }
-        if ((pos % 'B' < 8) &&(xyPointer == 0 || xyPointer == 1 ||xyPointer == 2)){
+        if ((pos % 'B' < 8) && (xyPointer == 0 || xyPointer == 1 || xyPointer == 2)) {
             return false;
-        } else if ((pos % 'q' < 8) && (xyPointer == 6 || xyPointer == 7 ||xyPointer == 8)) {
+        } else if ((pos % 'q' < 8) && (xyPointer == 6 || xyPointer == 7 || xyPointer == 8)) {
             return false;
-        } else if ((sideL.contains(pos+"")) && (xyPointer == 0 || xyPointer == 3 ||xyPointer == 6)) {
+        } else if ((sideL.contains(pos + "")) && (xyPointer == 0 || xyPointer == 3 || xyPointer == 6)) {
             return false;
-        } else if ((sideR.contains(pos+"")) && (xyPointer == 2 || xyPointer == 5 ||xyPointer == 8)) {
+        } else if ((sideR.contains(pos + "")) && (xyPointer == 2 || xyPointer == 5 || xyPointer == 8)) {
             return false;
         }
         return true;
@@ -328,7 +320,7 @@ public class StepsGame {
         String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         // Location from origin of piece - depends on indexing tis variable
-        int[] locationIndices = {-11,-10,-9,-1, 0 ,1,9,10,11};
+        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
         //System.out.println(toString(flip(AA)));
         HashSet<Character> upperList = new HashSet<>();
         HashSet<Character> checkList = new HashSet<>();
@@ -340,63 +332,58 @@ public class StepsGame {
                 int[] transposed = transposeAmount(x.charAt(0) + "" + x.charAt(1));
 
                 ArrayList<Character> upChars = new ArrayList<>();
-                    for (int j = 0; j < 9; j++) {
-                        if (transposed[j] != 0) {
+                for (int j = 0; j < 9; j++) {
+                    if (transposed[j] != 0) {
 
-                            if (!boundaryCheck(pieceOriginPeg, j)) {
+                        if (!boundaryCheck(pieceOriginPeg, j)) {
+                            return false;
+                        } else if (transposed[j] == 1) {
+                            Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
+                            if (!pegs.contains(currentChar + "")) {
                                 return false;
                             }
-
-                            else if (transposed[j] == 1) {
-                                Character currentChar = all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]);
-                                if (!pegs.contains(currentChar+"")) {
+                            if (boundaryCheck(currentChar, 1)) {
+                                Character topChar = all.charAt(all.indexOf(currentChar) - 10);
+                                if (upperList.contains(topChar)) {
                                     return false;
                                 }
-                                if (boundaryCheck(currentChar, 1)) {
-                                    Character topChar = all.charAt(all.indexOf(currentChar) -10);
-                                    if (upperList.contains(topChar)) {
-                                        return false;
-                                    }
-                                }
-                                if (boundaryCheck(currentChar, 3)) {
-                                    Character leftChar = all.charAt(all.indexOf(currentChar) - 1 );
-                                    if (upperList.contains(leftChar)) {
-                                        return false;
-                                    }
-                                }
-                                if (boundaryCheck(currentChar, 5)) {
-                                    Character rightChar = all.charAt(all.indexOf(currentChar) + 1 );
-                                    if (upperList.contains(rightChar)) {
-                                        return false;
-                                    }
-                                }
-                                if (boundaryCheck(currentChar, 7)) {
-                                    Character botChar = all.charAt(all.indexOf(currentChar) + 10 );
-                                    if (upperList.contains(botChar)) {
-                                        return false;
-                                    }
+                            }
+                            if (boundaryCheck(currentChar, 3)) {
+                                Character leftChar = all.charAt(all.indexOf(currentChar) - 1);
+                                if (upperList.contains(leftChar)) {
+                                    return false;
                                 }
                             }
-                            else if (checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]))) {
-                                checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
-                                if (transposed[j] == 2) {
-                                    upChars.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                            if (boundaryCheck(currentChar, 5)) {
+                                Character rightChar = all.charAt(all.indexOf(currentChar) + 1);
+                                if (upperList.contains(rightChar)) {
+                                    return false;
                                 }
                             }
-                            else {
-                                return false;
+                            if (boundaryCheck(currentChar, 7)) {
+                                Character botChar = all.charAt(all.indexOf(currentChar) + 10);
+                                if (upperList.contains(botChar)) {
+                                    return false;
+                                }
                             }
+                        } else if (checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]))) {
+                            checkList.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                            if (transposed[j] == 2) {
+                                upChars.add(all.charAt(all.indexOf(pieceOriginPeg) + locationIndices[j]));
+                            }
+                        } else {
+                            return false;
                         }
                     }
+                }
                 upperList.addAll(upChars);
                 //System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
             }
-        }
-        else {
+        } else {
             return false;
         }
         return true;
-        }
+    }
     // FIXME Task 5: determine whether a placement sequence is valid
 
     /**
@@ -428,7 +415,7 @@ public class StepsGame {
     // FIXME Task 6: determine the correct order of piece placements
 
     // Finds all possible next moves
-    private static String[] possibleMoves (ArrayList<List<String>> permutations) {
+    private static String[] possibleMoves(ArrayList<List<String>> permutations) {
         int permSize = permutations.size();
 
         String[] out = new String[permSize];
@@ -456,11 +443,11 @@ public class StepsGame {
                 List<String> temp = new ArrayList<>(smallerPermutated);
 
                 if (!firstElement.isEmpty()) {
-                temp.add(index, firstElement);
+                    temp.add(index, firstElement);
 
-                if (isPlacementSequenceValid(placement + join(temp))) {
-                out.add(temp);
-                }
+                    if (isPlacementSequenceValid(placement + join(temp))) {
+                        out.add(temp);
+                    }
 
                 }
             }
@@ -472,7 +459,7 @@ public class StepsGame {
 
 
     // Joins set of permutations
-    private static String join (List<String> inn) {
+    private static String join(List<String> inn) {
         StringBuilder out = new StringBuilder();
         for (String s : inn) {
             out.append(s);
@@ -502,35 +489,33 @@ public class StepsGame {
      * one placement sequence, however, only a single (unordered) solution should
      * be returned for each such case.
      *
-     * @param placement  A valid piece placement string.
+     * @param placement A valid piece placement string.
      * @return An array of strings, each describing a unique unordered solution to
      * the game given the starting point provided by placement.
      */
+
+
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         String[] output;
 
-        /* STEP 1) STORE ALL POSSIBLE PIECE PLACEMENTS IN A DATA STRUCTURE */
-
         // All the pieces and their variations
-        String[] shapesAndOrientations = {"AA","AB","AC","AD","AE","AF","AG","AH",
-                                          "BA","BB","BC","BD","BE","BF","BG","BH",
-                                          "CA","CB","CC","CD","CE","CF","CG","CH",
-                                          "DA","DB","DC","DD","DE","DF","DG","DH",
-                                          "EA","EB","EC","ED","EE","EF","EG","EH",
-                                          "FA","FB","FC","FD","FE","FF","FG","FH",
-                                          "GA","GB","GC","GD","GE","GF","GG","GH",
-                                          "HA","HB","HC","HD","HE","HF","HG","HH"};
+        String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
+                "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
+                "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
+                "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
+                "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
+                "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
+                "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
+                "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
         // All locations
-        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
-                              "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
+        String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
         // All possible moves each piece can take
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
-        ArrayList<String> remainingMoves = updateRemainingMovies(placement, possibleMoves);
-
-        /* STEP 2) INITIALIZE CONTAINERS FOR UPDATING AVAILABLE LOCATIONS AND POSSIBLE MOVE FOR REMAINING PIECES */
+        ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
         // Updated data structures for available locations and possible moves for remaining pieces
         ArrayList<String> availableLocations;
@@ -552,14 +537,18 @@ public class StepsGame {
         return possibleMoves;
     }
 
-    static ArrayList<String> updateRemainingMovies(String placement, ArrayList<String> moves) {
-        /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH REMAINING PIECE */
-        //ArrayList<String> remainingMoves = moves;
-        char[] placementChars = placement.toCharArray();
-        for (String p : moves) {
-            char[] characters = p.toCharArray();
-            if (characters[0] == placementChars[0]) {
-                moves.remove(p);
+    static ArrayList<String> updateRemainingMoves(String placement, ArrayList<String> moves) {
+        /* RETURNS AN ARRAYLIST OF REMAINING MOVES GIVEN A PLACEMENT OF PIECES ALREADY PLACED */
+        HashSet<String> usedShapes = new HashSet<>();
+        char[] characters = placement.toCharArray();
+        for (int i = 0; i < characters.length; i += 3) {
+            usedShapes.add(String.valueOf((characters[i])));
+        }
+        for (Iterator<String> iterator = moves.iterator(); iterator.hasNext();) {
+            String piecePlacement = iterator.next();
+            char[] chars = piecePlacement.toCharArray();
+            if (usedShapes.contains(String.valueOf(chars[0]))) {
+                iterator.remove();
             }
         }
         return moves;
@@ -567,26 +556,45 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-        //String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
-        //String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
-        //System.out.println(getViablePiecePlacements(placement, objective));
-        //getSolutions("BGS");
-        //System.out.println(isPlacementSequenceValid("AEg"));
-        String[] testSimple = {"AA"};
-        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
-                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
-        System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
-        System.out.println(getPossibleMoves(testSimple,locations));
-        System.out.println(isPlacementSequenceValid("AAMBGS"));
-        //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
-        System.out.println(isValid("AAO"));
+//        //String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
+//        //String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
+//        //System.out.println(getViablePiecePlacements(placement, objective));
+//        //getSolutions("BGS");
+//        //System.out.println(isPlacementSequenceValid("AEg"));
+//        String[] testSimple = {"AA"};
+//        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
+//                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
+//        System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+//        System.out.println(getPossibleMoves(testSimple,locations));
+//        System.out.println(isPlacementSequenceValid("AAMBGS"));
+//        //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
+//        System.out.println(isValid("AAO"));
+//
+//        System.out.println(isPlacementSequenceValid("AAM"));
+//        String test = "AAL";
+//        String[] originalMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
+//                "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
+//        ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
+//        System.out.println(updateRemainingMovies(test,testList));
+        String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
+                "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
+                "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
+                "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
+                "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
+                "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
+                "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
+                "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
+        // All locations
+        String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
+        // All possible moves each piece can take
+        ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
+        System.out.println(possibleMoves.size());
+        String[] original3 = {"BAL","BAN","BAP","BAR","BAU","BAW","BAY","BAb","BAd","BAg","BAi","BAk","BAm","GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn",
+                "HFM","HFO","HFQ","HFS","HFV","HFX","HFa","HFc","HFh","HFj","HFl","HFn"};
+        ArrayList<String> moves = new ArrayList<>(Arrays.asList(original3));
+        System.out.println(updateRemainingMoves("BGSGGM",moves));
 
-        System.out.println(isPlacementSequenceValid("AAM"));
-        String test = "AAL";
-        String[] originalMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
-                "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
-        ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
-        System.out.println(updateRemainingMovies(test,testList));
     }
 }
 
