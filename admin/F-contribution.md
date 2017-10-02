@@ -4,5 +4,5 @@ We declare that the work toward our submission of Stage F was distributed among 
 * u3456789 40
 * u0123456 30
 
-Signed: Mary Jones (u2345678), Bob Smith (u3456789), and Sue Black (u0123456)
+Signed: Aditya Sharma (u6051965), Stefan Louie (u6051635) and Khamis Buol (u6080028)
 
