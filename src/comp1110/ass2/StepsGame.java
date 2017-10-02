@@ -499,6 +499,10 @@ public class StepsGame {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         String[] output;
 
+        String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
+        // Location from origin of piece - depends on indexing its variable
+        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
+
         // All the pieces and their variations
         String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
                 "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
@@ -517,10 +521,9 @@ public class StepsGame {
         //All possible moves each REMAINING piece can take
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
-        // Updated data structures for available locations and possible moves for remaining pieces
-        ArrayList<String> availableLocations;
-        ArrayList<String> updatedRemainingMoves;
-        System.out.println(possibleMoves);
+        // Get unavailable locations
+        ArrayList<String> unavailableLocations = getUsedLocations(placement);
+
         return null;
     }
 
@@ -552,6 +555,15 @@ public class StepsGame {
             }
         }
         return moves;
+    }
+
+    static ArrayList<String> getUsedLocations(String placement) {
+        ArrayList<String> usedLocations = new ArrayList<>();
+        char[] characters = placement.toCharArray();
+        for (int i = 2; i < characters.length; i += 3) {
+            usedLocations.add(String.valueOf(characters[i]));
+        }
+        return usedLocations;
     }
 
 
@@ -593,7 +605,9 @@ public class StepsGame {
         String[] original3 = {"BAL","BAN","BAP","BAR","BAU","BAW","BAY","BAb","BAd","BAg","BAi","BAk","BAm","GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn",
                 "HFM","HFO","HFQ","HFS","HFV","HFX","HFa","HFc","HFh","HFj","HFl","HFn"};
         ArrayList<String> moves = new ArrayList<>(Arrays.asList(original3));
-        System.out.println(updateRemainingMoves("BGSGGM",moves));
+        ArrayList<String> remainingMoves = updateRemainingMoves("BGSGGM",possibleMoves);
+        System.out.println(remainingMoves);
+        System.out.println(remainingMoves.size());
 
     }
 }
