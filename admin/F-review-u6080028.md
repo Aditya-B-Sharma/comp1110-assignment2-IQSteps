@@ -1,6 +1,6 @@
 This is a review on the code written by Aditya Sharma for Task 5 of COMP1110 Assignment two. The code, in short, 
 determines the validity of a sequence of piece placements. The code is purely mathematical, somewhat complex 
-and yet vey efficient (O(n)).
+and yet very efficient (O(n)).
 
 The best feature about this code is its efficiency and non-hardcoding style, a technique I may have employed had I
 written this task instead. Another good feature about it is its mathematical nature and therefore how much easier
