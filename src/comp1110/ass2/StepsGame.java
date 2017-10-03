@@ -441,32 +441,24 @@ public class StepsGame {
     // Finds permutations of shapes
     private static ArrayList<List<String>> permute(List<String> unused, String placement) {
         ArrayList<List<String>> out = new ArrayList<>();
-
         if (unused.size() == 0) {
             out.add(new ArrayList<>());
             return out;
         }
-
         String firstElement = unused.remove(0);
         List<List<String>> permutations = permute(unused, placement);
 
         for (List<String> smallerPermutated : permutations) {
-
             for (int index = 0; index <= smallerPermutated.size(); index++) {
                 List<String> temp = new ArrayList<>(smallerPermutated);
-
                 if (!firstElement.isEmpty()) {
                 temp.add(index, firstElement);
-
-                if (isPlacementSequenceValid(placement + join(temp))) {
-                out.add(temp);
-                }
-
+                    if (isPlacementSequenceValid(placement + join(temp))) {
+                    out.add(temp);
+                    }
                 }
             }
-
         }
-
         return out;
     }
 
