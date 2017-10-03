@@ -255,6 +255,7 @@ public class Viewer extends Application {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
+                System.out.println("pressed");
                 removePrevious();
                 makePlacement(textField.getText());
                 //textField.clear();
