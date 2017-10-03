@@ -568,6 +568,7 @@ public class StepsGame {
     }
 
     static ArrayList<String> getUsedLocations(String placement) {
+        /* RETURNS A LIST OF ALL LOCATIONS THAT HAVE BEEN TAKEN BY THE CENTRE POSITIONS OF EACH SHAPE */
         ArrayList<String> usedLocations = new ArrayList<>();
         char[] characters = placement.toCharArray();
         for (int i = 2; i < characters.length; i += 3) {
@@ -619,6 +620,7 @@ public class StepsGame {
         System.out.println(remainingMoves);
         System.out.println(remainingMoves.size());
         System.out.println(getUsedLocations("BGSGGM"));
+        System.out.println(getViablePiecePlacements("BGS", "BGSAHQEFBGCgCDNHFlDAiFHn"));
 
         System.out.println(isPlacementSequenceValid("AAM"));
         String test = "AAL";
