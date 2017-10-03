@@ -147,7 +147,7 @@ public class StepsGame {
      * sequence must be well-formed and each piece placement must be a valid placement
      * (with the pieces ordered according to the order in which they are played).
      *
-     * @param placement A placement sequence string
+     * @param //placement A placement sequence string
      * @return True if the placement sequence is valid
      */
 
@@ -625,7 +625,7 @@ public class StepsGame {
         String[] originalMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
                 "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
         ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
-        System.out.println(updateRemainingMovies(test,testList));
+        //System.out.println(updateRemainingMovies(test,testList));
     }
 }
 
