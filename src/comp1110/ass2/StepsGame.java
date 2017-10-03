@@ -608,6 +608,7 @@ public class StepsGame {
         ArrayList<String> remainingMoves = updateRemainingMoves("BGSGGM",possibleMoves);
         System.out.println(remainingMoves);
         System.out.println(remainingMoves.size());
+        System.out.println(getUsedLocations("BGSGGM"));
 
     }
 }
