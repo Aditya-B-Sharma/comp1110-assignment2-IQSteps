@@ -32,19 +32,20 @@ public class GetUsedLocationsTest {
 
     @Test
     public void testSingle() {
-        assertTrue("Expected " + Arrays.toString(output) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test).toArray()), StepsGame.getUsedLocations(test).toArray().equals(output));
-        assertTrue("Expected " + Arrays.toString(output2) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test2).toArray()), StepsGame.getUsedLocations(test2).toArray().equals(output2));
+        assertTrue("Expected " + Arrays.toString(output) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test).toArray()), Arrays.equals(StepsGame.getUsedLocations(test).toArray(),output));
+        assertTrue("Expected " + Arrays.toString(output2) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test2).toArray()), Arrays.equals(StepsGame.getUsedLocations(test2).toArray(),output2));
+
     }
 
     @Test
     public void testPairs() {
-        assertTrue("Expected " + Arrays.toString(output3) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test3).toArray()), StepsGame.getUsedLocations(test3).toArray().equals(output3));
-        assertTrue("Expected " + Arrays.toString(output4) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test4).toArray()), StepsGame.getUsedLocations(test4).toArray().equals(output4));
+        assertTrue("Expected " + Arrays.toString(output3) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test3).toArray()), Arrays.equals(StepsGame.getUsedLocations(test3).toArray(),output3));
+        assertTrue("Expected " + Arrays.toString(output4) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test4).toArray()), Arrays.equals(StepsGame.getUsedLocations(test4).toArray(),output4));
     }
 
     @Test
     public void testMultiplePlacements() {
-        assertTrue("Expected " + Arrays.toString(output5) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test5).toArray()), StepsGame.getUsedLocations(test5).toArray().equals(output5));
-        assertTrue("Expected " + Arrays.toString(output6) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test6).toArray()), StepsGame.getUsedLocations(test6).toArray().equals(output6));
+        assertTrue("Expected " + Arrays.toString(output5) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test5).toArray()), Arrays.equals(StepsGame.getUsedLocations(test5).toArray(),output5));
+        assertTrue("Expected " + Arrays.toString(output6) + " but got " + Arrays.toString(StepsGame.getUsedLocations(test6).toArray()), Arrays.equals(StepsGame.getUsedLocations(test6).toArray(),output6));
     }
 }
