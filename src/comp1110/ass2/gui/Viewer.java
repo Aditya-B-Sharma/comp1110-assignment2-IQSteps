@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -19,6 +21,11 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+
+import java.awt.*;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -80,12 +87,7 @@ public class Viewer extends Application {
         GridPane gridPane = new GridPane();
 
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
-        //gridPane.setGridLinesVisible(true);
-        gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         //set padding to center gridpane
-
-        gridPane.setPadding(new Insets(15, 0, 0, 25));
-
         //these loops will make a row / column at every iteration for the grid,
         // since the game is 10 x 5, 10 columns and 5 rows will be made
         for (int k = 0; k < 10; k ++) {
@@ -114,9 +116,6 @@ public class Viewer extends Application {
 
         //fix peg positions as they were underpadded on the left
         //set up the pegs properly
-        for (Node node : gridPane.getChildren()) {
-            gridPane.setMargin(node, new Insets(0, 0, 0, 15));
-        }
         //add all circles (pegs) to parent group
 
         pegs.getChildren().addAll(gridPane);
@@ -138,8 +137,8 @@ public class Viewer extends Application {
             }
         }
         ImageView outputImage = new ImageView();
-        outputImage.setImage(new Image(Viewer.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
-        //if (toFlip) {outputImage.setScaleX(-1);}
+        Image image = new Image((Viewer.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+        outputImage.setImage(image);
         if (spinAmount!=0){
             outputImage.setRotate(90*spinAmount);
         }
@@ -154,12 +153,6 @@ public class Viewer extends Application {
 
         gridPane.setPrefSize(VIEWER_WIDTH, VIEWER_HEIGHT); // Default width and height
 
-        //Uncomment this if you want to see the gridlines:
-        //gridPane.setGridLinesVisible(true);
-        gridPane.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-
-        gridPane.setPadding(new Insets(15, 0, 0, 25));
-        //columns and rows again
         for (int k = 0; k < 10; k ++) {
             ColumnConstraints column = new ColumnConstraints(70);
             gridPane.getColumnConstraints().add(column);
@@ -168,23 +161,13 @@ public class Viewer extends Application {
             RowConstraints row = new RowConstraints(70);
             gridPane.getRowConstraints().add(row);
         }
-        //fix padding
-
-
-        for (Node node : gridPane.getChildren()) {
-            gridPane.setMargin(node, new Insets(0, 0, 0, 15));
-        }
-
-        //this will be the padding to ensure the piece is in the right place on the grid
-        Insets valuePadding = new Insets(0, 0, 0, -105);
 
         //place image files (pieces) and set their padding
         // go through all given placements and do this
         for (int x = 0; x < givenPlacements.size(); x++) {
             ImageView image = decideImage(givenPlacements.get(x));
-           //Debugging -> System.out.println(givenPlacements.get(x));
             gridPane.add(image, getXPos(givenPlacements.get(x)), getYPos(givenPlacements.get(x)));
-            gridPane.setMargin(image, valuePadding);
+            gridPane.setLayoutX(-120);
         }
         placements.getChildren().addAll(gridPane);
     }
@@ -211,12 +194,11 @@ public class Viewer extends Application {
             out = (letter%'A') % 10;
           //Debugging ->  System.out.println(out);
         } else if (Character.isLowerCase(letter) && letter!= 'z') {
-            out = (letter % 92) % 10;
+            out = (letter % 'a') % 10;
           //Debugging ->  System.out.println(out);
         }
         return out;
     }
-
     // Get y position of piece
     private int getYPos(String piece) {
         int out = 0;
@@ -237,13 +219,10 @@ public class Viewer extends Application {
         //Debugging -> System.out.println(out);
         return out;
     }
-
     // Displays image so the origin and orientation is correct
     private static void displayImage(int x, int y) {
         //done in make placement
     }
-
-
     /**
      * Create a basic text field for input and a refresh button.
      */
@@ -271,7 +250,6 @@ public class Viewer extends Application {
                 }
             }
         });
-
         HBox hb = new HBox();
         hb.getChildren().addAll(label1, textField, button);
         hb.setSpacing(10);
@@ -285,13 +263,11 @@ public class Viewer extends Application {
         primaryStage.setTitle("StepsGame Viewer");
         Scene scene = new Scene(root, VIEWER_WIDTH, VIEWER_HEIGHT);
         root.getChildren().addAll(pegs, placements, controls);
-        pegs.relocate(100, 80);
-        placements.relocate(100, 80);
-        controls.relocate(100, 0);
+        pegs.relocate(133.29, 80);
+        placements.relocate(133.29, 80);
+        controls.relocate(133.29, 0);
         makePegs();
         makeControls();
-
-
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -8,12 +8,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
@@ -23,6 +27,7 @@ public class Board extends Application {
 
     private static final String URI_BASE = "assets/";
     private static GridPane BOARD = new GridPane();
+    final GridPane target = BOARD;
 
     //Create needed groups for different elements
     private final Group root = new Group();
@@ -30,28 +35,184 @@ public class Board extends Application {
     private final Group placements = new Group();
     private final Group pegs = new Group();
     TextField textField;
+    /* the state of the pieces */
+    char[] piecestate = new char[8];
+    static final char NOT_PLACED = ' ';
+
+
 
     /*Inner class to display the shapes*/
-    class FXShape extends ImageView {
-        int shape;
+    class Piece extends ImageView {
 
-        FXShape(String shape) {
-            if (!(shape.charAt(0) >= 'A' && shape.charAt(0) <= 'H')) {
-                throw new IllegalArgumentException("Bad shape: \"" + shape + "\"");
-            }
-            setImage(new Image(Board.class.getResourceAsStream(URI_BASE + shape + ".png").toString()));
-//                this.shape = shape-65;
-            setFitHeight(PIECE_IMAGE_SIZE);
-            setFitWidth(PIECE_IMAGE_SIZE);
+    String piece;
+    Image image;
+        /**
+         * * Construct a particular square
+         * @param //piece A character representing the type of square to be created.
+         */
+
+        Piece(){
+        this.piece = piece;
+        this.image = image;
         }
 
-        FXShape(String shape, char position) {
-            this(shape);
-            if (!((position >= 'A' && position <= 'Y') || (position >= 'a' && position <= 'y'))) {
-                throw new IllegalArgumentException("Bad position string: " + position);
+        Piece(String piece) {
+        String toFetch = "";
+        int spinAmount = 0;
+        Character toCompare = piece.charAt(1);
+        if (piece.charAt(0) >= 'A' && piece.charAt(0) <= 'H') {
+            if (toCompare >= 'A' && toCompare < 'E') {
+                spinAmount = toCompare%'A';
+                toFetch = "A";
+            } else if (toCompare >= 'E' && toCompare <= 'H'){
+                spinAmount = toCompare%'E';
+                toFetch = "E";
             }
+        }
+        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+        //image.setRotate(90*spinAmount);
+        }
+
+    }
+
+    class DraggablePiece extends Piece {
+        int homeX, homeY;
+        double mouseX, mouseY;
+
+        DraggablePiece(String piece) {
+            super(piece);
+            piecestate[piece.charAt(0) - 'A'] = NOT_PLACED;
+            switch (piece.charAt(0)) {
+                case 'A':
+                    homeX = 0;
+                    homeY = 300;
+                    break;
+                case 'B':
+                    homeX = 70;
+                    homeY = 300;
+                    break;
+                case 'C':
+                    homeX = 90;
+                    homeY = 300;
+                    break;
+                case 'D':
+                    homeX = 110;
+                    homeY = 300;
+                    break;
+                case 'E':
+                    homeX = 50;
+                    homeY = 400;
+                    break;
+                case 'F':
+                    homeX = 70;
+                    homeY = 400;
+                    break;
+                case 'G':
+                    homeX = 90;
+                    homeY = 400;
+                    break;
+                case 'H':
+                    homeX = 110;
+                    homeY = 400;
+                    break;
+            }
+            setLayoutX(homeX);
+            setLayoutY(homeY);
+            setOnScroll(event -> {
+                //hideCompletion();
+                setRotate(90);
+                event.consume();
+            });
+            /*setOnMousePressed(event -> {
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+            });
+            setOnMouseDragged(event -> {
+                toFront();
+                double movementX = event.getSceneX() - mouseX;
+                double movementY = event.getSceneY() - mouseY;
+                setLayoutX(getLayoutX() + movementX);
+                setLayoutY(getLayoutY() + movementY);
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+                event.consume();
+            });
+            setOnMouseReleased(event -> {
+                //snapToGrid();
+            }); */
+            setOnDragDetected(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    Dragboard db = startDragAndDrop(TransferMode.ANY);
+                    ClipboardContent cbContent = new ClipboardContent();
+                    cbContent.putImage(image);
+                    db.setContent(cbContent);
+                    setVisible(false);
+                    event.consume();
+                }
+            });
+            BOARD.setOnDragOver(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    if (event.getGestureSource() != target && event.getDragboard().hasImage()){
+                        event.acceptTransferModes(TransferMode.MOVE);
+                    }
+                    event.consume();
+                }
+            });
+            BOARD.setOnDragEntered(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    if(event.getGestureSource() != target && event.getDragboard().hasImage()){
+                        setVisible(false);
+                        target.setOpacity(0.7);
+                        System.out.println("Drag entered");
+                    }
+
+                    event.consume();
+                }
+            });
+            BOARD.setOnDragExited(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    setVisible(true);
+                    target.setOpacity(1);
+
+                    event.consume();
+                }
+            });
+            BOARD.setOnDragDropped(new EventHandler<DragEvent>() {
+                @Override
+                public void handle(DragEvent event) {
+                    Dragboard db = event.getDragboard();
+                    boolean success = false;
+                    Node node = event.getPickResult().getIntersectedNode();
+                    if(node != target && db.hasImage()){
+
+                        Integer cIndex = BOARD.getColumnIndex(node);
+                        Integer rIndex = BOARD.getRowIndex(node);
+                        int x = cIndex == null ? 0 : cIndex;
+                        int y = rIndex == null ? 0 : rIndex;
+                        //target.setText(db.getImage()); --- must be changed to target.add(source, col, row)
+                        //target.add(source, 5, 5, 1, 1);
+                        //Places at 0,0 - will need to take coordinates once that is implemented
+                        ImageView image = new ImageView(db.getImage());
+
+                        // TODO: set image size; use correct column/row span
+                        BOARD.add(image, x, y, 1, 1);
+                        success = true;
+                    }
+                    //let the source know whether the image was successfully transferred and used
+                    event.setDropCompleted(success);
+                    event.consume();
+
+                }
+            });
+
+
         }
     }
+
 
     private void makePegs() {
         //GridPane gridPane = new GridPane();
@@ -89,6 +250,16 @@ public class Board extends Application {
             }
         }
 
+        int out = 0;
+        for (int y = 0; y<5; y++) {
+            for (int z = 0; z<10; z++) {
+                BOARD.add(new Text(out + ""), z, y);
+                out++;
+                }
+        }
+
+        BOARD.add(new Piece("AA"), 5, 5);
+
         //fix peg positions as they were underpadded on the left
         //set up the pegs properly
         for (Node node : BOARD.getChildren()) {
@@ -97,6 +268,11 @@ public class Board extends Application {
         //add all circles (pegs) to parent group
 
         pegs.getChildren().addAll(BOARD);
+    }
+
+    private void makeDraggableImages() {
+        Piece AA = new Piece("AA");
+        System.out.println(AA);
     }
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
@@ -110,12 +286,16 @@ public class Board extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-        root.getChildren().add(pegs);
-        pegs.relocate(100, 20);
+        //root.getChildren().add(new DraggablePiece("AA"));
+        //DraggablePiece piece = new DraggablePiece("AAL");
+        //placements.getChildren().add(piece);
+        root.getChildren().addAll(pegs, placements);
+        //pegs.relocate(100, 20);
         makePegs();
-
+        //makeDraggableImages();
         primaryStage.setScene(scene);
         primaryStage.show();
 
     }
+
 }
