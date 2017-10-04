@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+import java.net.URI;
+
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
@@ -81,6 +83,8 @@ public class Board extends Application {
 
         DraggablePiece(String piece) {
             super(piece);
+            setFocusTraversable(true);
+            requestFocus();
             piecestate[piece.charAt(0) - 'A'] = NOT_PLACED;
             switch (piece.charAt(0)) {
                 case 'A':
@@ -118,15 +122,35 @@ public class Board extends Application {
             }
             setLayoutX(homeX);
             setLayoutY(homeY);
-            setOnScroll(event -> {
-                //hideCompletion();
-                setRotate(90);
-                event.consume();
+            setOnScroll(new EventHandler<ScrollEvent>() {
+                @Override
+                public void handle(ScrollEvent event) {
+                    setRotate((getRotate() + 90) % 360);
+                    event.consume();
+                    System.out.println("event consumed");
+                }
             });
-            /*setOnMousePressed(event -> {
-                mouseX = event.getSceneX();
-                mouseY = event.getSceneY();
-            });
+            setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    if (event.getCode().equals(KeyCode.SPACE)) {
+                        if (piece.charAt(1) >= 'A' && piece.charAt(1) <= 'D') {
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+                            String x = "";
+                            x += piece.charAt(0);
+                            x += 'E';
+                            piece = x;
+                            }
+                        else if (piece.charAt(1) >= 'E' && piece.charAt(1) <= 'H'){
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
+                            }
+                    }
+                }
+                });
+            setOnMousePressed(event -> {
+            mouseX = event.getSceneX();
+            mouseY = event.getSceneY();
+                    });
             setOnMouseDragged(event -> {
                 toFront();
                 double movementX = event.getSceneX() - mouseX;
@@ -139,8 +163,8 @@ public class Board extends Application {
             });
             setOnMouseReleased(event -> {
                 //snapToGrid();
-            }); */
-            setOnDragDetected(new EventHandler<MouseEvent>() {
+            });
+            /*setOnDragDetected(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     Dragboard db = startDragAndDrop(TransferMode.ANY);
@@ -148,40 +172,43 @@ public class Board extends Application {
                     cbContent.putImage(image);
                     db.setContent(cbContent);
                     setVisible(false);
+                    System.out.println("Drag detected");
                     event.consume();
                 }
             });
-            BOARD.setOnDragOver(new EventHandler<DragEvent>() {
+            setOnDragOver(new EventHandler<DragEvent>() {
                 @Override
                 public void handle(DragEvent event) {
                     if (event.getGestureSource() != target && event.getDragboard().hasImage()){
                         event.acceptTransferModes(TransferMode.MOVE);
                     }
+                    System.out.println("Drag over");
                     event.consume();
                 }
             });
-            BOARD.setOnDragEntered(new EventHandler<DragEvent>() {
+            setOnDragEntered(new EventHandler<DragEvent>() {
                 @Override
                 public void handle(DragEvent event) {
                     if(event.getGestureSource() != target && event.getDragboard().hasImage()){
                         setVisible(false);
                         target.setOpacity(0.7);
-                        System.out.println("Drag entered");
-                    }
 
+                    }
+                    System.out.println("Drag entered");
                     event.consume();
                 }
             });
-            BOARD.setOnDragExited(new EventHandler<DragEvent>() {
+            setOnDragExited(new EventHandler<DragEvent>() {
                 @Override
                 public void handle(DragEvent event) {
                     setVisible(true);
                     target.setOpacity(1);
+                    System.out.println("Drag exited");
 
                     event.consume();
                 }
             });
-            BOARD.setOnDragDropped(new EventHandler<DragEvent>() {
+            setOnDragDropped(new EventHandler<DragEvent>() {
                 @Override
                 public void handle(DragEvent event) {
                     Dragboard db = event.getDragboard();
@@ -199,15 +226,16 @@ public class Board extends Application {
                         ImageView image = new ImageView(db.getImage());
 
                         // TODO: set image size; use correct column/row span
-                        BOARD.add(image, x, y, 1, 1);
+                        //BOARD.add(image, x, y, 1, 1);
                         success = true;
                     }
                     //let the source know whether the image was successfully transferred and used
                     event.setDropCompleted(success);
+                    System.out.println("Drag dropped");
                     event.consume();
 
                 }
-            });
+            }); */
 
 
         }
@@ -258,8 +286,6 @@ public class Board extends Application {
                 }
         }
 
-        BOARD.add(new Piece("AA"), 5, 5);
-
         //fix peg positions as they were underpadded on the left
         //set up the pegs properly
         for (Node node : BOARD.getChildren()) {
@@ -292,6 +318,7 @@ public class Board extends Application {
         root.getChildren().addAll(pegs, placements);
         //pegs.relocate(100, 20);
         makePegs();
+        root.getChildren().add(new DraggablePiece("AA"));
         //makeDraggableImages();
         primaryStage.setScene(scene);
         primaryStage.show();
