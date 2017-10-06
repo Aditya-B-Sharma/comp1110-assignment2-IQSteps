@@ -30,6 +30,7 @@ public class Board extends Application {
     private static final String URI_BASE = "assets/";
     private static GridPane BOARD = new GridPane();
     final GridPane target = BOARD;
+    //final String piece;
 
     //Create needed groups for different elements
     private final Group root = new Group();
@@ -45,21 +46,19 @@ public class Board extends Application {
 
     /*Inner class to display the shapes*/
     class Piece extends ImageView {
+        String piece;
 
-    String piece;
-    Image image;
+    //Image image;
         /**
          * * Construct a particular square
          * @param //piece A character representing the type of square to be created.
          */
 
-        Piece(){
-        this.piece = piece;
-        this.image = image;
-        }
+//        this.image = image
 
         Piece(String piece) {
-        String toFetch = "";
+            this.piece = piece;
+            String toFetch = "";
         int spinAmount = 0;
         Character toCompare = piece.charAt(1);
         if (piece.charAt(0) >= 'A' && piece.charAt(0) <= 'H') {
@@ -71,6 +70,11 @@ public class Board extends Application {
                 toFetch = "E";
             }
         }
+
+//        public void setOrientation(String orientation) {
+//
+//        }
+
         setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
         //image.setRotate(90*spinAmount);
         }
@@ -80,6 +84,7 @@ public class Board extends Application {
     class DraggablePiece extends Piece {
         int homeX, homeY;
         double mouseX, mouseY;
+        boolean flipped = false;
 
         DraggablePiece(String piece) {
             super(piece);
@@ -127,26 +132,30 @@ public class Board extends Application {
                 public void handle(ScrollEvent event) {
                     setRotate((getRotate() + 90) % 360);
                     event.consume();
-                    System.out.println("event consumed");
+                    //System.out.println("event consumed");
                 }
             });
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
-                        if (piece.charAt(1) >= 'A' && piece.charAt(1) <= 'D') {
+                        if (!flipped) {
+
+                            flipped = true;
+
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
-                            String x = "";
-                            x += piece.charAt(0);
-                            x += 'E';
-                            piece = x;
-                            }
-                        else if (piece.charAt(1) >= 'E' && piece.charAt(1) <= 'H'){
+
+                        }
+                        else  {
+                            flipped = false;
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
-                            }
+                        }
                     }
                 }
-                });
+            });
+            /*HELPED BY STEVE*/
+            /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
+
             setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
