@@ -155,7 +155,6 @@ public class Board extends Application {
             });
             /*HELPED BY STEVE*/
             /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
-
             setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
