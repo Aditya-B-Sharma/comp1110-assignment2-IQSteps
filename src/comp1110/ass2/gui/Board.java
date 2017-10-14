@@ -2,6 +2,7 @@ package comp1110.ass2.gui;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -20,12 +21,32 @@ import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
 import java.net.URI;
+import java.util.ArrayList;
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
+    private static final double ROWS = 31/3;
+    private static final double COLS = 493/60;
     private static final int SQUARE_SIZE = 60;
     private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
+    private static final int LARGE_SQUARE_SIZE = 3 * SQUARE_SIZE;
+    private static final int MARGIN_X = 40;
+    private static final int BOARD_X = MARGIN_X+LARGE_SQUARE_SIZE;
+    private static final int MARGIN_Y = SQUARE_SIZE;
+    private static final int BOARD_Y = MARGIN_Y;
+    
+
+//    private static final double BOARD_WIDTH = (2*BOARD_X) + (COLS * SQUARE_SIZE);
+//    private static final double BOARD_HEIGHT = (2*BOARD_Y) + (ROWS * SQUARE_SIZE);
+
+    /*Board not currently in correct dimension*/
+
+    private static int[] pos = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                               10,11,12,13,14,15,16,17,18,19,
+                               20,21,22,23,24,25,26,27,28,29,
+                               30,31,32,33,34,35,36,37,38,39,
+                               40,41,42,43,44,45,46,47,48,49};
 
     private static final String URI_BASE = "assets/";
     private static GridPane BOARD = new GridPane();
@@ -38,10 +59,10 @@ public class Board extends Application {
     private final Group placements = new Group();
     private final Group pegs = new Group();
     TextField textField;
+    private final Group pieces = new Group();
     /* the state of the pieces */
-    char[] piecestate = new char[8];
-    static final char NOT_PLACED = ' ';
-
+    String[] piecestate = new String[8];
+    static final String NOT_PLACED = " ";
 
 
     /*Inner class to display the shapes*/
@@ -54,7 +75,6 @@ public class Board extends Application {
          * @param //piece A character representing the type of square to be created.
          */
 
-//        this.image = image
 
         Piece(String piece) {
             this.piece = piece;
@@ -82,15 +102,17 @@ public class Board extends Application {
     }
 
     class DraggablePiece extends Piece {
+        int piece;
         int homeX, homeY;
         double mouseX, mouseY;
         boolean flipped = false;
+        ArrayList<String> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
 
         DraggablePiece(String piece) {
             super(piece);
             setFocusTraversable(true);
             requestFocus();
-            piecestate[piece.charAt(0) - 'A'] = NOT_PLACED;
+            //piecestate[piece.charAt(0) - 65] = NOT_PLACED;
             switch (piece.charAt(0)) {
                 case 'A':
                     homeX = 0;
@@ -132,13 +154,16 @@ public class Board extends Application {
                 public void handle(ScrollEvent event) {
                     setRotate((getRotate() + 90) % 360);
                     event.consume();
-                    //System.out.println("event consumed");
                 }
             });
+
+
+
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
+                        //System.out.println("Is working");
                         if (!flipped) {
 
                             flipped = true;
@@ -155,6 +180,7 @@ public class Board extends Application {
             });
             /*HELPED BY STEVE*/
             /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
+
             setOnMousePressed(event -> {
             mouseX = event.getSceneX();
             mouseY = event.getSceneY();
@@ -170,85 +196,47 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                //snapToGrid();
+                snapToGrid();
             });
-            /*setOnDragDetected(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    Dragboard db = startDragAndDrop(TransferMode.ANY);
-                    ClipboardContent cbContent = new ClipboardContent();
-                    cbContent.putImage(image);
-                    db.setContent(cbContent);
-                    setVisible(false);
-                    System.out.println("Drag detected");
-                    event.consume();
-                }
-            });
-            setOnDragOver(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    if (event.getGestureSource() != target && event.getDragboard().hasImage()){
-                        event.acceptTransferModes(TransferMode.MOVE);
-                    }
-                    System.out.println("Drag over");
-                    event.consume();
-                }
-            });
-            setOnDragEntered(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    if(event.getGestureSource() != target && event.getDragboard().hasImage()){
-                        setVisible(false);
-                        target.setOpacity(0.7);
-
-                    }
-                    System.out.println("Drag entered");
-                    event.consume();
-                }
-            });
-            setOnDragExited(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    setVisible(true);
-                    target.setOpacity(1);
-                    System.out.println("Drag exited");
-
-                    event.consume();
-                }
-            });
-            setOnDragDropped(new EventHandler<DragEvent>() {
-                @Override
-                public void handle(DragEvent event) {
-                    Dragboard db = event.getDragboard();
-                    boolean success = false;
-                    Node node = event.getPickResult().getIntersectedNode();
-                    if(node != target && db.hasImage()){
-
-                        Integer cIndex = BOARD.getColumnIndex(node);
-                        Integer rIndex = BOARD.getRowIndex(node);
-                        int x = cIndex == null ? 0 : cIndex;
-                        int y = rIndex == null ? 0 : rIndex;
-                        //target.setText(db.getImage()); --- must be changed to target.add(source, col, row)
-                        //target.add(source, 5, 5, 1, 1);
-                        //Places at 0,0 - will need to take coordinates once that is implemented
-                        ImageView image = new ImageView(db.getImage());
-
-                        // TODO: set image size; use correct column/row span
-                        //BOARD.add(image, x, y, 1, 1);
-                        success = true;
-                    }
-                    //let the source know whether the image was successfully transferred and used
-                    event.setDropCompleted(success);
-                    System.out.println("Drag dropped");
-                    event.consume();
-
-                }
-            }); */
-
 
         }
-    }
 
+        private void snapToGrid() {
+            if (onBoard()) {
+                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+                setPosition();
+            } else {
+                snapToHome();
+            }
+            //makeExposed();
+        }
+
+
+        private boolean onBoard(){
+            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
+                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
+            //return false;
+        }
+        private void setPosition() {
+            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
+            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
+            int rotate = (int) getRotate() / 90;
+            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
+            piecestate[piece] = val+"";
+        }
+
+
+        //setOnHover or setOnaction
+
+        // Snaps to home
+        private void snapToHome() {
+            setLayoutX(homeX);
+            setLayoutX(homeY);
+            setRotate(0);
+            piecestate[piece] = NOT_PLACED;
+        }
+    }
 
     private void makePegs() {
         //GridPane gridPane = new GridPane();
@@ -259,6 +247,7 @@ public class Board extends Application {
         //set padding to center gridpane
 
         BOARD.setPadding(new Insets(15, 0, 0, 25));
+        BOARD.setAlignment(Pos.TOP_CENTER);     // Centers the board
 
         //these loops will make a row / column at every iteration for the grid,
         // since the game is 10 x 5, 10 columns and 5 rows will be made
@@ -306,7 +295,7 @@ public class Board extends Application {
 
     private void makeDraggableImages() {
         Piece AA = new Piece("AA");
-        System.out.println(AA);
+        //System.out.println(AA);
     }
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
@@ -318,6 +307,7 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA"};
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         //root.getChildren().add(new DraggablePiece("AA"));
@@ -326,7 +316,9 @@ public class Board extends Application {
         root.getChildren().addAll(pegs, placements);
         //pegs.relocate(100, 20);
         makePegs();
-        root.getChildren().add(new DraggablePiece("AA"));
+        for (String p : pieces) {
+            root.getChildren().add(new DraggablePiece(p));
+        }
         //makeDraggableImages();
         primaryStage.setScene(scene);
         primaryStage.show();
