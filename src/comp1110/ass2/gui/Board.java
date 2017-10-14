@@ -35,6 +35,10 @@ public class Board extends Application {
     private static final int BOARD_X = MARGIN_X+LARGE_SQUARE_SIZE;
     private static final int MARGIN_Y = SQUARE_SIZE;
     private static final int BOARD_Y = MARGIN_Y;
+    private static final int OFFBOARD_X = 622;
+    private static final int OFFBOARD_Y = 140;
+    private static final int OFFBOARD_MARGIN_X = 20;
+    private static final int OFFBOARD_MARGIN_Y = -60;
     
 
 //    private static final double BOARD_WIDTH = (2*BOARD_X) + (COLS * SQUARE_SIZE);
@@ -95,7 +99,9 @@ public class Board extends Application {
 //
 //        }
 
-        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+
+
+        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString(), 150, 150, false, false));
         //image.setRotate(90*spinAmount);
         }
 
@@ -158,7 +164,6 @@ public class Board extends Application {
             });
 
 
-
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
@@ -196,46 +201,47 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                //snapToGrid();
+                snapToGrid();
             });
 
         }
 
-//        private void snapToGrid() {
-//            if (onBoard()) {
-//                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-//                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-//                setPosition();
-//            } else {
-//                snapToHome();
-//            }
-//            //makeExposed();
-//        }
+        private void snapToGrid() {
+            if (onBoard()) {
+                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+                setPosition();
+                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
+            } else {
+                snapToHome();
+            }
+            //makeExposed();
+        }
 //
 //
-//        private boolean onBoard(){
-//            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
-//                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
-//            //return false;
-//        }
-//        private void setPosition() {
-//            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
-//            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
-//            int rotate = (int) getRotate() / 90;
-//            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
-//            piecestate[piece] = val+"";
-//        }
-//
-//
-//        //setOnHover or setOnaction
-//
-//        // Snaps to home
-//        private void snapToHome() {
-//            setLayoutX(homeX);
-//            setLayoutX(homeY);
-//            setRotate(0);
-//            piecestate[piece] = NOT_PLACED;
-//        }
+        private boolean onBoard(){
+            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
+                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
+            //return false;
+        }
+        private void setPosition() {
+            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
+            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
+            int rotate = (int) getRotate() / 90;
+            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
+            piecestate[piece] = val+"";
+        }
+
+
+        //setOnHover or setOnaction
+
+        // Snaps to home
+        private void snapToHome() {
+            setLayoutX(homeX);
+            setLayoutX(homeY);
+            setRotate(0);
+            piecestate[piece] = NOT_PLACED;
+        }
     }
 
     private void makePegs() {
@@ -293,10 +299,17 @@ public class Board extends Application {
         pegs.getChildren().addAll(BOARD);
     }
 
-    private void makeDraggableImages() {
-        Piece AA = new Piece("AA");
-        //System.out.println(AA);
+    private void makePieces() {
+//        BOARD.setPrefSize(BOARD_WIDTH, BOARD_HEIGHT); // Default width and height
+//        BOARD.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+//        BOARD.setPadding(new Insets(0, 0, 0, 25));
+//        BOARD.setAlignment(Pos.BOTTOM_CENTER);     // Centers the board
+        String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA", "HA"};
+        for (String p : pieces) {
+            root.getChildren().add(new DraggablePiece(p));
+        }
     }
+
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
     // FIXME Task 8: Implement starting placements
@@ -307,22 +320,24 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA"};
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-        //root.getChildren().add(new DraggablePiece("AA"));
-        //DraggablePiece piece = new DraggablePiece("AAL");
-        //placements.getChildren().add(piece);
         root.getChildren().addAll(pegs, placements);
-        //pegs.relocate(100, 20);
         makePegs();
-        for (String p : pieces) {
-            root.getChildren().add(new DraggablePiece(p));
-        }
+        makePieces();
         //makeDraggableImages();
         primaryStage.setScene(scene);
         primaryStage.show();
 
+    }
+    public static String showJustShapeName(String piece) {
+        String out = "";
+        for (int i = 0; i < piece.length(); i++) {
+            if (!(piece.charAt(i) == '.' || piece.charAt(i) == 'p' || piece.charAt(i) == 'n' || piece.charAt(i) == 'g')) {
+                out += piece.charAt(i);
+            }
+        }
+        return out;
     }
 
 }
