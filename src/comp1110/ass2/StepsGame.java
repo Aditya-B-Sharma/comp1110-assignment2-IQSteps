@@ -1,8 +1,5 @@
 package comp1110.ass2;
 
-import com.sun.deploy.util.StringUtils;
-import gittest.C;
-
 import java.util.*;
 
 /**
@@ -531,31 +528,41 @@ public class StepsGame {
                 solutionPaths.root.addChild(solutionPaths.root, move);
             }
         }
+        return null;
     }
 
-    static treeNode<String> buildTree(int maxDepth, treeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
+    static TreeNode<String> buildTree(int maxDepth, TreeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
         int iterationsRemaining = maxDepth;
 
         if (iterationsRemaining == 0) {
             return initialNode;
         }
         else {
+//            for (int i = 0; i < remainingMoves.size(); i++) {
+//                if (isPlacementSequenceValid(initialPlacement+remainingMoves.get(i))) {
+//                    initialNode.addChild(initialNode, remainingMoves.get(i));
+//                }
+//                else {
+//
+//                }
+//            }
             for (String move : remainingMoves) {
                 if (isPlacementSequenceValid(initialPlacement + move)) {
                     initialNode.addChild(initialNode, move);
                 }
             }
         }
+        return null; // Nothing yet
     }
 
-//        static treeNode<String> buildTree(int maxDepth, treeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
+//        static TreeNode<String> buildTree(int maxDepth, TreeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
 //            int iterationsRemaining = maxDepth;
 //
 //            if (iterationsRemaining == 0) {
 //                return initialNode;
 //            }
 //            else {
-//                for (treeNode<String> node : initialNode.children) {
+//                for (TreeNode<String> node : initialNode.children) {
 //                    for (String move : remainingMoves) {
 //                        if(isPlacementSequenceValid(initialPlacement + move)) {
 //                            node.addChild(node, move);

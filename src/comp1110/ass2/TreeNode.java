@@ -5,12 +5,12 @@ import java.util.List;
 /**
  * Created by Stefan on 14/10/2017.
  */
-public class treeNode<String> {
+public class TreeNode<String> {
         public String data;
-        public  treeNode<String> parent;
-        public List<treeNode<String>> children;
+        public TreeNode<String> parent;
+        public List<TreeNode<String>> children;
 
-        public treeNode(treeNode<String> parent) {
+        public TreeNode(TreeNode<String> parent) {
             this.parent = parent;
         }
 
@@ -18,16 +18,16 @@ public class treeNode<String> {
             data = value;
         }
 
-        public List<treeNode<String>> getChildren() {
+        public List<TreeNode<String>> getChildren() {
             return children;
         }
 
-        public treeNode<String> getParent() {
+        public TreeNode<String> getParent() {
             return parent;
         }
 
-        public treeNode<String> addChild(treeNode<String> parent, String value) {
-            treeNode node = new treeNode(parent);
+        public TreeNode<String> addChild(TreeNode<String> parent, String value) {
+            TreeNode node = new TreeNode(parent);
             node.setValue(value);
             parent.getChildren().add(node);
             return node;
