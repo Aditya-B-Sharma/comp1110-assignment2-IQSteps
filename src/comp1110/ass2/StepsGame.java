@@ -45,6 +45,17 @@ public class StepsGame {
             2, 1, 0,
             0, 2, 1};
 
+    public static String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
+            "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
+            "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
+            "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
+            "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
+            "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
+            "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
+            "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
+    // All locations
+    public static String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
 
 
 
@@ -504,38 +515,58 @@ public class StepsGame {
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
         String[] output;
+        Tree<String> solutionPaths;
 
-        String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
-        // Location from origin of piece - depends on indexing its variable
-        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
+        List<String> initialPieces = getPiecePlacements(placement);
+        String latestPiece = initialPieces.get(initialPieces.size() - 1);
 
-        // All the pieces and their variations
-        String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
-                "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
-                "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
-                "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
-                "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
-                "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
-                "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
-                "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
-        // All locations
-        String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
-                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
-        // All possible moves each piece can take
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
-        // Get unavailable locations
-        ArrayList<String> unavailableLocations = getUsedLocations(placement);
-
-        // Updated data structures for available locations and possible moves for remaining pieces
-        ArrayList<String> availableLocations;
-        ArrayList<String> updatedRemainingMoves;
-        System.out.println(possibleMoves);
-        return null;
+        solutionPaths = new Tree<String>(latestPiece);
+        for (String move : remainingMoves) {
+            if (isPlacementSequenceValid(latestPiece + move)) {
+                solutionPaths.root.addChild(solutionPaths.root, move);
+            }
+        }
     }
+
+    static treeNode<String> buildTree(int maxDepth, treeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
+        int iterationsRemaining = maxDepth;
+
+        if (iterationsRemaining == 0) {
+            return initialNode;
+        }
+        else {
+            for (String move : remainingMoves) {
+                if (isPlacementSequenceValid(initialPlacement + move)) {
+                    initialNode.addChild(initialNode, move);
+                }
+            }
+        }
+    }
+
+//        static treeNode<String> buildTree(int maxDepth, treeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
+//            int iterationsRemaining = maxDepth;
+//
+//            if (iterationsRemaining == 0) {
+//                return initialNode;
+//            }
+//            else {
+//                for (treeNode<String> node : initialNode.children) {
+//                    for (String move : remainingMoves) {
+//                        if(isPlacementSequenceValid(initialPlacement + move)) {
+//                            node.addChild(node, move);
+//                        }
+//                    }
+//
+//                }
+//                return output;
+//            }
+//        }
+
 
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
         /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH INDIVIDUAL PIECE */
