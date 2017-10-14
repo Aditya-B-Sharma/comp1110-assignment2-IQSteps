@@ -196,46 +196,46 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                snapToGrid();
+                //snapToGrid();
             });
 
         }
 
-        private void snapToGrid() {
-            if (onBoard()) {
-                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-                setPosition();
-            } else {
-                snapToHome();
-            }
-            //makeExposed();
-        }
-
-
-        private boolean onBoard(){
-            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
-                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
-            //return false;
-        }
-        private void setPosition() {
-            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
-            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
-            int rotate = (int) getRotate() / 90;
-            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
-            piecestate[piece] = val+"";
-        }
-
-
-        //setOnHover or setOnaction
-
-        // Snaps to home
-        private void snapToHome() {
-            setLayoutX(homeX);
-            setLayoutX(homeY);
-            setRotate(0);
-            piecestate[piece] = NOT_PLACED;
-        }
+//        private void snapToGrid() {
+//            if (onBoard()) {
+//                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+//                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+//                setPosition();
+//            } else {
+//                snapToHome();
+//            }
+//            //makeExposed();
+//        }
+//
+//
+//        private boolean onBoard(){
+//            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
+//                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
+//            //return false;
+//        }
+//        private void setPosition() {
+//            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
+//            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
+//            int rotate = (int) getRotate() / 90;
+//            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
+//            piecestate[piece] = val+"";
+//        }
+//
+//
+//        //setOnHover or setOnaction
+//
+//        // Snaps to home
+//        private void snapToHome() {
+//            setLayoutX(homeX);
+//            setLayoutX(homeY);
+//            setRotate(0);
+//            piecestate[piece] = NOT_PLACED;
+//        }
     }
 
     private void makePegs() {
