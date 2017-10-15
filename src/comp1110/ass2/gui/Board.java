@@ -26,19 +26,8 @@ import java.util.ArrayList;
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
-    private static final double ROWS = 31/3;
-    private static final double COLS = 493/60;
-    private static final int SQUARE_SIZE = 60;
-    private static final int PIECE_IMAGE_SIZE = (int) ((3*SQUARE_SIZE)*1.33);
-    private static final int LARGE_SQUARE_SIZE = 3 * SQUARE_SIZE;
-    private static final int MARGIN_X = 40;
-    private static final int BOARD_X = MARGIN_X+LARGE_SQUARE_SIZE;
-    private static final int MARGIN_Y = SQUARE_SIZE;
-    private static final int BOARD_Y = MARGIN_Y;
-    private static final int OFFBOARD_X = 622;
-    private static final int OFFBOARD_Y = 140;
-    private static final int OFFBOARD_MARGIN_X = 20;
-    private static final int OFFBOARD_MARGIN_Y = -60;
+    private static final int CIRCLE_SIZE = 20;
+
     
 
 //    private static final double BOARD_WIDTH = (2*BOARD_X) + (COLS * SQUARE_SIZE);
@@ -46,6 +35,8 @@ public class Board extends Application {
 
     /*Board not currently in correct dimension*/
 
+
+    // Need to somehow link the positions with each node.
     private static int[] pos = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                                10,11,12,13,14,15,16,17,18,19,
                                20,21,22,23,24,25,26,27,28,29,
@@ -95,24 +86,25 @@ public class Board extends Application {
             }
         }
 
+
 //        public void setOrientation(String orientation) {
 //
 //        }
 
 
-
-        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString(), 150, 150, false, false));
+            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+        //setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString(), 150, 150, false, false));
         //image.setRotate(90*spinAmount);
         }
+
 
     }
 
     class DraggablePiece extends Piece {
-        int piece;
         int homeX, homeY;
         double mouseX, mouseY;
         boolean flipped = false;
-        ArrayList<String> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
+        ArrayList<Piece> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
 
         DraggablePiece(String piece) {
             super(piece);
@@ -168,7 +160,8 @@ public class Board extends Application {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
-                        //System.out.println("Is working");
+                        //setImage(new Image(Board.class.getResource(URI_BASE+ flip(piece)+".png").toString()));
+                        System.out.println("Is working");
                         if (!flipped) {
 
                             flipped = true;
@@ -201,46 +194,43 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                snapToGrid();
+                //snapToGrid();
             });
 
         }
 
-        private void snapToGrid() {
-            if (onBoard()) {
-                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-                setPosition();
-                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
-            } else {
-                snapToHome();
-            }
-            //makeExposed();
-        }
+//        private void snapToGrid() {
+//            if (onBoard()) {
+//                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+//                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+//                setPosition();
+//                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
+//            } else {
+//                snapToHome();
+//            }
+//            //makeExposed();
+//        }
 //
 //
-        private boolean onBoard(){
-            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
-                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
-            //return false;
-        }
-        private void setPosition() {
-            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
-            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
-            int rotate = (int) getRotate() / 90;
-            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
-            piecestate[piece] = val+"";
-        }
+//        private boolean onBoard(){
+//            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
+//                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
+//            //return false;
+//        }
+//        private void setPosition() {
+//            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
+//            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
+//            int rotate = (int) getRotate() / 90;
+//            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
+//            piecestate[piece] = val+"";
+//        }
 
 
         //setOnHover or setOnaction
 
         // Snaps to home
         private void snapToHome() {
-            setLayoutX(homeX);
-            setLayoutX(homeY);
-            setRotate(0);
-            piecestate[piece] = NOT_PLACED;
+
         }
     }
 
@@ -270,11 +260,11 @@ public class Board extends Application {
         for (int y = 0; y<10; y++) {
             for (int z = 0; z<5; z++) {
                 if (y % 2 == 0 && z % 2 == 0 ) {
-                    Circle x = new Circle(20);
+                    Circle x = new Circle(CIRCLE_SIZE);
                     x.setOpacity(0.3);
                     BOARD.add(x, y, z);
                 } else if (y % 2 == 1 && z % 2 == 1) {
-                    Circle x = new Circle(20);
+                    Circle x = new Circle(CIRCLE_SIZE);
                     x.setOpacity(0.3);
                     BOARD.add(x, y, z);
                 }
@@ -300,13 +290,19 @@ public class Board extends Application {
     }
 
     private void makePieces() {
-//        BOARD.setPrefSize(BOARD_WIDTH, BOARD_HEIGHT); // Default width and height
-//        BOARD.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-//        BOARD.setPadding(new Insets(0, 0, 0, 25));
-//        BOARD.setAlignment(Pos.BOTTOM_CENTER);     // Centers the board
         String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA", "HA"};
+        int x = 0;
+        int y = 200;
         for (String p : pieces) {
-            root.getChildren().add(new DraggablePiece(p));
+            DraggablePiece piece = new DraggablePiece(p);
+            piece.setFitHeight(150);
+            piece.setFitWidth(150);
+            piece.setLayoutX(x);            // Unsure why the shapes aren't being added in such order and positions
+            piece.setLayoutX(y);
+            root.getChildren().add(piece);
+            x += 300;
+            //piece.setFitHeight();
+            //root.getChildren().add(new DraggablePiece(p));
         }
     }
 
@@ -330,14 +326,16 @@ public class Board extends Application {
         primaryStage.show();
 
     }
-    public static String showJustShapeName(String piece) {
-        String out = "";
-        for (int i = 0; i < piece.length(); i++) {
-            if (!(piece.charAt(i) == '.' || piece.charAt(i) == 'p' || piece.charAt(i) == 'n' || piece.charAt(i) == 'g')) {
-                out += piece.charAt(i);
-            }
+    public String flip(String piece) {
+        String p = "";
+        if (piece.charAt(1) == 'A') {
+            p+=piece.charAt(0)+'E';
+            return p;
         }
-        return out;
+        else {
+            p += piece.charAt(0) + 'A';
+            return p;
+        }
     }
 
 }
