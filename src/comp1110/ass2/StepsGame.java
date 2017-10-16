@@ -1,5 +1,9 @@
 package comp1110.ass2;
 
+import com.sun.deploy.util.StringUtils;
+import gittest.C;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -528,51 +532,35 @@ public class StepsGame {
                 solutionPaths.root.addChild(solutionPaths.root, move);
             }
         }
-        return null;
     }
 
-    static TreeNode<String> buildTree(int maxDepth, TreeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
-        int iterationsRemaining = maxDepth;
+    static TreeNode<String> addNodes(TreeNode<String> initialNode, int maxDepth, ArrayList<String> remainingMoves, String initialPlacement) {
 
-        if (iterationsRemaining == 0) {
+        for (Iterator<String> iterator = remainingMoves.iterator(); iterator.hasNext();) {
+            String placement = iterator.next();
+            if (!isPlacementSequenceValid(initialPlacement + placement)) {
+                iterator.remove();
+            }
+        }
+
+        if (maxDepth == 0 || remainingMoves.size() == 0) {
             return initialNode;
         }
+
         else {
-//            for (int i = 0; i < remainingMoves.size(); i++) {
-//                if (isPlacementSequenceValid(initialPlacement+remainingMoves.get(i))) {
-//                    initialNode.addChild(initialNode, remainingMoves.get(i));
-//                }
-//                else {
-//
-//                }
-//            }
-            for (String move : remainingMoves) {
-                if (isPlacementSequenceValid(initialPlacement + move)) {
-                    initialNode.addChild(initialNode, move);
+            for (int i = 0; i < remainingMoves.size(); i++) {
+                if (isPlacementSequenceValid(initialPlacement + remainingMoves.get(i))) {
+                    TreeNode<String> newNode = initialNode.addChild(initialNode, remainingMoves.get(i));
+                    ArrayList<String> remainingMovesUpdate = remainingMoves;
+                    remainingMovesUpdate.remove(remainingMoves.get(i));
+                    addNodes(newNode, maxDepth - 1, remainingMovesUpdate, initialPlacement + remainingMoves.get(i));
                 }
             }
         }
-        return null; // Nothing yet
+
+        return null;
     }
 
-//        static TreeNode<String> buildTree(int maxDepth, TreeNode<String> initialNode, List<String> remainingMoves, String initialPlacement) {
-//            int iterationsRemaining = maxDepth;
-//
-//            if (iterationsRemaining == 0) {
-//                return initialNode;
-//            }
-//            else {
-//                for (TreeNode<String> node : initialNode.children) {
-//                    for (String move : remainingMoves) {
-//                        if(isPlacementSequenceValid(initialPlacement + move)) {
-//                            node.addChild(node, move);
-//                        }
-//                    }
-//
-//                }
-//                return output;
-//            }
-//        }
 
 
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
