@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
+import java.awt.*;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -57,6 +58,7 @@ public class Board extends Application {
     private final Group pieces = new Group();
     /* the state of the pieces */
     static final String NOT_PLACED = " ";
+    private final ArrayList<Circle> Container = new ArrayList<>();
 
     String[] piecestate = new String[8];
 
@@ -106,6 +108,8 @@ public class Board extends Application {
         double mouseX, mouseY;
         boolean flipped = false;
         ArrayList<Piece> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
+
+
 
         DraggablePiece(String piece) {
             super(piece);
@@ -177,6 +181,10 @@ public class Board extends Application {
                     }
                 }
             });
+            ArrayList<Double> distancesOfCircles = new ArrayList<>();
+            for (Circle x : Container) {
+                //distancesOfCircles.add(Math.sqrt((Math.pow(x.getCenterX()))))
+            }
             /*HELPED BY STEVE*/
             /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
 
@@ -253,30 +261,43 @@ public class Board extends Application {
         int xd = 209;
         int xe = 139;
         for (int i = 0; i < 50; i++) {
-            Circle peg = new Circle(CIRCLE_SIZE);
-            peg.setOpacity(0.3);
-            pegs.getChildren().add(peg);
+
             if (i<=9 && i%2 == 0) {
+                Circle peg = new Circle(CIRCLE_SIZE);
+                peg.setOpacity(0.3);
+                pegs.getChildren().add(peg);
                 peg.setCenterX(x);
                 peg.setCenterY(y);
                 x += 140;
             }
             else if (i > 9 && i <= 19 && i%2==1) {
+                Circle peg = new Circle(CIRCLE_SIZE);
+                peg.setOpacity(0.3);
+                pegs.getChildren().add(peg);
                 peg.setCenterX(xb);
                 peg.setCenterY(y+70);
                 xb += 140;
             }
             else if (i > 19 && i <= 29 && i%2 == 0) {
+                Circle peg = new Circle(CIRCLE_SIZE);
+                peg.setOpacity(0.3);
+                pegs.getChildren().add(peg);
                 peg.setCenterX(xc);
                 peg.setCenterY(y+140);
                 xc += 140;
             }
             else if (i > 29 && i <= 39 && i%2==1) {
+                Circle peg = new Circle(CIRCLE_SIZE);
+                peg.setOpacity(0.3);
+                pegs.getChildren().add(peg);
                 peg.setCenterX(xd);
                 peg.setCenterY(y+210);
                 xd += 140;
             }
             else if (i > 39 && i <= 49 && i%2==0) {
+                Circle peg = new Circle(CIRCLE_SIZE);
+                peg.setOpacity(0.3);
+                pegs.getChildren().add(peg);
                 peg.setCenterX(xe);
                 peg.setCenterY(y+280);
                 xe += 140;
