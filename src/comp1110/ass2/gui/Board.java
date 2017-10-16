@@ -20,9 +20,10 @@ import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
 
-import java.awt.*;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
@@ -53,14 +54,57 @@ public class Board extends Application {
     private final Group root = new Group();
     private final Group controls = new Group();
     private final Group placements = new Group();
-    private final Group pegs = new Group();
+    //private final Group pegs = new Group();
     TextField textField;
     private final Group pieces = new Group();
     /* the state of the pieces */
     static final String NOT_PLACED = " ";
-    private final ArrayList<Circle> Container = new ArrayList<>();
 
     String[] piecestate = new String[8];
+
+    private ArrayList<Circle> pegs = new ArrayList<>();
+
+    public Circle findNearestPeg(double mouseX, double mouseY) {
+        ArrayList<Double> distances = new ArrayList<>();
+        Circle nearestCircle;
+        for (Circle peg : pegs) {
+
+            distances.add(peg.distance(mouseX,mouseY));
+            //System.out.println(peg);
+//            System.out.println("peg: " + pegs.get(i).distance(x,y));
+//            System.out.println("current nearest " + nearestCircle.distance(x,y));
+//            if ((pegs.get(i).distance(x,y)) < nearestCircle.distance(x,y)) {
+//                nearestCircle = pegs.get(i);
+//            }
+        }
+        System.out.println(distances);
+        double smallestDist = Collections.min(distances);
+        //System.out.println("smallest dist from cursor" + smallestDist);
+        int index = distances.indexOf(smallestDist);
+        //System.out.println(index);
+        nearestCircle = pegs.get(index);
+        //System.out.println(nearestCircle);
+        //System.out.println("nearest peg: " + nearestCircle);
+        return nearestCircle;
+
+    }
+
+    class Circle extends javafx.scene.shape.Circle {
+
+        public Circle(double radius) {
+            super(radius);
+        }
+
+        public double distance(double mousex, double mousey){
+            double xDistance = getCenterX() - mousex;
+            double yDistance = getCenterY() - mousey;
+            return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        }
+
+
+    }
+
+
 
 
     /*Inner class to display the shapes*/
@@ -108,8 +152,6 @@ public class Board extends Application {
         double mouseX, mouseY;
         boolean flipped = false;
         ArrayList<Piece> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
-
-
 
         DraggablePiece(String piece) {
             super(piece);
@@ -181,10 +223,6 @@ public class Board extends Application {
                     }
                 }
             });
-            ArrayList<Double> distancesOfCircles = new ArrayList<>();
-            for (Circle x : Container) {
-                //distancesOfCircles.add(Math.sqrt((Math.pow(x.getCenterX()))))
-            }
             /*HELPED BY STEVE*/
             /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
 
@@ -203,27 +241,46 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                snapToGrid();
+                //System.out.println(event.getSceneX() + "" + event.getSceneY());
+                Circle near = findNearestPeg(event.getSceneX() ,event.getSceneY());
+                setLayoutX(near.getCenterX()-70);
+                setLayoutY(near.getCenterY()-70);
+                //if (near.getRotate() != 0) {
+                //    this.setRotate(180);
+                //}
+                //snapToGrid();
+//                if ((getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363)) {
+//                } else {
+//                    if (super.piece.charAt(0) == 'A') {
+//                        setLayoutX(121);
+//                        setLayoutY(406);
+//                        //root.getChildren().add(p);
+//                    } else if (super.piece.charAt(0) == 'B'){
+//                        setLayoutX(279);
+//                        setLayoutY(406);
+//                        //root.getChildren().add(p);
+//                    }
+//                }
             });
 
         }
 
-        private void snapToGrid() {
-            if (onBoard()) {
-//                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-//                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-//                setPosition();
-                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
-            } else {
-                snapToHome();
-            }
-            //makeExposed();
-        }
+//        private void snapToGrid() {
+//            if (onBoard()) {
+////                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+////                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+////                setPosition();
+//                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
+//            } else {
+//                snapToHome();
+//            }
+//            //makeExposed();
+//        }
 //
 //
-        private boolean onBoard(){
-            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
-        }
+//        private boolean onBoard(){
+//            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
+//        }
 //        private void setPosition() {
 //            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
 //            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
@@ -236,21 +293,21 @@ public class Board extends Application {
         //setOnHover or setOnaction
 
         // Snaps to home
-        private void snapToHome() {
-            DraggablePiece p = new DraggablePiece(piece);
-//            p.setFitWidth(120);
-//            p.setFitHeight(120);
-            if (piece.charAt(0) == 'A') {
-                p.setLayoutX(121);
-                p.setLayoutY(406);
-                root.getChildren().add(p);
-            }
-            else if (piece.charAt(0) == 'B'){
-                p.setLayoutX(279);
-                p.setLayoutY(406);
-                root.getChildren().add(p);
-            }
-        }
+//        private void snapToHome(DraggablePiece x) {
+//            //DraggablePiece p = new DraggablePiece(piece);
+////            p.setFitWidth(120);
+////            p.setFitHeight(120);
+//            if (charAt(0) == 'A') {
+//                p.setLayoutX(121);
+//                p.setLayoutY(406);
+//                root.getChildren().add(p);
+//            }
+//            else if (piece.charAt(0) == 'B'){
+//                p.setLayoutX(279);
+//                p.setLayoutY(406);
+//                root.getChildren().add(p);
+//            }
+//        }
     }
 
     public void makePegs() {
@@ -260,12 +317,16 @@ public class Board extends Application {
         int xc = 139;
         int xd = 209;
         int xe = 139;
+        int yb = 153;
+        int yc = 223;
+        int yd = 293;
+        int ye = 363;
         for (int i = 0; i < 50; i++) {
-
             if (i<=9 && i%2 == 0) {
                 Circle peg = new Circle(CIRCLE_SIZE);
                 peg.setOpacity(0.3);
-                pegs.getChildren().add(peg);
+                root.getChildren().add(peg);
+                pegs.add(peg);
                 peg.setCenterX(x);
                 peg.setCenterY(y);
                 x += 140;
@@ -273,33 +334,37 @@ public class Board extends Application {
             else if (i > 9 && i <= 19 && i%2==1) {
                 Circle peg = new Circle(CIRCLE_SIZE);
                 peg.setOpacity(0.3);
-                pegs.getChildren().add(peg);
+                root.getChildren().add(peg);
+                pegs.add(peg);
                 peg.setCenterX(xb);
-                peg.setCenterY(y+70);
+                peg.setCenterY(yb);
                 xb += 140;
             }
             else if (i > 19 && i <= 29 && i%2 == 0) {
                 Circle peg = new Circle(CIRCLE_SIZE);
                 peg.setOpacity(0.3);
-                pegs.getChildren().add(peg);
+                root.getChildren().add(peg);
+                pegs.add(peg);
                 peg.setCenterX(xc);
-                peg.setCenterY(y+140);
+                peg.setCenterY(yc);
                 xc += 140;
             }
             else if (i > 29 && i <= 39 && i%2==1) {
                 Circle peg = new Circle(CIRCLE_SIZE);
                 peg.setOpacity(0.3);
-                pegs.getChildren().add(peg);
+                root.getChildren().add(peg);
+                pegs.add(peg);
                 peg.setCenterX(xd);
-                peg.setCenterY(y+210);
+                peg.setCenterY(yd);
                 xd += 140;
             }
             else if (i > 39 && i <= 49 && i%2==0) {
                 Circle peg = new Circle(CIRCLE_SIZE);
                 peg.setOpacity(0.3);
-                pegs.getChildren().add(peg);
+                root.getChildren().add(peg);
+                pegs.add(peg);
                 peg.setCenterX(xe);
-                peg.setCenterY(y+280);
+                peg.setCenterY(ye);
                 xe += 140;
             }
         }
@@ -370,8 +435,8 @@ public class Board extends Application {
         for (int i = 0; i < pieces.length; i++) {
             if (i/4 < 1) {
                 DraggablePiece piece = new DraggablePiece(pieces[i]);
-                piece.setFitHeight(120);
-                piece.setFitWidth(120);
+                //piece.setFitHeight(120);
+                //piece.setFitWidth(120);
                 piece.setLayoutX(x);
                 piece.setLayoutY(y);
                 x += 158;
@@ -379,8 +444,8 @@ public class Board extends Application {
             }
             else {
                 DraggablePiece piece = new DraggablePiece(pieces[i]);
-                piece.setFitHeight(120);
-                piece.setFitWidth(120);
+                //piece.setFitHeight(120);
+                //piece.setFitWidth(120);
                 piece.setLayoutX(xb);
                 piece.setLayoutY(yb);
                 xb += 158;
@@ -401,7 +466,7 @@ public class Board extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-        root.getChildren().addAll(pegs, placements);
+        root.getChildren().addAll(placements);
         makePegs();
         makePieces();
         //makeDraggableImages();
