@@ -26,15 +26,14 @@ import java.util.ArrayList;
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
-    private static final int CIRCLE_SIZE = 20;
+    private static final double CIRCLE_SIZE = 22.5;
+    private static final int MARGIN_X = 121;
+    private static final int MARGIN_Y = 406;
 
     
 
 //    private static final double BOARD_WIDTH = (2*BOARD_X) + (COLS * SQUARE_SIZE);
 //    private static final double BOARD_HEIGHT = (2*BOARD_Y) + (ROWS * SQUARE_SIZE);
-
-    /*Board not currently in correct dimension*/
-
 
     // Need to somehow link the positions with each node.
     private static int[] pos = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -46,6 +45,7 @@ public class Board extends Application {
     private static final String URI_BASE = "assets/";
     private static GridPane BOARD = new GridPane();
     final GridPane target = BOARD;
+
     //final String piece;
 
     //Create needed groups for different elements
@@ -56,8 +56,9 @@ public class Board extends Application {
     TextField textField;
     private final Group pieces = new Group();
     /* the state of the pieces */
-    String[] piecestate = new String[8];
     static final String NOT_PLACED = " ";
+
+    String[] piecestate = new String[8];
 
 
     /*Inner class to display the shapes*/
@@ -194,29 +195,27 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                //snapToGrid();
+                snapToGrid();
             });
 
         }
 
-//        private void snapToGrid() {
-//            if (onBoard()) {
+        private void snapToGrid() {
+            if (onBoard()) {
 //                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
 //                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
 //                setPosition();
-//                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
-//            } else {
-//                snapToHome();
-//            }
-//            //makeExposed();
-//        }
+                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
+            } else {
+                snapToHome();
+            }
+            //makeExposed();
+        }
 //
 //
-//        private boolean onBoard(){
-//            return getLayoutX() > (BOARD_X-LARGE_SQUARE_SIZE) && (getLayoutX() < (BOARD_WIDTH - BOARD_X))
-//                    && getLayoutY() > (BOARD_Y-LARGE_SQUARE_SIZE) && (getLayoutY() < (BOARD_HEIGHT - BOARD_Y));
-//            //return false;
-//        }
+        private boolean onBoard(){
+            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
+        }
 //        private void setPosition() {
 //            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
 //            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
@@ -230,79 +229,142 @@ public class Board extends Application {
 
         // Snaps to home
         private void snapToHome() {
-
-        }
-    }
-
-    private void makePegs() {
-        //GridPane gridPane = new GridPane();
-
-        BOARD.setPrefSize(BOARD_WIDTH, BOARD_HEIGHT); // Default width and height
-        //gridPane.setGridLinesVisible(true);
-        BOARD.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-        //set padding to center gridpane
-
-        BOARD.setPadding(new Insets(15, 0, 0, 25));
-        BOARD.setAlignment(Pos.TOP_CENTER);     // Centers the board
-
-        //these loops will make a row / column at every iteration for the grid,
-        // since the game is 10 x 5, 10 columns and 5 rows will be made
-        for (int k = 0; k < 10; k ++) {
-            ColumnConstraints column = new ColumnConstraints(70);
-            BOARD.getColumnConstraints().add(column);
-        }
-        for (int l = 0; l < 5; l ++) {
-            RowConstraints row = new RowConstraints(70);
-            BOARD.getRowConstraints().add(row);
-        }
-
-        //decide our peg positions
-        for (int y = 0; y<10; y++) {
-            for (int z = 0; z<5; z++) {
-                if (y % 2 == 0 && z % 2 == 0 ) {
-                    Circle x = new Circle(CIRCLE_SIZE);
-                    x.setOpacity(0.3);
-                    BOARD.add(x, y, z);
-                } else if (y % 2 == 1 && z % 2 == 1) {
-                    Circle x = new Circle(CIRCLE_SIZE);
-                    x.setOpacity(0.3);
-                    BOARD.add(x, y, z);
-                }
+            DraggablePiece p = new DraggablePiece(piece);
+//            p.setFitWidth(120);
+//            p.setFitHeight(120);
+            if (piece.charAt(0) == 'A') {
+                p.setLayoutX(121);
+                p.setLayoutY(406);
+                root.getChildren().add(p);
+            }
+            else if (piece.charAt(0) == 'B'){
+                p.setLayoutX(279);
+                p.setLayoutY(406);
+                root.getChildren().add(p);
             }
         }
-
-        int out = 0;
-        for (int y = 0; y<5; y++) {
-            for (int z = 0; z<10; z++) {
-                BOARD.add(new Text(out + ""), z, y);
-                out++;
-                }
-        }
-
-        //fix peg positions as they were underpadded on the left
-        //set up the pegs properly
-        for (Node node : BOARD.getChildren()) {
-            BOARD.setMargin(node, new Insets(0, 0, 0, 15));
-        }
-        //add all circles (pegs) to parent group
-
-        pegs.getChildren().addAll(BOARD);
     }
 
+    public void makePegs() {
+        int x = 139;
+        int y = 83;
+        int xb = 209;
+        int xc = 139;
+        int xd = 209;
+        int xe = 139;
+        for (int i = 0; i < 50; i++) {
+            Circle peg = new Circle(CIRCLE_SIZE);
+            peg.setOpacity(0.3);
+            pegs.getChildren().add(peg);
+            if (i<=9 && i%2 == 0) {
+                peg.setCenterX(x);
+                peg.setCenterY(y);
+                x += 140;
+            }
+            else if (i > 9 && i <= 19 && i%2==1) {
+                peg.setCenterX(xb);
+                peg.setCenterY(y+70);
+                xb += 140;
+            }
+            else if (i > 19 && i <= 29 && i%2 == 0) {
+                peg.setCenterX(xc);
+                peg.setCenterY(y+140);
+                xc += 140;
+            }
+            else if (i > 29 && i <= 39 && i%2==1) {
+                peg.setCenterX(xd);
+                peg.setCenterY(y+210);
+                xd += 140;
+            }
+            else if (i > 39 && i <= 49 && i%2==0) {
+                peg.setCenterX(xe);
+                peg.setCenterY(y+280);
+                xe += 140;
+            }
+        }
+    }
+
+//    private void makePegs() {
+//        //GridPane gridPane = new GridPane();
+//
+//        BOARD.setPrefSize(BOARD_WIDTH, BOARD_HEIGHT); // Default width and height
+//        //gridPane.setGridLinesVisible(true);
+//        BOARD.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+//        //set padding to center gridpane
+//
+//        BOARD.setPadding(new Insets(15, 0, 0, 25));
+//        BOARD.setAlignment(Pos.TOP_CENTER);     // Centers the board
+//
+//        //these loops will make a row / column at every iteration for the grid,
+//        // since the game is 10 x 5, 10 columns and 5 rows will be made
+//        for (int k = 0; k < 10; k ++) {
+//            ColumnConstraints column = new ColumnConstraints(70);
+//            BOARD.getColumnConstraints().add(column);
+//        }
+//        for (int l = 0; l < 5; l ++) {
+//            RowConstraints row = new RowConstraints(70);
+//            BOARD.getRowConstraints().add(row);
+//        }
+//
+//        //decide our peg positions
+//        for (int y = 0; y<10; y++) {
+//            for (int z = 0; z<5; z++) {
+//                if (y % 2 == 0 && z % 2 == 0 ) {
+//                    Circle x = new Circle(CIRCLE_SIZE);
+//                    x.setOpacity(0.3);
+//                    BOARD.add(x, y, z);
+//                } else if (y % 2 == 1 && z % 2 == 1) {
+//                    Circle x = new Circle(CIRCLE_SIZE);
+//                    x.setOpacity(0.3);
+//                    BOARD.add(x, y, z);
+//                }
+//            }
+//        }
+//
+//        int out = 0;
+//        for (int y = 0; y<5; y++) {
+//            for (int z = 0; z<10; z++) {
+//                BOARD.add(new Text(out + ""), z, y);
+//                out++;
+//                }
+//        }
+//
+//        //fix peg positions as they were underpadded on the left
+//        //set up the pegs properly
+//        for (Node node : BOARD.getChildren()) {
+//            BOARD.setMargin(node, new Insets(0, 0, 0, 15));
+//        }
+//        //add all circles (pegs) to parent group
+//
+//        pegs.getChildren().addAll(BOARD);
+//    }
+
+    // Authorship: Khamis Buol u6080028
     private void makePieces() {
         String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA", "HA"};
-        int x = 0;
-        int y = 200;
-        for (String p : pieces) {
-            DraggablePiece piece = new DraggablePiece(p);
-            piece.setFitHeight(150);
-            piece.setFitWidth(150);
-            piece.setLayoutX(x);            // Unsure why the shapes aren't being added in such order and positions
-            piece.setLayoutX(y);
-            root.getChildren().add(piece);
-            x += 300;
-            //piece.setFitHeight();
-            //root.getChildren().add(new DraggablePiece(p));
+        int x = 121;
+        int xb = 121;
+        int y = 406;
+        int yb = 536;
+        for (int i = 0; i < pieces.length; i++) {
+            if (i/4 < 1) {
+                DraggablePiece piece = new DraggablePiece(pieces[i]);
+                piece.setFitHeight(120);
+                piece.setFitWidth(120);
+                piece.setLayoutX(x);
+                piece.setLayoutY(y);
+                x += 158;
+                root.getChildren().add(piece);
+            }
+            else {
+                DraggablePiece piece = new DraggablePiece(pieces[i]);
+                piece.setFitHeight(120);
+                piece.setFitWidth(120);
+                piece.setLayoutX(xb);
+                piece.setLayoutY(yb);
+                xb += 158;
+                root.getChildren().add(piece);
+            }
         }
     }
 
