@@ -60,6 +60,17 @@ public class Board extends Application {
 
     String[] piecestate = new String[8];
 
+    ArrayList<Peg> pegs = new ArrayList<>();
+
+
+    class Peg extends Circle{
+
+        public double distance(double x, double y){
+            double xDistance = getLayoutX() - x;
+            double yDistance = getLayoutY() - y;
+            return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        }
+    }
 
     /*Inner class to display the shapes*/
     class Piece extends ImageView {
@@ -195,27 +206,39 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                snapToGrid();
+                //snapToGrid();
+//                if ((getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363)) {
+//                } else {
+//                    if (super.piece.charAt(0) == 'A') {
+//                        setLayoutX(121);
+//                        setLayoutY(406);
+//                        //root.getChildren().add(p);
+//                    } else if (super.piece.charAt(0) == 'B'){
+//                        setLayoutX(279);
+//                        setLayoutY(406);
+//                        //root.getChildren().add(p);
+//                    }
+//                }
             });
 
         }
 
-        private void snapToGrid() {
-            if (onBoard()) {
-//                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-//                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-//                setPosition();
-                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
-            } else {
-                snapToHome();
-            }
-            //makeExposed();
-        }
+//        private void snapToGrid() {
+//            if (onBoard()) {
+////                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
+////                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
+////                setPosition();
+//                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
+//            } else {
+//                snapToHome();
+//            }
+//            //makeExposed();
+//        }
 //
 //
-        private boolean onBoard(){
-            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
-        }
+//        private boolean onBoard(){
+//            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
+//        }
 //        private void setPosition() {
 //            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
 //            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
@@ -228,21 +251,21 @@ public class Board extends Application {
         //setOnHover or setOnaction
 
         // Snaps to home
-        private void snapToHome() {
-            DraggablePiece p = new DraggablePiece(piece);
-//            p.setFitWidth(120);
-//            p.setFitHeight(120);
-            if (piece.charAt(0) == 'A') {
-                p.setLayoutX(121);
-                p.setLayoutY(406);
-                root.getChildren().add(p);
-            }
-            else if (piece.charAt(0) == 'B'){
-                p.setLayoutX(279);
-                p.setLayoutY(406);
-                root.getChildren().add(p);
-            }
-        }
+//        private void snapToHome(DraggablePiece x) {
+//            //DraggablePiece p = new DraggablePiece(piece);
+////            p.setFitWidth(120);
+////            p.setFitHeight(120);
+//            if (charAt(0) == 'A') {
+//                p.setLayoutX(121);
+//                p.setLayoutY(406);
+//                root.getChildren().add(p);
+//            }
+//            else if (piece.charAt(0) == 'B'){
+//                p.setLayoutX(279);
+//                p.setLayoutY(406);
+//                root.getChildren().add(p);
+//            }
+//        }
     }
 
     public void makePegs() {
@@ -255,7 +278,8 @@ public class Board extends Application {
         for (int i = 0; i < 50; i++) {
             Circle peg = new Circle(CIRCLE_SIZE);
             peg.setOpacity(0.3);
-            pegs.getChildren().add(peg);
+            root.getChildren().add(peg);
+            pegs.add(peg);
             if (i<=9 && i%2 == 0) {
                 peg.setCenterX(x);
                 peg.setCenterY(y);
@@ -380,7 +404,7 @@ public class Board extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-        root.getChildren().addAll(pegs, placements);
+        root.getChildren().addAll(placements);
         makePegs();
         makePieces();
         //makeDraggableImages();
