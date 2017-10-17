@@ -4,11 +4,9 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import java.util.ArrayList;
@@ -34,10 +32,10 @@ public class Board extends Application {
 
     private ArrayList<Circle> pegs = new ArrayList<>();
 
-    public Circle findNearestPeg(double mouseX, double mouseY) {
+    public Circle findNearestPeg(double x, double y) {
         ArrayList<Double> distances = new ArrayList<>();
         for (Circle peg : pegs) {
-            distances.add(peg.distance(mouseX,mouseY));
+            distances.add(peg.distance(x,y));
         }
         double smallestDist = Collections.min(distances);
         int index = distances.indexOf(smallestDist);
@@ -67,10 +65,12 @@ public class Board extends Application {
             root.getChildren().add(pos);
         }
 
-        public double distance(double mousex, double mousey){
-            double xDistance = getCenterX() - mousex;
-            double yDistance = getCenterY() - mousey;
-            return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
+        public double distance(double x, double y){
+            double xDistance = getCenterX() - x;
+            System.out.println(xDistance);
+            double yDistance = getCenterY() - y;
+            System.out.println(yDistance);
+            return Math.sqrt((Math.pow(Math.abs(xDistance), 2) + Math.pow(Math.abs(yDistance), 2)));
         }
     }
 
@@ -186,10 +186,14 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                Circle near = findNearestPeg(getLayoutX() ,getLayoutY());
-                System.out.println(getLayoutX() + "" + getLayoutY());
+                Circle near = findNearestPeg(getLayoutX(), getLayoutY());
+                System.out.println("Nearest peg: " + near.position);
+                System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
+                System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
                 setLayoutX(near.getCenterX());
                 setLayoutY(near.getCenterY());
+                System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
+                System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
         }
     }
