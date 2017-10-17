@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by Stefan on 14/10/2017.
  */
 public class Tree<String> {
+/*
     public TreeNode<String> root;
 
     public Tree(String rootData) {
@@ -14,5 +15,6 @@ public class Tree<String> {
         root.children = new ArrayList<TreeNode<String>>();
     }
 
+*/
 
 }
