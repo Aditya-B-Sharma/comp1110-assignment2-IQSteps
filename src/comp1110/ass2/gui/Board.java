@@ -1,41 +1,23 @@
 package comp1110.ass2.gui;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
-
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     private static final double CIRCLE_SIZE = 22.5;
-    private static final int MARGIN_X = 121;
-    private static final int MARGIN_Y = 406;
-
-    
-
-//    private static final double BOARD_WIDTH = (2*BOARD_X) + (COLS * SQUARE_SIZE);
-//    private static final double BOARD_HEIGHT = (2*BOARD_Y) + (ROWS * SQUARE_SIZE);
 
     // Need to somehow link the positions with each node.
     private static int[] pos = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -45,54 +27,44 @@ public class Board extends Application {
                                40,41,42,43,44,45,46,47,48,49};
 
     private static final String URI_BASE = "assets/";
-    private static GridPane BOARD = new GridPane();
-    final GridPane target = BOARD;
-
-    //final String piece;
 
     //Create needed groups for different elements
     private final Group root = new Group();
-    private final Group controls = new Group();
     private final Group placements = new Group();
-    //private final Group pegs = new Group();
-    TextField textField;
-    private final Group pieces = new Group();
-    /* the state of the pieces */
-    static final String NOT_PLACED = " ";
-
-    String[] piecestate = new String[8];
 
     private ArrayList<Circle> pegs = new ArrayList<>();
 
     public Circle findNearestPeg(double mouseX, double mouseY) {
         ArrayList<Double> distances = new ArrayList<>();
-        Circle nearestCircle;
         for (Circle peg : pegs) {
-
             distances.add(peg.distance(mouseX,mouseY));
-            //System.out.println(peg);
-//            System.out.println("peg: " + pegs.get(i).distance(x,y));
-//            System.out.println("current nearest " + nearestCircle.distance(x,y));
-//            if ((pegs.get(i).distance(x,y)) < nearestCircle.distance(x,y)) {
-//                nearestCircle = pegs.get(i);
-//            }
         }
-        System.out.println(distances);
         double smallestDist = Collections.min(distances);
-        //System.out.println("smallest dist from cursor" + smallestDist);
         int index = distances.indexOf(smallestDist);
-        //System.out.println(index);
-        nearestCircle = pegs.get(index);
-        //System.out.println(nearestCircle);
-        //System.out.println("nearest peg: " + nearestCircle);
+        Circle nearestCircle = pegs.get(index);
         return nearestCircle;
 
     }
 
     class Circle extends javafx.scene.shape.Circle {
 
+        private Character position;
+
+
         public Circle(double radius) {
             super(radius);
+        }
+
+        public Circle(Character position, double radius, double opacity, double centerX, double centerY) {
+            super(radius);
+            this.position = position;
+            setOpacity(opacity);
+            setCenterX(centerX);
+            setCenterY(centerY);
+            Label pos = new Label(Character.toString(position));
+            pos.setLayoutX(centerX);
+            pos.setLayoutY(centerY);
+            root.getChildren().add(pos);
         }
 
         public double distance(double mousex, double mousey){
@@ -100,23 +72,11 @@ public class Board extends Application {
             double yDistance = getCenterY() - mousey;
             return Math.sqrt((Math.pow(xDistance, 2) + Math.pow(yDistance, 2)));
         }
-
-
     }
-
-
-
 
     /*Inner class to display the shapes*/
     class Piece extends ImageView {
-        String piece;
-
-    //Image image;
-        /**
-         * * Construct a particular square
-         * @param //piece A character representing the type of square to be created.
-         */
-
+        private String piece;
 
         Piece(String piece) {
             this.piece = piece;
@@ -132,32 +92,21 @@ public class Board extends Application {
                 toFetch = "E";
             }
         }
-
-
-//        public void setOrientation(String orientation) {
-//
-//        }
-
-
-            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
-        //setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString(), 150, 150, false, false));
-        //image.setRotate(90*spinAmount);
+        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
         }
-
-
     }
 
     class DraggablePiece extends Piece {
         int homeX, homeY;
         double mouseX, mouseY;
         boolean flipped = false;
-        ArrayList<Piece> piecess = new ArrayList<>();  // ArrayList that will consist of pieces
 
-        DraggablePiece(String piece) {
+        DraggablePiece(String piece, double x, double y) {
             super(piece);
             setFocusTraversable(true);
             requestFocus();
-            //piecestate[piece.charAt(0) - 65] = NOT_PLACED;
+            setLayoutX(x);
+            setLayoutY(y);
             switch (piece.charAt(0)) {
                 case 'A':
                     homeX = 0;
@@ -207,14 +156,10 @@ public class Board extends Application {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
-                        //setImage(new Image(Board.class.getResource(URI_BASE+ flip(piece)+".png").toString()));
                         System.out.println("Is working");
                         if (!flipped) {
-
                             flipped = true;
-
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
-
                         }
                         else  {
                             flipped = false;
@@ -227,9 +172,9 @@ public class Board extends Application {
             /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
 
             setOnMousePressed(event -> {
-            mouseX = event.getSceneX();
-            mouseY = event.getSceneY();
-                    });
+                mouseX = event.getSceneX();
+                mouseY = event.getSceneY();
+            });
             setOnMouseDragged(event -> {
                 toFront();
                 double movementX = event.getSceneX() - mouseX;
@@ -241,73 +186,12 @@ public class Board extends Application {
                 event.consume();
             });
             setOnMouseReleased(event -> {
-                //System.out.println(event.getSceneX() + "" + event.getSceneY());
-                Circle near = findNearestPeg(event.getSceneX() ,event.getSceneY());
-                setLayoutX(near.getCenterX()-70);
-                setLayoutY(near.getCenterY()-70);
-                //if (near.getRotate() != 0) {
-                //    this.setRotate(180);
-                //}
-                //snapToGrid();
-//                if ((getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363)) {
-//                } else {
-//                    if (super.piece.charAt(0) == 'A') {
-//                        setLayoutX(121);
-//                        setLayoutY(406);
-//                        //root.getChildren().add(p);
-//                    } else if (super.piece.charAt(0) == 'B'){
-//                        setLayoutX(279);
-//                        setLayoutY(406);
-//                        //root.getChildren().add(p);
-//                    }
-//                }
+                Circle near = findNearestPeg(getLayoutX() ,getLayoutY());
+                System.out.println(getLayoutX() + "" + getLayoutY());
+                setLayoutX(near.getCenterX());
+                setLayoutY(near.getCenterY());
             });
-
         }
-
-//        private void snapToGrid() {
-//            if (onBoard()) {
-////                setLayoutX((BOARD_WIDTH/2) + (((getLayoutX() + (1.5*SQUARE_SIZE))> BOARD_WIDTH/2 ? 0 : -3) * SQUARE_SIZE));
-////                setLayoutY((BOARD_HEIGHT/2) + ((getLayoutY() + (1.5*SQUARE_SIZE) > BOARD_HEIGHT/2 ? 0 : -3) * SQUARE_SIZE ));
-////                setPosition();
-//                //setImage(new Image(Board.class.getResource(URI_BASE + piece + ".png").toString()));       // setting image back to correct dimensions once on board
-//            } else {
-//                snapToHome();
-//            }
-//            //makeExposed();
-//        }
-//
-//
-//        private boolean onBoard(){
-//            return (getLayoutX() >= 139 && getLayoutX() <= 769) && (getLayoutY() >=  83 && getLayoutY() <= 363);
-//        }
-//        private void setPosition() {
-//            int x = (int) (getLayoutX() - BOARD_X) / LARGE_SQUARE_SIZE;
-//            int y = (int) (getLayoutY() - BOARD_Y) / LARGE_SQUARE_SIZE;
-//            int rotate = (int) getRotate() / 90;
-//            char val = (char) ('A' + (4 * (x + (2*y)) + rotate));
-//            piecestate[piece] = val+"";
-//        }
-
-
-        //setOnHover or setOnaction
-
-        // Snaps to home
-//        private void snapToHome(DraggablePiece x) {
-//            //DraggablePiece p = new DraggablePiece(piece);
-////            p.setFitWidth(120);
-////            p.setFitHeight(120);
-//            if (charAt(0) == 'A') {
-//                p.setLayoutX(121);
-//                p.setLayoutY(406);
-//                root.getChildren().add(p);
-//            }
-//            else if (piece.charAt(0) == 'B'){
-//                p.setLayoutX(279);
-//                p.setLayoutY(406);
-//                root.getChildren().add(p);
-//            }
-//        }
     }
 
     public void makePegs() {
@@ -321,109 +205,45 @@ public class Board extends Application {
         int yc = 223;
         int yd = 293;
         int ye = 363;
+        char pos = 'A';
         for (int i = 0; i < 50; i++) {
             if (i<=9 && i%2 == 0) {
-                Circle peg = new Circle(CIRCLE_SIZE);
-                peg.setOpacity(0.3);
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, x, y);
+                x += 140;
                 root.getChildren().add(peg);
                 pegs.add(peg);
-                peg.setCenterX(x);
-                peg.setCenterY(y);
-                x += 140;
             }
             else if (i > 9 && i <= 19 && i%2==1) {
-                Circle peg = new Circle(CIRCLE_SIZE);
-                peg.setOpacity(0.3);
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xb, yb);
+                xb += 140;
                 root.getChildren().add(peg);
                 pegs.add(peg);
-                peg.setCenterX(xb);
-                peg.setCenterY(yb);
-                xb += 140;
             }
             else if (i > 19 && i <= 29 && i%2 == 0) {
-                Circle peg = new Circle(CIRCLE_SIZE);
-                peg.setOpacity(0.3);
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xc, yc);
+                xc += 140;
                 root.getChildren().add(peg);
                 pegs.add(peg);
-                peg.setCenterX(xc);
-                peg.setCenterY(yc);
-                xc += 140;
             }
             else if (i > 29 && i <= 39 && i%2==1) {
-                Circle peg = new Circle(CIRCLE_SIZE);
-                peg.setOpacity(0.3);
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xd, yd);
+                xd += 140;
                 root.getChildren().add(peg);
                 pegs.add(peg);
-                peg.setCenterX(xd);
-                peg.setCenterY(yd);
-                xd += 140;
             }
             else if (i > 39 && i <= 49 && i%2==0) {
-                Circle peg = new Circle(CIRCLE_SIZE);
-                peg.setOpacity(0.3);
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xe, ye);
+                xe += 140;
                 root.getChildren().add(peg);
                 pegs.add(peg);
-                peg.setCenterX(xe);
-                peg.setCenterY(ye);
-                xe += 140;
+            }
+            pos += 1;
+            if (pos >= 90 && pos <= 96){
+                pos = 97;
             }
         }
+        System.out.println(pegs);
     }
-
-//    private void makePegs() {
-//        //GridPane gridPane = new GridPane();
-//
-//        BOARD.setPrefSize(BOARD_WIDTH, BOARD_HEIGHT); // Default width and height
-//        //gridPane.setGridLinesVisible(true);
-//        BOARD.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-//        //set padding to center gridpane
-//
-//        BOARD.setPadding(new Insets(15, 0, 0, 25));
-//        BOARD.setAlignment(Pos.TOP_CENTER);     // Centers the board
-//
-//        //these loops will make a row / column at every iteration for the grid,
-//        // since the game is 10 x 5, 10 columns and 5 rows will be made
-//        for (int k = 0; k < 10; k ++) {
-//            ColumnConstraints column = new ColumnConstraints(70);
-//            BOARD.getColumnConstraints().add(column);
-//        }
-//        for (int l = 0; l < 5; l ++) {
-//            RowConstraints row = new RowConstraints(70);
-//            BOARD.getRowConstraints().add(row);
-//        }
-//
-//        //decide our peg positions
-//        for (int y = 0; y<10; y++) {
-//            for (int z = 0; z<5; z++) {
-//                if (y % 2 == 0 && z % 2 == 0 ) {
-//                    Circle x = new Circle(CIRCLE_SIZE);
-//                    x.setOpacity(0.3);
-//                    BOARD.add(x, y, z);
-//                } else if (y % 2 == 1 && z % 2 == 1) {
-//                    Circle x = new Circle(CIRCLE_SIZE);
-//                    x.setOpacity(0.3);
-//                    BOARD.add(x, y, z);
-//                }
-//            }
-//        }
-//
-//        int out = 0;
-//        for (int y = 0; y<5; y++) {
-//            for (int z = 0; z<10; z++) {
-//                BOARD.add(new Text(out + ""), z, y);
-//                out++;
-//                }
-//        }
-//
-//        //fix peg positions as they were underpadded on the left
-//        //set up the pegs properly
-//        for (Node node : BOARD.getChildren()) {
-//            BOARD.setMargin(node, new Insets(0, 0, 0, 15));
-//        }
-//        //add all circles (pegs) to parent group
-//
-//        pegs.getChildren().addAll(BOARD);
-//    }
 
     // Authorship: Khamis Buol u6080028
     private void makePieces() {
@@ -434,20 +254,12 @@ public class Board extends Application {
         int yb = 536;
         for (int i = 0; i < pieces.length; i++) {
             if (i/4 < 1) {
-                DraggablePiece piece = new DraggablePiece(pieces[i]);
-                //piece.setFitHeight(120);
-                //piece.setFitWidth(120);
-                piece.setLayoutX(x);
-                piece.setLayoutY(y);
+                DraggablePiece piece = new DraggablePiece(pieces[i], x , y);
                 x += 158;
                 root.getChildren().add(piece);
             }
             else {
-                DraggablePiece piece = new DraggablePiece(pieces[i]);
-                //piece.setFitHeight(120);
-                //piece.setFitWidth(120);
-                piece.setLayoutX(xb);
-                piece.setLayoutY(yb);
+                DraggablePiece piece = new DraggablePiece(pieces[i], xb, yb);
                 xb += 158;
                 root.getChildren().add(piece);
             }
@@ -469,7 +281,6 @@ public class Board extends Application {
         root.getChildren().addAll(placements);
         makePegs();
         makePieces();
-        //makeDraggableImages();
         primaryStage.setScene(scene);
         primaryStage.show();
 
