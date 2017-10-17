@@ -532,7 +532,7 @@ public class StepsGame {
                 solutionPaths.root.addChild(solutionPaths.root, move);
             }
         }
-        return null;
+        return new String[] {"Hi"};
     }
 
     static TreeNode<String> addNodes(TreeNode<String> initialNode, int maxDepth, ArrayList<String> remainingMoves, String initialPlacement) {
