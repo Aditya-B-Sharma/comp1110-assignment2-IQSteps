@@ -546,44 +546,6 @@ public class StepsGame {
         }
     }
 
-
-/*    static TreeNode<String> addNodes(TreeNode<String> initialNode, int maxDepth, ArrayList<String> remainingMoves, String initialPlacement) {
-
-        for (Iterator<String> iterator = remainingMoves.iterator(); iterator.hasNext();) {
-            String placement = iterator.next();
-            if (!isPlacementSequenceValid(initialPlacement + placement)) {
-                iterator.remove();
-            }
-        }
-
-        if (maxDepth == 0 || remainingMoves.size() == 0) {
-            return initialNode;
-        }
-
-        else {
-            for (int i = 0; i < remainingMoves.size(); i++) {
-                if (isPlacementSequenceValid(initialPlacement + remainingMoves.get(i))) {
-                    TreeNode<String> newNode = initialNode.addChild(initialNode, remainingMoves.get(i));
-                    ArrayList<String> remainingMovesUpdate = remainingMoves;
-                    remainingMovesUpdate.remove(remainingMoves.get(i));
-                    addNodes(newNode, maxDepth - 1, remainingMovesUpdate, initialPlacement + remainingMoves.get(i));
-                }
-            }
-        }
-
-        return null;
-    }*/
-
-
-    static void printTree(TreeNode node, String appender) {
-        System.out.println(appender + node.data);
-        for (TreeNode child : node.children) {
-            printTree(child, appender + appender);
-        }
-    }
-
-
-
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
         /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH INDIVIDUAL PIECE */
         ArrayList<String> possibleMoves = new ArrayList<>();
