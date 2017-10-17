@@ -655,6 +655,30 @@ public class StepsGame {
                 "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
         ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
         //System.out.println(updateRemainingMovies(test,testList));
+
+        /* Easy */
+        String e1 = "BGKADgHAiDHnEDkGFS";
+        System.out.println("For e1: " + e1+ ": "+isPlacementSequenceValid(e1));
+        String e2 = "BGKGCgDHnCElACiHHQFFO";
+        System.out.println("For e2: " + e2+ ": "+isPlacementSequenceValid(e2));
+        String e3 = "";
+        System.out.println("For e3: " + e3+ ": "+ isPlacementSequenceValid(e3));
+
+        /* Medium */
+        String m1 = "CEnAESHGlFAP";
+        System.out.println("For m1: " + m1 + ": "+ isPlacementSequenceValid(m1));
+        String m2 = "FBgBElEFBCCW";
+        System.out.println("For m2: " + m2+ ": "+ isPlacementSequenceValid(m2));
+        String m3 = "BGKFCNCFl";
+        System.out.println("For m3: " + m3+ ": "+ isPlacementSequenceValid(m3));
+
+        /* Hard */
+        String h1 = "EFBHBR";
+        System.out.println("For h1: " + h1+ ": "+isPlacementSequenceValid(h1));
+        String h2 = "HHOFBg";
+        System.out.println("For h2: " + h2+ ": "+ isPlacementSequenceValid(h2));
+        String h3 = "EEfAEn";
+        System.out.println("For h3: " + h3+ ": " + isPlacementSequenceValid(h3));
     }
 }
 
