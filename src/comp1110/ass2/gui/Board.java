@@ -2,6 +2,7 @@ package comp1110.ass2.gui;
 
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -29,6 +30,7 @@ public class Board extends Application {
     //Create needed groups for different elements
     private final Group root = new Group();
     private final Group placements = new Group();
+    boolean flipped = false;
 
     private ArrayList<Circle> pegs = new ArrayList<>();
 
@@ -44,6 +46,7 @@ public class Board extends Application {
 
     }
 
+
     class Circle extends javafx.scene.shape.Circle {
 
         private Character position;
@@ -57,21 +60,22 @@ public class Board extends Application {
             super(radius);
             this.position = position;
             setOpacity(opacity);
-            setCenterX(centerX);
-            setCenterY(centerY);
+            setCenterX(centerX+70);
+            setCenterY(centerY+70);
             Label pos = new Label(Character.toString(position));
-            pos.setLayoutX(centerX);
-            pos.setLayoutY(centerY);
+            pos.setLayoutX(centerX+70);
+            pos.setLayoutY(centerY+70);
             root.getChildren().add(pos);
         }
 
         public double distance(double x, double y){
-            double xDistance = getCenterX() - x;
+            double xDistance = getCenterX() - (x+70);
             System.out.println(xDistance);
-            double yDistance = getCenterY() - y;
+            double yDistance = getCenterY() - (y+70);
             System.out.println(yDistance);
             return Math.sqrt((Math.pow(Math.abs(xDistance), 2) + Math.pow(Math.abs(yDistance), 2)));
         }
+
     }
 
     /*Inner class to display the shapes*/
@@ -99,7 +103,7 @@ public class Board extends Application {
     class DraggablePiece extends Piece {
         int homeX, homeY;
         double mouseX, mouseY;
-        boolean flipped = false;
+
 
         DraggablePiece(String piece, double x, double y) {
             super(piece);
@@ -160,6 +164,7 @@ public class Board extends Application {
                         if (!flipped) {
                             flipped = true;
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+
                         }
                         else  {
                             flipped = false;
@@ -190,8 +195,8 @@ public class Board extends Application {
                 System.out.println("Nearest peg: " + near.position);
                 System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
                 System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
-                setLayoutX(near.getCenterX());
-                setLayoutY(near.getCenterY());
+                setLayoutX(near.getCenterX()-70);
+                setLayoutY(near.getCenterY()-70);
                 System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
@@ -199,16 +204,16 @@ public class Board extends Application {
     }
 
     public void makePegs() {
-        int x = 139;
-        int y = 83;
-        int xb = 209;
-        int xc = 139;
-        int xd = 209;
-        int xe = 139;
-        int yb = 153;
-        int yc = 223;
-        int yd = 293;
-        int ye = 363;
+        int x = 69;
+        int y = 13;
+        int xb = 139;
+        int xc = 69;
+        int xd = 139;
+        int xe = 69;
+        int yb = 83;
+        int yc = 153;
+        int yd = 223;
+        int ye = 293;
         char pos = 'A';
         for (int i = 0; i < 50; i++) {
             if (i<=9 && i%2 == 0) {
@@ -246,7 +251,6 @@ public class Board extends Application {
                 pos = 97;
             }
         }
-        System.out.println(pegs);
     }
 
     // Authorship: Khamis Buol u6080028
@@ -284,6 +288,7 @@ public class Board extends Application {
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         root.getChildren().addAll(placements);
         makePegs();
+        System.out.println(pegs);
         makePieces();
         primaryStage.setScene(scene);
         primaryStage.show();
