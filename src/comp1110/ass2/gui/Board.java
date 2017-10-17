@@ -80,7 +80,7 @@ public class Board extends Application {
 
     /*Inner class to display the shapes*/
     class Piece extends ImageView {
-        private String piece;
+        public String piece;
 
         Piece(String piece) {
             this.piece = piece;
@@ -97,6 +97,14 @@ public class Board extends Application {
             }
         }
         setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+        }
+        public void flip() {
+            if (piece.charAt(1) == 'A') {
+                piece = piece.charAt(0)+"E";
+            }
+            else {
+                piece = piece.charAt(0) + "A";
+            }
         }
     }
 
@@ -156,20 +164,39 @@ public class Board extends Application {
             });
 
 
-            setOnKeyPressed(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    if (event.getCode().equals(KeyCode.SPACE)) {
-                        System.out.println("Is working");
-                        if (!flipped) {
-                            flipped = true;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+//            setOnKeyPressed(new EventHandler<KeyEvent>() {
+//                @Override
+//                public void handle(KeyEvent event) {
+//                    if (event.getCode().equals(KeyCode.SPACE)) {
+//
+//                        //setImage(new Image(Board.class.getResource(URI_BASE + piece.flip.toString())));
+//
+//                        System.out.println("Is working");
+//                        if (!flipped) {
+//                            flipped = true;
+//                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+//
+//                        }
+//                        else  {
+//                            flipped = false;
+//                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
+//                        }
+//                    }
+//                }
+//            });
+            //setOnMouseClicked();
 
-                        }
-                        else  {
-                            flipped = false;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
-                        }
+            setOnMouseClicked(event -> {
+                MouseButton button = event.getButton();
+                if (button == MouseButton.SECONDARY) {
+
+                    if (!flipped) {
+                        flipped = true;
+                        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+
+                    } else {
+                        flipped = false;
+                        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
                     }
                 }
             });
@@ -274,6 +301,7 @@ public class Board extends Application {
         }
     }
 
+
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
     // FIXME Task 8: Implement starting placements
@@ -293,17 +321,6 @@ public class Board extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-    }
-    public String flip(String piece) {
-        String p = "";
-        if (piece.charAt(1) == 'A') {
-            p+=piece.charAt(0)+'E';
-            return p;
-        }
-        else {
-            p += piece.charAt(0) + 'A';
-            return p;
-        }
     }
 
 }
