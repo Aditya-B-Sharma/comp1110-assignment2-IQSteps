@@ -347,16 +347,4 @@ public class Board extends Application {
         primaryStage.show();
 
     }
-    public String flip(String piece) {
-        String p = "";
-        if (piece.charAt(1) == 'A') {
-            p+=piece.charAt(0)+'E';
-            return p;
-        }
-        else {
-            p += piece.charAt(0) + 'A';
-            return p;
-        }
-    }
-
 }
