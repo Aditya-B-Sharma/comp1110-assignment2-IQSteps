@@ -26,6 +26,10 @@ public class TreeNode<String> {
             return parent;
         }
 
+        public String getData() {
+            return data;
+        }
+
         public TreeNode<String> addChild(TreeNode<String> parent, String value) {
             TreeNode node = new TreeNode(parent);
             node.setValue(value);

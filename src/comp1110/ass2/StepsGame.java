@@ -532,9 +532,22 @@ public class StepsGame {
                 solutionPaths.root.addChild(solutionPaths.root, move);
             }
         }
+        return null;
     }
 
-    static TreeNode<String> addNodes(TreeNode<String> initialNode, int maxDepth, ArrayList<String> remainingMoves, String initialPlacement) {
+    static void addNodes(TreeNode<String> initialNode, ArrayList<String> remainingMoves, ArrayList<String> addedList) {
+        for (String move : remainingMoves) {
+            if (!addedList.contains(move)) {
+                TreeNode<String> child = new TreeNode<String>(initialNode);
+                child.setValue(move);
+                initialNode.addChild(initialNode, move);
+                addedList.add(move)
+                addNodes(child, remainingMoves, addedList);
+            }
+        }
+    }
+
+/*    static TreeNode<String> addNodes(TreeNode<String> initialNode, int maxDepth, ArrayList<String> remainingMoves, String initialPlacement) {
 
         for (Iterator<String> iterator = remainingMoves.iterator(); iterator.hasNext();) {
             String placement = iterator.next();
@@ -559,6 +572,14 @@ public class StepsGame {
         }
 
         return null;
+    }*/
+
+
+    static void printTree(TreeNode<String> node, String appender) {
+        System.out.println(appender + node.data);
+        for (TreeNode child : node.getChildren()) {
+            printTree(child, appender + appender);
+        }
     }
 
 
@@ -654,6 +675,10 @@ public class StepsGame {
                 "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
         ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
         //System.out.println(updateRemainingMovies(test,testList));
+        TreeNode<String> node = new TreeNode<String>(null);
+        node.setValue("BGS");
+        TreeNode<String> output = addNodes(node,7, remainingMoves,"AAL");
+        printTree(output, " ");
     }
 }
 
