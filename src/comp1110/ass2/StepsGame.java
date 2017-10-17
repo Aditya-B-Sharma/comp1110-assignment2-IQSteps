@@ -540,6 +540,7 @@ public class StepsGame {
                 TreeNode child = new TreeNode(move);
                 usedMoves.add(move);
                 initialNode.addChild(child);
+                System.out.println(child.toString());
                 addNodes(child, remainingMoves, usedMoves);
             }
         }
@@ -625,26 +626,6 @@ public class StepsGame {
 
 
     public static void main(String[] args) {
-//        //String objective = "BGSAHQEFBGCgCDNHFlDAiFHn";
-//        //String placement = "BGSEFBAHQGCgCDNDAiHFlFHn";
-//        //System.out.println(getViablePiecePlacements(placement, objective));
-//        //getSolutions("BGS");
-//        //System.out.println(isPlacementSequenceValid("AEg"));
-//        String[] testSimple = {"AA"};
-//        String[] locations = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
-//                "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y"};
-//        System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
-//        System.out.println(getPossibleMoves(testSimple,locations));
-//        System.out.println(isPlacementSequenceValid("AAMBGS"));
-//        //System.out.println(Arrays.toString(flip(new int[] {1,2,0,2,1,2,1,0,0})));
-//        System.out.println(isValid("AAO"));
-//
-//        System.out.println(isPlacementSequenceValid("AAM"));
-//        String test = "AAL";
-//        String[] originalMoves = {"AAL","AAN","AAP","AAR","AAW","AAY","AAb","AAd","AAg","AAi","AAk","AAm","DDL","DDN","DDP","DDR","DDW","DDY","DDb","DDd","DDg","DDi","DDk","DDm",
-//                "GGM","GGO","GGQ","GGS","GGV","GGX","GGa","GGc","GGh","GGj","GGl","GGn"};
-//        ArrayList<String> testList = new ArrayList<>(Arrays.asList(originalMoves));
-//        System.out.println(updateRemainingMovies(test,testList));
         String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
                 "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
                 "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
@@ -677,9 +658,6 @@ public class StepsGame {
 
         TreeNode solutionsPath;
 
-        List<String> initialPieces = getPiecePlacements("BGS");
-        String latestPiece = initialPieces.get(initialPieces.size() - 1);
-
         ArrayList<String> possiblemoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
@@ -688,7 +666,6 @@ public class StepsGame {
 
         solutionsPath = new TreeNode("BGS");
         addNodes(solutionsPath, remainingMoves, new ArrayList<String>());
-        printTree(solutionsPath, " ");
 
         /* Easy */
         String e1 = "BGKADgHAiDHnEDkGFS";

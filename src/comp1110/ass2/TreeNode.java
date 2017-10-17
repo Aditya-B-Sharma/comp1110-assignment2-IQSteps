@@ -30,5 +30,9 @@ public class TreeNode {
             children.add(child);
             child.setParent(this);
         }
+
+        public String toString() {
+            return data;
+        }
     }
 
