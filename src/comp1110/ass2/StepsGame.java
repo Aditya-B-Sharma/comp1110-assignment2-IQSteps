@@ -541,7 +541,7 @@ public class StepsGame {
                 TreeNode<String> child = new TreeNode<String>(initialNode);
                 child.setValue(move);
                 initialNode.addChild(initialNode, move);
-                addedList.add(move)
+                addedList.add(move);
                 addNodes(child, remainingMoves, addedList);
             }
         }
