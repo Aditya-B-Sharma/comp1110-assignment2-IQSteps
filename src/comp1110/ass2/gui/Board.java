@@ -30,14 +30,52 @@ public class Board extends Application {
     //Create needed groups for different elements
     private final Group root = new Group();
     private final Group placements = new Group();
-    boolean flipped = false;
 
     private ArrayList<Circle> pegs = new ArrayList<>();
 
-    public Circle findNearestPeg(double x, double y) {
+    class PieceName {
+        String pieceName;
+
+        public PieceName(String pieceName) {
+            this.pieceName = pieceName;
+        }
+
+        void rotPiece() {
+            switch (pieceName.charAt(1)) {
+                case 'A':
+                    pieceName = pieceName.charAt(0) + "B";
+                    break;
+                case 'B':
+                    pieceName = pieceName.charAt(0) + "C";
+                    break;
+                case 'C':
+                    pieceName = pieceName.charAt(0) + "D";
+                    break;
+                case 'D':
+                    pieceName = pieceName.charAt(0) + "A";
+                    break;
+                case 'E':
+                    pieceName = pieceName.charAt(0) + "F";
+                    break;
+                case 'F':
+                    pieceName = pieceName.charAt(0) + "G";
+                    break;
+                case 'G':
+                    pieceName = pieceName.charAt(0) + "H";
+                    break;
+                case 'H':
+                    pieceName = pieceName.charAt(0) + "E";
+                    break;
+            }
+
+        }
+
+    }
+
+    public Circle findNearestPeg(double x, double y, int mod) {
         ArrayList<Double> distances = new ArrayList<>();
         for (Circle peg : pegs) {
-            distances.add(peg.distance(x,y));
+            distances.add(peg.distance((x+mod),y));
         }
         double smallestDist = Collections.min(distances);
         int index = distances.indexOf(smallestDist);
@@ -69,6 +107,8 @@ public class Board extends Application {
         }
 
         public double distance(double x, double y){
+
+        //x is +140 if flipped
             double xDistance = getCenterX() - (x+70);
             System.out.println(xDistance);
             double yDistance = getCenterY() - (y+70);
@@ -80,68 +120,66 @@ public class Board extends Application {
 
     /*Inner class to display the shapes*/
     class Piece extends ImageView {
-        private String piece;
 
         Piece(String piece) {
-            this.piece = piece;
-            String toFetch = "";
-        int spinAmount = 0;
-        Character toCompare = piece.charAt(1);
-        if (piece.charAt(0) >= 'A' && piece.charAt(0) <= 'H') {
-            if (toCompare >= 'A' && toCompare < 'E') {
-                spinAmount = toCompare%'A';
-                toFetch = "A";
-            } else if (toCompare >= 'E' && toCompare <= 'H'){
-                spinAmount = toCompare%'E';
-                toFetch = "E";
-            }
-        }
-        setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + toFetch + ".png").toString()));
+
         }
     }
 
-    class DraggablePiece extends Piece {
+    class DraggablePiece extends ImageView {
         int homeX, homeY;
         double mouseX, mouseY;
+        int mod1;
+        int mod2;
+        boolean flipped;
+        boolean focused;
+        PieceName piece;
 
 
-        DraggablePiece(String piece, double x, double y) {
-            super(piece);
+        DraggablePiece(PieceName piece, double x, double y) {
+            this.piece = piece;
+            String toFetch = "";
+            Character toCompare = piece.pieceName.charAt(1);
+            if (piece.pieceName.charAt(0) >= 'A' && piece.pieceName.charAt(0) <= 'H') {
+                if (toCompare >= 'A' && toCompare < 'E') {
+                    toFetch = "A";
+                } else if (toCompare >= 'E' && toCompare <= 'H'){
+                    toFetch = "E";
+                }
+            }
+            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + toFetch + ".png").toString()));
             setFocusTraversable(true);
-            requestFocus();
-            setLayoutX(x);
-            setLayoutY(y);
-            switch (piece.charAt(0)) {
+            switch (piece.pieceName.charAt(0)) {
                 case 'A':
                     homeX = 0;
                     homeY = 300;
                     break;
                 case 'B':
-                    homeX = 70;
+                    homeX = 200;
                     homeY = 300;
                     break;
                 case 'C':
-                    homeX = 90;
+                    homeX = 400;
                     homeY = 300;
                     break;
                 case 'D':
-                    homeX = 110;
+                    homeX = 600;
                     homeY = 300;
                     break;
                 case 'E':
-                    homeX = 50;
+                    homeX = 0;
                     homeY = 400;
                     break;
                 case 'F':
-                    homeX = 70;
+                    homeX = 200;
                     homeY = 400;
                     break;
                 case 'G':
-                    homeX = 90;
+                    homeX = 400;
                     homeY = 400;
                     break;
                 case 'H':
-                    homeX = 110;
+                    homeX = 600;
                     homeY = 400;
                     break;
             }
@@ -151,6 +189,8 @@ public class Board extends Application {
                 @Override
                 public void handle(ScrollEvent event) {
                     setRotate((getRotate() + 90) % 360);
+                    piece.rotPiece();
+                    System.out.println(piece.pieceName);
                     event.consume();
                 }
             });
@@ -163,14 +203,22 @@ public class Board extends Application {
                         System.out.println("Is working");
                         if (!flipped) {
                             flipped = true;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "E.png").toString()));
+                            piece.pieceName = piece.pieceName.charAt(0) + "E";
+                            mod1 = -70;
+                            mod2 = 70;
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+                            System.out.println(piece.pieceName);
 
                         }
                         else  {
                             flipped = false;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.charAt(0) + "A.png").toString()));
+                            piece.pieceName = piece.pieceName.charAt(0) + "A";
+                            mod1 = 0;
+                            mod2 = 0;
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+                            System.out.println(piece.pieceName);
+                            }
                         }
-                    }
                 }
             });
             /*HELPED BY STEVE*/
@@ -179,6 +227,7 @@ public class Board extends Application {
             setOnMousePressed(event -> {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
+                requestFocus();
             });
             setOnMouseDragged(event -> {
                 toFront();
@@ -188,14 +237,14 @@ public class Board extends Application {
                 setLayoutY(getLayoutY() + movementY);
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
-                event.consume();
             });
             setOnMouseReleased(event -> {
-                Circle near = findNearestPeg(getLayoutX(), getLayoutY());
+                Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
                 System.out.println("Nearest peg: " + near.position);
                 System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
                 System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
-                setLayoutX(near.getCenterX()-70);
+                //setlayoutx is -140 if flipped
+                setLayoutX(near.getCenterX()-70+mod1);
                 setLayoutY(near.getCenterY()-70);
                 System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
@@ -262,14 +311,15 @@ public class Board extends Application {
         int yb = 536;
         for (int i = 0; i < pieces.length; i++) {
             if (i/4 < 1) {
-                DraggablePiece piece = new DraggablePiece(pieces[i], x , y);
+                DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), x , y);
                 x += 158;
                 root.getChildren().add(piece);
-            }
-            else {
-                DraggablePiece piece = new DraggablePiece(pieces[i], xb, yb);
+                System.out.println(piece.piece.pieceName);
+            } else {
+                DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), xb, yb);
                 xb += 158;
                 root.getChildren().add(piece);
+                System.out.println(piece.piece.pieceName);
             }
         }
     }
