@@ -4,9 +4,12 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import java.util.ArrayList;
@@ -276,6 +279,19 @@ public class Board extends Application {
                 setLayoutY(near.getCenterY()-140);
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 //System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
+            });
+
+            /* Key event to give hints */
+            setOnKeyPressed(event -> {
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.LIGHTBLUE);
+                glow.setOffsetX(0f);
+                glow.setOffsetY(0f);
+                glow.setHeight(10);
+                if (event.getCode().equals(KeyCode.H)) {
+                    //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+                    root.setEffect(glow);
+                }
             });
         }
     }
