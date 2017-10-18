@@ -273,6 +273,11 @@ public class Board extends Application {
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
+                    DropShadow glow = new DropShadow();
+                    glow.setColor(Color.LIGHTBLUE);
+                    glow.setOffsetX(0f);
+                    glow.setOffsetY(0f);
+                    glow.setHeight(10);
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         if (!flipped) {
                             changePieceArray(piece.pieceName, pieces);
@@ -294,10 +299,14 @@ public class Board extends Application {
                             //System.out.println(piece.pieceName);
                             }
                         }
+                        // Key event to give hints
+                        else if (event.getCode().equals(KeyCode.H)) {
+                        //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+                        root.setEffect(glow);
+                        // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
+                    }
                 }
             });
-            /*HELPED BY STEVE*/
-
             setOnMousePressed(event -> {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
@@ -355,19 +364,6 @@ public class Board extends Application {
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 //System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
-
-            /* Key event to give hints */
-//            setOnKeyPressed(event -> {
-//                DropShadow glow = new DropShadow();
-//                glow.setColor(Color.LIGHTBLUE);
-//                glow.setOffsetX(0f);
-//                glow.setOffsetY(0f);
-//                glow.setHeight(10);
-//                if (event.getCode().equals(KeyCode.H)) {
-//                    //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-//                    root.setEffect(glow);
-//                }
-//            });
         }
     }
 
