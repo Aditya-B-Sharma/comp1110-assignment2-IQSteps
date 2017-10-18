@@ -3,6 +3,7 @@ package comp1110.ass2;
 import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
+import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -530,10 +531,10 @@ public class StepsGame {
         solutionsPath = new TreeNode(placement);
         addNodes(solutionsPath, remainingMoves);
 
-        int maxDepth = 8 - getPiecePlacements(placement).size();
-        output = traverseTree(maxDepth, 0, solutionsPath);
 
-        return output.toArray(new String[output.size()]);
+
+//        return output.toArray(new String[output.size()]);
+        return null;
     }
 
 /*    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> remainingMovesTemp) {
@@ -548,15 +549,13 @@ public class StepsGame {
         }
     }*/
 
-    static ArrayList<String> traverseTree(int maxDepth, int counter, TreeNode node) {
+    static ArrayList<String> traverseBranch(TreeNode node) {
         ArrayList<String> output = new ArrayList<String>();
         for (TreeNode child : node.children) {
-            if (child.data.length() == 24) {
+            if (child.children.size() == 0) {
                 output.add(child.data);
             }
-            else {
-                traverseTree(maxDepth, counter + 1, child);
-            }
+            traverseBranch(child);
         }
         return output;
     }
@@ -669,11 +668,32 @@ public class StepsGame {
         ArrayList<String> possiblemoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
-        ArrayList<String> remainingmoves = updateRemainingMoves("BGS", possiblemoves);
+        ArrayList<String> remainingmoves = updateRemainingMoves("BGSAHQEFBGCgCDN", possiblemoves);
 
 
-        solutionsPath = new TreeNode("BGS");
+        solutionsPath = new TreeNode("BGSAHQEFBGCgCDN");
         addNodes(solutionsPath, remainingMoves);
+
+        System.out.println("");
+
+        ArrayList<ArrayList<String>> testList2 = new ArrayList<>();
+
+        for (TreeNode child : solutionsPath.children) {
+            System.out.println(child.data);
+            testList2.add(traverseBranch(child));
+        }
+        for (ArrayList<String> moveList : testList2) {
+            for (String s : moveList) {
+                if (s.length() == 24) {
+                    System.out.println(s);
+                }
+            }
+        }
+        System.out.println(testList2);
+
+//        for (String solution : traverseTest) {
+//            System.out.println(solution);
+//        }
 
         System.out.println(isPlacementSequenceValid("BGSAALCAgDCmEEjHDP"));
         System.out.println(isPlacementSequenceValid("BGSAHQEFBGCgCDNHFlDAiFHn"));
@@ -701,6 +721,8 @@ public class StepsGame {
         System.out.println("For h2: " + h2+ ": "+ isPlacementSequenceValid(h2));
         String h3 = "EEfAEn";
         System.out.println("For h3: " + h3+ ": " + isPlacementSequenceValid(h3));
+
+        System.out.println(h1.length());
     }
 }
 
