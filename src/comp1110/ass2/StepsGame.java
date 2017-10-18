@@ -3,6 +3,7 @@ package comp1110.ass2;
 import com.sun.deploy.util.StringUtils;
 import gittest.C;
 
+import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -515,11 +516,11 @@ public class StepsGame {
 
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        String[] output;
+        ArrayList<String> output;
         TreeNode solutionsPath;
 
-        List<String> initialPieces = getPiecePlacements(placement);
-        String latestPiece = initialPieces.get(initialPieces.size() - 1);
+//        List<String> initialPieces = getPiecePlacements(placement);
+//        String latestPiece = initialPieces.get(initialPieces.size() - 1);
 
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
 
@@ -527,13 +528,56 @@ public class StepsGame {
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
 
-        solutionsPath = new TreeNode(latestPiece);
-        addNodes(solutionsPath, remainingMoves, new ArrayList<String>());
+        solutionsPath = new TreeNode(placement);
+        addNodes(solutionsPath, remainingMoves);
 
+
+
+//        return output.toArray(new String[output.size()]);
         return null;
     }
 
+/*    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> remainingMovesTemp) {
+        for (String move : remainingMoves) {
+            if (isPlacementSequenceValid(initialNode.data + move)) {
+                TreeNode child = new TreeNode(initialNode.data + move);
+                ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, remainingMovesTemp);
+                initialNode.addChild(child);
+                System.out.println(child.toString());
+                addNodes(child, remainingMovesUpdate);
+            }
+        }
+    }*/
 
+    static ArrayList<String> traverseBranch(TreeNode node) {
+        ArrayList<String> output = new ArrayList<String>();
+        for (TreeNode child : node.children) {
+            if (child.children.size() == 0) {
+                output.add(child.data);
+            }
+            traverseBranch(child);
+        }
+        return output;
+    }
+
+
+    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves) {
+        for (String move : remainingMoves) {
+            ArrayList<String> movesAvailable = new ArrayList<String>();
+            for (String s : remainingMoves) {
+                movesAvailable.add(s);
+            }
+            if (isPlacementSequenceValid(initialNode.data + move)) {
+                TreeNode child = new TreeNode(initialNode.data + move);
+                ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
+                initialNode.addChild(child);
+                System.out.println(child.toString());
+                addNodes(child, remainingMovesUpdate);
+            }
+        }
+    }
+
+/*
     static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> usedMoves) {
         for (String move : remainingMoves) {
             if (!usedMoves.contains(move) && isPlacementSequenceValid(initialNode.data + move)) {
@@ -545,7 +589,7 @@ public class StepsGame {
                 addNodes(child, remainingMoves, usedMoves);
             }
         }
-    }
+    }*/
 
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
         /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH INDIVIDUAL PIECE */
@@ -624,11 +668,35 @@ public class StepsGame {
         ArrayList<String> possiblemoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
-        ArrayList<String> remainingmoves = updateRemainingMoves("BGS", possiblemoves);
+        ArrayList<String> remainingmoves = updateRemainingMoves("BGSAHQEFBGCgCDN", possiblemoves);
 
 
-        solutionsPath = new TreeNode("BGS");
-        addNodes(solutionsPath, remainingMoves, new ArrayList<String>());
+        solutionsPath = new TreeNode("BGSAHQEFBGCgCDN");
+        addNodes(solutionsPath, remainingMoves);
+
+        System.out.println("");
+
+        ArrayList<ArrayList<String>> testList2 = new ArrayList<>();
+
+        for (TreeNode child : solutionsPath.children) {
+            System.out.println(child.data);
+            testList2.add(traverseBranch(child));
+        }
+        for (ArrayList<String> moveList : testList2) {
+            for (String s : moveList) {
+                if (s.length() == 24) {
+                    System.out.println(s);
+                }
+            }
+        }
+        System.out.println(testList2);
+
+//        for (String solution : traverseTest) {
+//            System.out.println(solution);
+//        }
+
+        System.out.println(isPlacementSequenceValid("BGSAALCAgDCmEEjHDP"));
+        System.out.println(isPlacementSequenceValid("BGSAHQEFBGCgCDNHFlDAiFHn"));
 
         /* Easy */
         String e1 = "BGKADgHAiDHnEDkGFS";
@@ -653,6 +721,8 @@ public class StepsGame {
         System.out.println("For h2: " + h2+ ": "+ isPlacementSequenceValid(h2));
         String h3 = "EEfAEn";
         System.out.println("For h3: " + h3+ ": " + isPlacementSequenceValid(h3));
+
+        System.out.println(h1.length());
     }
 }
 

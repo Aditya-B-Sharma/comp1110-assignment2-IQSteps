@@ -1,5 +1,7 @@
 package comp1110.ass2.gui;
 
+import com.sun.org.apache.bcel.internal.generic.LADD;
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -31,6 +33,7 @@ public class Board extends Application {
     private ArrayList<Circle> pegs = new ArrayList<>();
 
     private ArrayList<String> pieces = new ArrayList<>();
+    Label current = new Label();
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
     class PieceName {
@@ -191,6 +194,10 @@ public class Board extends Application {
 
         DraggablePiece(PieceName piece, double x, double y) {
             this.piece = piece;
+            root.getChildren().remove(current);
+            current =  new Label(Boolean.toString(placed));
+            root.getChildren().add(current);
+
             String toFetch = "";
             Character toCompare = piece.pieceName.charAt(1);
             if (piece.pieceName.charAt(0) >= 'A' && piece.pieceName.charAt(0) <= 'H') {
@@ -242,6 +249,9 @@ public class Board extends Application {
                 @Override
                 public void handle(ScrollEvent event) {
                     if (placed) {
+                        root.getChildren().remove(current);
+                        current =  new Label(Boolean.toString(placed));
+                        root.getChildren().add(current);
                         String holder = piece.pieceName;
                         String holder2;
                         int index = 0;
@@ -292,9 +302,17 @@ public class Board extends Application {
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
+                    DropShadow glow = new DropShadow();
+                    glow.setColor(Color.LIGHTBLUE);
+                    glow.setOffsetX(0f);
+                    glow.setOffsetY(0f);
+                    glow.setHeight(10);
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         if (!flipped) {
                             placed = false;
+                            root.getChildren().remove(current);
+                            current =  new Label(Boolean.toString(placed));
+                            root.getChildren().add(current);
                             changePieceArray(piece.pieceName, pieces);
                             System.out.println(pieces);
                             flipped = true;
@@ -302,16 +320,27 @@ public class Board extends Application {
                             mod2 = 70;
                             piece.flipPiece();
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "E.png").toString()));
+//                            setFitHeight(150);
+//                            setFitWidth(150);
+//                            setLayoutX(homeX);
+//                            setLayoutY(homeY);
                             //System.out.println(piece.pieceName);
 
                         }
                         else  {
                             placed = false;
+                            root.getChildren().remove(current);
+                            current =  new Label(Boolean.toString(placed));
+                            root.getChildren().add(current);
                             flipped = false;
                             mod1 = 0;
                             mod2 = 0;
                             piece.flipPiece();
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "A.png").toString()));
+//                            setFitHeight(150);
+//                            setFitWidth(150);
+//                            setLayoutX(homeX);
+//                            setLayoutY(homeY);
                             //System.out.println(piece.pieceName);
                             }
                         }
@@ -320,7 +349,7 @@ public class Board extends Application {
                         Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod1);
 
                         //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-
+                        root.setEffect(glow);
                         // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
                     }
                 }
@@ -331,6 +360,9 @@ public class Board extends Application {
                 setFitHeight(280);
                 setFitWidth(280);
                 placed=false;
+                root.getChildren().remove(current);
+                current =  new Label(Boolean.toString(placed));
+                root.getChildren().add(current);
                 requestFocus();
             });
             setOnMouseDragged(event -> {
@@ -369,15 +401,21 @@ public class Board extends Application {
                     setLayoutX(near.getCenterX()-140+mod1);
                     setLayoutY(near.getCenterY()-140);
                     placed=true;
-                } else
-                    {
-                        pieces.remove(fullpiece);
-                        placed = false;
-                        setFitHeight(150);
-                        setFitWidth(150);
-                        setLayoutX(homeX);
-                        setLayoutY(homeY);
-                    }
+                    root.getChildren().remove(current);
+                    current =  new Label(Boolean.toString(placed));
+                    root.getChildren().add(current);
+                    System.out.println(placed);
+                } else {
+                    pieces.remove(fullpiece);
+                    placed = false;
+                    root.getChildren().remove(current);
+                    current =  new Label(Boolean.toString(placed));
+                    root.getChildren().add(current);
+                    setFitHeight(150);
+                    setFitWidth(150);
+                    setLayoutX(homeX);
+                    setLayoutY(homeY);
+                }
                 }
                 System.out.println(pieces);
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
@@ -486,6 +524,7 @@ public class Board extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         primaryStage.setTitle("IQ Steps");
         Scene scene = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
         root.getChildren().addAll(placements);
