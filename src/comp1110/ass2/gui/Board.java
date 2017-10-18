@@ -161,7 +161,7 @@ public class Board extends Application {
     }
 
     class DraggablePiece extends ImageView {
-        double homeX, homeY;
+        int homeX, homeY;
         double mouseX, mouseY;
         int mod1;
         int mod2;
@@ -280,6 +280,7 @@ public class Board extends Application {
                     glow.setHeight(10);
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         if (!flipped) {
+                            placed = false;
                             changePieceArray(piece.pieceName, pieces);
                             System.out.println(pieces);
                             flipped = true;
@@ -291,6 +292,7 @@ public class Board extends Application {
 
                         }
                         else  {
+                            placed = false;
                             flipped = false;
                             mod1 = 0;
                             mod2 = 0;
