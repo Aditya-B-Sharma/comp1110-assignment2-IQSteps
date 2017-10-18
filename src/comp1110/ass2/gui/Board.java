@@ -347,9 +347,8 @@ public class Board extends Application {
                         // Key event to give hints
                         else if (event.getCode().equals(KeyCode.H)) {
                         Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod1);
-
                         //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                        root.setEffect(glow);
+                        //root.setEffect(glow);
                         // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
                     }
                 }
