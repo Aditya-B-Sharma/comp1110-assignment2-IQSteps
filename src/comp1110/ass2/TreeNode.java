@@ -1,40 +1,38 @@
 package comp1110.ass2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Stefan on 14/10/2017.
  */
-public class TreeNode<String> {
+public class TreeNode {
         public String data;
-        public TreeNode<String> parent;
-        public List<TreeNode<String>> children;
+        public TreeNode parent;
+        public List<TreeNode> children;
 
-        public TreeNode(TreeNode<String> parent) {
+        public TreeNode(String data) {
+            this.data = data;
+            parent = null;
+            children = new ArrayList<TreeNode>();
+        }
+
+        public void setData (String data) {
+            this.data = data;
+        }
+
+        public void setParent(TreeNode parent) {
             this.parent = parent;
         }
 
-        public void setValue(String value) {
-            data = value;
+
+        public void addChild(TreeNode child) {
+            children.add(child);
+            child.setParent(this);
         }
 
-        public List<TreeNode<String>> getChildren() {
-            return children;
-        }
-
-        public TreeNode<String> getParent() {
-            return parent;
-        }
-
-        public String getData() {
+        public String toString() {
             return data;
-        }
-
-        public TreeNode<String> addChild(TreeNode<String> parent, String value) {
-            TreeNode node = new TreeNode(parent);
-            node.setValue(value);
-            parent.getChildren().add(node);
-            return node;
         }
     }
 

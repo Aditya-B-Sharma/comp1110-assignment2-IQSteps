@@ -2,7 +2,6 @@ package comp1110.ass2.gui;
 
 import javafx.application.Application;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -17,22 +16,17 @@ public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
     private static final int BOARD_HEIGHT = 700;
     private static final double CIRCLE_SIZE = 22.5;
-
-    // Need to somehow link the positions with each node.
-    private static int[] pos = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                               10,11,12,13,14,15,16,17,18,19,
-                               20,21,22,23,24,25,26,27,28,29,
-                               30,31,32,33,34,35,36,37,38,39,
-                               40,41,42,43,44,45,46,47,48,49};
-
     private static final String URI_BASE = "assets/";
 
     //Create needed groups for different elements
     private final Group root = new Group();
     private final Group placements = new Group();
 
+    //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
 
+
+    //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
     class PieceName {
         String pieceName;
 
@@ -66,11 +60,41 @@ public class Board extends Application {
                 case 'H':
                     pieceName = pieceName.charAt(0) + "E";
                     break;
+                    }
+            }
+
+            void flipPiece() {
+                switch (pieceName.charAt(1)) {
+                    case 'A':
+                        pieceName = pieceName.charAt(0) + "E";
+                        break;
+                    case 'B':
+                        pieceName = pieceName.charAt(0) + "F";
+                        break;
+                    case 'C':
+                        pieceName = pieceName.charAt(0) + "G";
+                        break;
+                    case 'D':
+                        pieceName = pieceName.charAt(0) + "H";
+                        break;
+                    case 'E':
+                        pieceName = pieceName.charAt(0) + "A";
+                        break;
+                    case 'F':
+                        pieceName = pieceName.charAt(0) + "B";
+                        break;
+                    case 'G':
+                        pieceName = pieceName.charAt(0) + "C";
+                        break;
+                    case 'H':
+                        pieceName = pieceName.charAt(0) + "D";
+                        break;
+
+                }
             }
 
         }
 
-    }
 
     public Circle findNearestPeg(double x, double y, int mod) {
         ArrayList<Double> distances = new ArrayList<>();
@@ -194,7 +218,7 @@ public class Board extends Application {
                 public void handle(ScrollEvent event) {
                     setRotate((getRotate() + 90) % 360);
                     piece.rotPiece();
-                    //System.out.println(piece.pieceName);
+                    System.out.println(piece.pieceName);
                     event.consume();
                 }
             });
@@ -207,20 +231,20 @@ public class Board extends Application {
                         //System.out.println("Is working");
                         if (!flipped) {
                             flipped = true;
-                            piece.pieceName = piece.pieceName.charAt(0) + "E";
+                            piece.flipPiece();
                             mod1 = -70;
                             mod2 = 70;
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            //System.out.println(piece.pieceName);
+                            System.out.println(piece.pieceName);
 
                         }
                         else  {
                             flipped = false;
-                            piece.pieceName = piece.pieceName.charAt(0) + "A";
+                            piece.flipPiece();
                             mod1 = 0;
                             mod2 = 0;
                             setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            //System.out.println(piece.pieceName);
+                            System.out.println(piece.pieceName);
                             }
                         }
                 }
