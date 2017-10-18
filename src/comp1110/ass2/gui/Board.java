@@ -190,6 +190,7 @@ public class Board extends Application {
         boolean flipped;
         PieceName piece;
         boolean placed;
+        Character pos;
 
 
         DraggablePiece(PieceName piece, double x, double y) {
@@ -379,7 +380,7 @@ public class Board extends Application {
                     pieces = changePieceArray(piece.pieceName, pieces);
                 Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
 
-                Character pos = near.position;
+                pos = near.position;
                 String fullpiece;
 
                 if (flipped) {
