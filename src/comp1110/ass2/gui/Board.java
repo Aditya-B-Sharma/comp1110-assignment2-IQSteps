@@ -1,5 +1,6 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.input.*;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Board extends Application {
@@ -25,6 +27,7 @@ public class Board extends Application {
     //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
 
+    private ArrayList<String> pieces = new ArrayList<>();
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
     class PieceName {
@@ -159,8 +162,8 @@ public class Board extends Application {
         int mod1;
         int mod2;
         boolean flipped;
-        boolean focused;
         PieceName piece;
+        boolean placed;
 
 
         DraggablePiece(PieceName piece, double x, double y) {
@@ -215,9 +218,49 @@ public class Board extends Application {
             setOnScroll(new EventHandler<ScrollEvent>() {
                 @Override
                 public void handle(ScrollEvent event) {
-                    setRotate((getRotate() + 90) % 360);
-                    piece.rotPiece();
-                    System.out.println(piece.pieceName);
+                    if (placed) {
+                        String holder = piece.pieceName;
+                        String holder2;
+                        int index = 0;
+                        Character current = ' ';
+                        //piece.rotPiece();
+                        //System.out.println("pieces : " + pieces);
+                        //int index = pieces.indexOf()
+                        //pieces = changePieceArray(piece.pieceName, pieces);
+                        //System.out.println("pieces : " + pieces);
+                        //take the piece from pieces and update it
+                        System.out.println("pieces before: " + pieces);
+                        //piece.rotPiece();
+
+                        for (String s: pieces) {
+                            if (s.contains(piece.pieceName)) {
+                                System.out.println("s :" + s);
+                                holder2 = s;
+                                index = pieces.indexOf(s);
+                                current = s.charAt(2);
+                                String currentPeg = s.charAt(2) + "";
+                                piece.rotPiece();
+                                pieces.set(pieces.indexOf(s), piece.pieceName + currentPeg);
+                            }
+                        }
+
+                        String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
+
+                        //System.out.println("place" + placement);
+                        if (StepsGame.isPlacementSequenceValid(placement)) {
+                            setRotate((getRotate() + 90) % 360);
+                        } else {
+                            piece.pieceName = holder;
+                            System.out.println(holder);
+                            pieces.set(index, piece.pieceName + current);
+                            System.out.println("pieces after: " + pieces);
+                        }
+                    } else {
+                        piece.rotPiece();
+                        setRotate((getRotate() + 90) % 360);
+
+                    }
+                    //System.out.println(piece.pieceName);
                     event.consume();
                 }
             });
@@ -227,23 +270,22 @@ public class Board extends Application {
                 @Override
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
-                        //System.out.println("Is working");
                         if (!flipped) {
                             flipped = true;
-                            piece.flipPiece();
                             mod1 = -70;
                             mod2 = 70;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            System.out.println(piece.pieceName);
+                            piece.flipPiece();
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "E.png").toString()));
+                            //System.out.println(piece.pieceName);
 
                         }
                         else  {
                             flipped = false;
-                            piece.flipPiece();
                             mod1 = 0;
                             mod2 = 0;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            System.out.println(piece.pieceName);
+                            piece.flipPiece();
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "A.png").toString()));
+                            //System.out.println(piece.pieceName);
                             }
                         }
                 }
@@ -254,6 +296,7 @@ public class Board extends Application {
             setOnMousePressed(event -> {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
+                placed=false;
                 requestFocus();
             });
             setOnMouseDragged(event -> {
@@ -266,17 +309,55 @@ public class Board extends Application {
                 mouseY = event.getSceneY();
             });
             setOnMouseReleased(event -> {
+                if (!placed) {
+                    pieces = changePieceArray(piece.pieceName, pieces);
                 Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
+
+                Character pos = near.position;
+                String fullpiece;
+
+                if (flipped) {
+                    fullpiece = piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(pos))-1);
+                } else {
+                    fullpiece = piece.pieceName + pos; }
+                    System.out.println("adding to pieces");
+                pieces.add(fullpiece);
+
+                String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
+
+                //System.out.println("place" + placement);
+                if (StepsGame.isPlacementSequenceValid(placement)) {
                 //System.out.println("Nearest peg: " + near.position);
                 //System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
                 //System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
                 //setlayoutx is -140 if flipped
-                setLayoutX(near.getCenterX()-140+mod1);
-                setLayoutY(near.getCenterY()-140);
+                    setLayoutX(near.getCenterX()-140+mod1);
+                    setLayoutY(near.getCenterY()-140);
+                    placed=true;
+                } else {
+                    pieces.remove(fullpiece);
+                    placed = false;
+                }
+                }
+                System.out.println(pieces);
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 //System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
         }
+    }
+
+    public ArrayList<String> changePieceArray(String pieceName, ArrayList<String> pieces) {
+        String pieceToRemove = "";
+        ArrayList<String> out = new ArrayList<>();
+        for (String item : pieces) {
+            Character itemPiece = item.charAt(0);
+            if (itemPiece.equals(pieceName.charAt(0))) {
+                pieceToRemove = item;
+            }
+        }
+        pieces.remove(pieceToRemove);
+        //System.out.println("remove piece:" + pieceToRemove);
+        return pieces;
     }
 
     public void makePegs() {
