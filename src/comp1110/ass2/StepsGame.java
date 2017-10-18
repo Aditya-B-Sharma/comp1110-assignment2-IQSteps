@@ -515,11 +515,11 @@ public class StepsGame {
 
     static String[] getSolutions(String placement) {
         // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        String[] output;
+        ArrayList<String> output;
         TreeNode solutionsPath;
 
-        List<String> initialPieces = getPiecePlacements(placement);
-        String latestPiece = initialPieces.get(initialPieces.size() - 1);
+//        List<String> initialPieces = getPiecePlacements(placement);
+//        String latestPiece = initialPieces.get(initialPieces.size() - 1);
 
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
 
@@ -527,10 +527,13 @@ public class StepsGame {
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
 
-        solutionsPath = new TreeNode(latestPiece);
+        solutionsPath = new TreeNode(placement);
         addNodes(solutionsPath, remainingMoves);
 
-        return null;
+        int maxDepth = 8 - getPiecePlacements(placement).size();
+        output = traverseTree(maxDepth, 0, solutionsPath);
+
+        return output.toArray(new String[output.size()]);
     }
 
 /*    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> remainingMovesTemp) {
@@ -544,6 +547,20 @@ public class StepsGame {
             }
         }
     }*/
+
+    static ArrayList<String> traverseTree(int maxDepth, int counter, TreeNode node) {
+        ArrayList<String> output = new ArrayList<String>();
+        for (TreeNode child : node.children) {
+            if (child.data.length() == 24) {
+                output.add(child.data);
+            }
+            else {
+                traverseTree(maxDepth, counter + 1, child);
+            }
+        }
+        return output;
+    }
+
 
     static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves) {
         for (String move : remainingMoves) {
@@ -652,10 +669,10 @@ public class StepsGame {
         ArrayList<String> possiblemoves = getPossibleMoves(shapesAndOrientations, locations);
 
         //All possible moves each REMAINING piece can take
-        ArrayList<String> remainingmoves = updateRemainingMoves("BGSAHQEFBGCgCDNHFl", possiblemoves);
+        ArrayList<String> remainingmoves = updateRemainingMoves("BGS", possiblemoves);
 
 
-        solutionsPath = new TreeNode("BGSAHQEFBGCgCDNHFl");
+        solutionsPath = new TreeNode("BGS");
         addNodes(solutionsPath, remainingMoves);
 
         System.out.println(isPlacementSequenceValid("BGSAALCAgDCmEEjHDP"));
