@@ -98,6 +98,25 @@ public class Board extends Application {
 
                 }
             }
+            void glowPiece(PieceName piece) {
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.LIGHTBLUE);
+                glow.setOffsetX(0f);
+                glow.setOffsetY(0f);
+                glow.setHeight(10);
+
+            }
+            public void glowPeg(Circle peg) {
+                peg.getCenterX();
+                peg.getCenterY();
+                peg.getEffect();
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.LIGHTBLUE);
+                glow.setOffsetX(0f);
+                glow.setOffsetY(0f);
+                glow.setHeight(10);
+                peg.setEffect(glow);
+            }
 
         }
 
@@ -273,11 +292,6 @@ public class Board extends Application {
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
-                    DropShadow glow = new DropShadow();
-                    glow.setColor(Color.LIGHTBLUE);
-                    glow.setOffsetX(0f);
-                    glow.setOffsetY(0f);
-                    glow.setHeight(10);
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         if (!flipped) {
                             placed = false;
@@ -303,8 +317,10 @@ public class Board extends Application {
                         }
                         // Key event to give hints
                         else if (event.getCode().equals(KeyCode.H)) {
+                        Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod1);
+
                         //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                        root.setEffect(glow);
+
                         // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
                     }
                 }
@@ -353,14 +369,15 @@ public class Board extends Application {
                     setLayoutX(near.getCenterX()-140+mod1);
                     setLayoutY(near.getCenterY()-140);
                     placed=true;
-                } else {
-                    pieces.remove(fullpiece);
-                    placed = false;
-                    setFitHeight(150);
-                    setFitWidth(150);
-                    setLayoutX(homeX);
-                    setLayoutY(homeY);
-                }
+                } else
+                    {
+                        pieces.remove(fullpiece);
+                        placed = false;
+                        setFitHeight(150);
+                        setFitWidth(150);
+                        setLayoutX(homeX);
+                        setLayoutY(homeY);
+                    }
                 }
                 System.out.println(pieces);
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
