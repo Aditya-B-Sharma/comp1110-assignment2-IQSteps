@@ -1,15 +1,20 @@
 package comp1110.ass2.gui;
 
+import comp1110.ass2.StepsGame;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Board extends Application {
@@ -25,6 +30,7 @@ public class Board extends Application {
     //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
 
+    private ArrayList<String> pieces = new ArrayList<>();
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
     class PieceName {
@@ -121,6 +127,7 @@ public class Board extends Application {
             super(radius);
         }
 
+        // Need to add case for if shape is flipped. It keeps thinking the node is the one on the right
         public Circle(Character position, double radius, double opacity, double centerX, double centerY) {
             super(radius);
             this.position = position;
@@ -159,8 +166,8 @@ public class Board extends Application {
         int mod1;
         int mod2;
         boolean flipped;
-        boolean focused;
         PieceName piece;
+        boolean placed;
 
 
         DraggablePiece(PieceName piece, double x, double y) {
@@ -178,36 +185,36 @@ public class Board extends Application {
             setFocusTraversable(true);
             switch (piece.pieceName.charAt(0)) {
                 case 'A':
-                    homeX = 0;
-                    homeY = 300;
+                    homeX = 111;
+                    homeY = 386;
                     break;
                 case 'B':
-                    homeX = 200;
-                    homeY = 300;
+                    homeX = 269;
+                    homeY = 386;
                     break;
                 case 'C':
-                    homeX = 400;
-                    homeY = 300;
+                    homeX = 457;
+                    homeY = 386;
                     break;
                 case 'D':
-                    homeX = 600;
-                    homeY = 300;
+                    homeX = 647;
+                    homeY = 386;
                     break;
                 case 'E':
-                    homeX = 0;
-                    homeY = 400;
+                    homeX = 111;
+                    homeY = 536;
                     break;
                 case 'F':
-                    homeX = 200;
-                    homeY = 400;
+                    homeX = 269;
+                    homeY = 536;
                     break;
                 case 'G':
-                    homeX = 400;
-                    homeY = 400;
+                    homeX = 457;
+                    homeY = 536;
                     break;
                 case 'H':
-                    homeX = 600;
-                    homeY = 400;
+                    homeX = 647;
+                    homeY = 536;
                     break;
             }
             setLayoutX(homeX);
@@ -215,9 +222,49 @@ public class Board extends Application {
             setOnScroll(new EventHandler<ScrollEvent>() {
                 @Override
                 public void handle(ScrollEvent event) {
-                    setRotate((getRotate() + 90) % 360);
-                    piece.rotPiece();
-                    System.out.println(piece.pieceName);
+                    if (placed) {
+                        String holder = piece.pieceName;
+                        String holder2;
+                        int index = 0;
+                        Character current = ' ';
+                        //piece.rotPiece();
+                        //System.out.println("pieces : " + pieces);
+                        //int index = pieces.indexOf()
+                        //pieces = changePieceArray(piece.pieceName, pieces);
+                        //System.out.println("pieces : " + pieces);
+                        //take the piece from pieces and update it
+                        System.out.println("pieces before: " + pieces);
+                        //piece.rotPiece();
+
+                        for (String s: pieces) {
+                            if (s.contains(piece.pieceName)) {
+                                System.out.println("s :" + s);
+                                holder2 = s;
+                                index = pieces.indexOf(s);
+                                current = s.charAt(2);
+                                String currentPeg = s.charAt(2) + "";
+                                piece.rotPiece();
+                                pieces.set(pieces.indexOf(s), piece.pieceName + currentPeg);
+                            }
+                        }
+
+                        String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
+
+                        //System.out.println("place" + placement);
+                        if (StepsGame.isPlacementSequenceValid(placement)) {
+                            setRotate((getRotate() + 90) % 360);
+                        } else {
+                            piece.pieceName = holder;
+                            System.out.println(holder);
+                            pieces.set(index, piece.pieceName + current);
+                            System.out.println("pieces after: " + pieces);
+                        }
+                    } else {
+                        piece.rotPiece();
+                        setRotate((getRotate() + 90) % 360);
+
+                    }
+                    //System.out.println(piece.pieceName);
                     event.consume();
                 }
             });
@@ -226,34 +273,48 @@ public class Board extends Application {
             setOnKeyPressed(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
+                    DropShadow glow = new DropShadow();
+                    glow.setColor(Color.LIGHTBLUE);
+                    glow.setOffsetX(0f);
+                    glow.setOffsetY(0f);
+                    glow.setHeight(10);
                     if (event.getCode().equals(KeyCode.SPACE)) {
-                        //System.out.println("Is working");
                         if (!flipped) {
+                            placed = false;
+                            changePieceArray(piece.pieceName, pieces);
+                            System.out.println(pieces);
                             flipped = true;
-                            piece.flipPiece();
                             mod1 = -70;
                             mod2 = 70;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            System.out.println(piece.pieceName);
+                            piece.flipPiece();
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "E.png").toString()));
+                            //System.out.println(piece.pieceName);
 
                         }
                         else  {
+                            placed = false;
                             flipped = false;
-                            piece.flipPiece();
                             mod1 = 0;
                             mod2 = 0;
-                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                            System.out.println(piece.pieceName);
+                            piece.flipPiece();
+                            setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + "A.png").toString()));
+                            //System.out.println(piece.pieceName);
                             }
                         }
+                        // Key event to give hints
+                        else if (event.getCode().equals(KeyCode.H)) {
+                        //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+                        root.setEffect(glow);
+                        // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
+                    }
                 }
             });
-            /*HELPED BY STEVE*/
-            /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
-
             setOnMousePressed(event -> {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
+                setFitHeight(280);
+                setFitWidth(280);
+                placed=false;
                 requestFocus();
             });
             setOnMouseDragged(event -> {
@@ -266,17 +327,60 @@ public class Board extends Application {
                 mouseY = event.getSceneY();
             });
             setOnMouseReleased(event -> {
+                System.out.println(pieces);
+                if (!placed) {
+                    pieces = changePieceArray(piece.pieceName, pieces);
                 Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
+
+                Character pos = near.position;
+                String fullpiece;
+
+                if (flipped) {
+                    fullpiece = piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(pos))-1);
+                } else {
+                    fullpiece = piece.pieceName + pos; }
+                    System.out.println("adding to pieces");
+                pieces.add(fullpiece);
+
+                String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
+
+                //System.out.println("place" + placement);
+                if (StepsGame.isPlacementSequenceValid(placement)) {
                 //System.out.println("Nearest peg: " + near.position);
                 //System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
                 //System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
                 //setlayoutx is -140 if flipped
-                setLayoutX(near.getCenterX()-140+mod1);
-                setLayoutY(near.getCenterY()-140);
+                    setLayoutX(near.getCenterX()-140+mod1);
+                    setLayoutY(near.getCenterY()-140);
+                    placed=true;
+                } else {
+                    pieces.remove(fullpiece);
+                    placed = false;
+                    setFitHeight(150);
+                    setFitWidth(150);
+                    setLayoutX(homeX);
+                    setLayoutY(homeY);
+                }
+                }
+                System.out.println(pieces);
                 //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
                 //System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
         }
+    }
+
+    public ArrayList<String> changePieceArray(String pieceName, ArrayList<String> pieces) {
+        String pieceToRemove = "";
+        ArrayList<String> out = new ArrayList<>();
+        for (String item : pieces) {
+            Character itemPiece = item.charAt(0);
+            if (itemPiece.equals(pieceName.charAt(0))) {
+                pieceToRemove = item;
+            }
+        }
+        pieces.remove(pieceToRemove);
+        //System.out.println("remove piece:" + pieceToRemove);
+        return pieces;
     }
 
     public void makePegs() {
@@ -340,11 +444,15 @@ public class Board extends Application {
             if (i/4 < 1) {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), x , y);
                 x += 158;
+                piece.setFitHeight(150);
+                piece.setFitWidth(150);
                 root.getChildren().add(piece);
                 //System.out.println(piece.piece.pieceName);
             } else {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), xb, yb);
                 xb += 158;
+                piece.setFitHeight(150);
+                piece.setFitWidth(150);
                 root.getChildren().add(piece);
                 //System.out.println(piece.piece.pieceName);
             }
