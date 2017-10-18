@@ -357,17 +357,17 @@ public class Board extends Application {
             });
 
             /* Key event to give hints */
-            setOnKeyPressed(event -> {
-                DropShadow glow = new DropShadow();
-                glow.setColor(Color.LIGHTBLUE);
-                glow.setOffsetX(0f);
-                glow.setOffsetY(0f);
-                glow.setHeight(10);
-                if (event.getCode().equals(KeyCode.H)) {
-                    //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                    root.setEffect(glow);
-                }
-            });
+//            setOnKeyPressed(event -> {
+//                DropShadow glow = new DropShadow();
+//                glow.setColor(Color.LIGHTBLUE);
+//                glow.setOffsetX(0f);
+//                glow.setOffsetY(0f);
+//                glow.setHeight(10);
+//                if (event.getCode().equals(KeyCode.H)) {
+//                    //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
+//                    root.setEffect(glow);
+//                }
+//            });
         }
     }
 
