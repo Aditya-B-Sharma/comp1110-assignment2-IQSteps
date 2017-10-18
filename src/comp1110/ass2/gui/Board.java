@@ -161,7 +161,7 @@ public class Board extends Application {
     }
 
     class DraggablePiece extends ImageView {
-        int homeX, homeY;
+        double homeX, homeY;
         double mouseX, mouseY;
         int mod1;
         int mod2;
@@ -185,36 +185,36 @@ public class Board extends Application {
             setFocusTraversable(true);
             switch (piece.pieceName.charAt(0)) {
                 case 'A':
-                    homeX = 0;
-                    homeY = 300;
+                    homeX = 111;
+                    homeY = 386;
                     break;
                 case 'B':
-                    homeX = 200;
-                    homeY = 300;
+                    homeX = 269;
+                    homeY = 386;
                     break;
                 case 'C':
-                    homeX = 400;
-                    homeY = 300;
+                    homeX = 457;
+                    homeY = 386;
                     break;
                 case 'D':
-                    homeX = 600;
-                    homeY = 300;
+                    homeX = 647;
+                    homeY = 386;
                     break;
                 case 'E':
-                    homeX = 0;
-                    homeY = 400;
+                    homeX = 111;
+                    homeY = 536;
                     break;
                 case 'F':
-                    homeX = 200;
-                    homeY = 400;
+                    homeX = 269;
+                    homeY = 536;
                     break;
                 case 'G':
-                    homeX = 400;
-                    homeY = 400;
+                    homeX = 457;
+                    homeY = 536;
                     break;
                 case 'H':
-                    homeX = 600;
-                    homeY = 400;
+                    homeX = 647;
+                    homeY = 536;
                     break;
             }
             setLayoutX(homeX);
@@ -275,6 +275,8 @@ public class Board extends Application {
                 public void handle(KeyEvent event) {
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         if (!flipped) {
+                            changePieceArray(piece.pieceName, pieces);
+                            System.out.println(pieces);
                             flipped = true;
                             mod1 = -70;
                             mod2 = 70;
@@ -295,11 +297,12 @@ public class Board extends Application {
                 }
             });
             /*HELPED BY STEVE*/
-            /*Remember to tell the game when it is flipped and when it isn't. Currently isn't implemented*/
 
             setOnMousePressed(event -> {
                 mouseX = event.getSceneX();
                 mouseY = event.getSceneY();
+                setFitHeight(280);
+                setFitWidth(280);
                 placed=false;
                 requestFocus();
             });
@@ -313,6 +316,7 @@ public class Board extends Application {
                 mouseY = event.getSceneY();
             });
             setOnMouseReleased(event -> {
+                System.out.println(pieces);
                 if (!placed) {
                     pieces = changePieceArray(piece.pieceName, pieces);
                 Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
@@ -341,6 +345,10 @@ public class Board extends Application {
                 } else {
                     pieces.remove(fullpiece);
                     placed = false;
+                    setFitHeight(150);
+                    setFitWidth(150);
+                    setLayoutX(homeX);
+                    setLayoutY(homeY);
                 }
                 }
                 System.out.println(pieces);
@@ -438,11 +446,15 @@ public class Board extends Application {
             if (i/4 < 1) {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), x , y);
                 x += 158;
+                piece.setFitHeight(150);
+                piece.setFitWidth(150);
                 root.getChildren().add(piece);
                 //System.out.println(piece.piece.pieceName);
             } else {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), xb, yb);
                 xb += 158;
+                piece.setFitHeight(150);
+                piece.setFitWidth(150);
                 root.getChildren().add(piece);
                 //System.out.println(piece.piece.pieceName);
             }
