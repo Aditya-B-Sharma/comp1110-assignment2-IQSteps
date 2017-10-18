@@ -537,7 +537,8 @@ public class StepsGame {
     static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> usedMoves) {
         for (String move : remainingMoves) {
             if (!usedMoves.contains(move) && isPlacementSequenceValid(initialNode.data + move)) {
-                TreeNode child = new TreeNode(move);
+                //TreeNode child = new TreeNode(move);
+                TreeNode child = new TreeNode(initialNode.data + move);
                 usedMoves.add(move);
                 initialNode.addChild(child);
                 System.out.println(child.toString());
