@@ -13,6 +13,7 @@ import java.util.*;
  * (http://www.smartgames.eu/en/smartgames/iq-steps)
  */
 public class StepsGame {
+    public static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
     private static int[] AA = {1, 2, 0,
             2, 1, 2,
@@ -335,7 +336,6 @@ public class StepsGame {
     // +9 = bottom left, +10 = directly below, +11 = bottom right
     public static boolean isPlacementSequenceValid(String placement) {
         // String of all possible positions on the board
-        String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
         // Location from origin of piece - depends on indexing tis variable
         int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
@@ -477,7 +477,7 @@ public class StepsGame {
 
 
     // Joins set of permutations
-    private static String join(List<String> inn) {
+    public static String join(List<String> inn) {
         StringBuilder out = new StringBuilder();
         for (String s : inn) {
             out.append(s);
@@ -537,7 +537,8 @@ public class StepsGame {
     static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> usedMoves) {
         for (String move : remainingMoves) {
             if (!usedMoves.contains(move) && isPlacementSequenceValid(initialNode.data + move)) {
-                TreeNode child = new TreeNode(move);
+                //TreeNode child = new TreeNode(move);
+                TreeNode child = new TreeNode(initialNode.data + move);
                 usedMoves.add(move);
                 initialNode.addChild(child);
                 System.out.println(child.toString());
