@@ -97,6 +97,7 @@ public class Board extends Application {
             super(radius);
         }
 
+        // Need to add case for if shape is flipped. It keeps thinking the node is the one on the right
         public Circle(Character position, double radius, double opacity, double centerX, double centerY) {
             super(radius);
             this.position = position;
