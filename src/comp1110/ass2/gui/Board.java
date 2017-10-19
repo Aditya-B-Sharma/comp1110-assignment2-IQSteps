@@ -197,6 +197,8 @@ public class Board extends Application {
         Character pos;
         boolean StartingPiece;
 
+        // create a draggable piece with its instance values which will change on events fired
+
 
         DraggablePiece(PieceName piece, double x, double y) {
         DraggablePiece self = this;
@@ -215,6 +217,8 @@ public class Board extends Application {
                 }
             }
             setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName.charAt(0) + toFetch + ".png").toString()));
+
+            //make sure the image is movable
             setFocusTraversable(true);
             switch (piece.pieceName.charAt(0)) {
                 case 'A':
@@ -253,16 +257,17 @@ public class Board extends Application {
             setLayoutX(homeX);
             setLayoutY(homeY);
             setOnScroll(new EventHandler<ScrollEvent>() {
+            // scroll piece
                 @Override
                 public void handle(ScrollEvent event) {
                     scrollPiece(self);
-                    //System.out.println(piece.pieceName);
                     event.consume();
                 }
             });
 
 
             setOnKeyPressed(new EventHandler<KeyEvent>() {
+            // on space, flip
                 @Override
                 public void handle(KeyEvent event) {
                     DropShadow glow = new DropShadow();
@@ -276,31 +281,10 @@ public class Board extends Application {
                         // Key event to give hints
                         else if (event.getCode().equals(KeyCode.H)) {
                         Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
-                        //Circle glowingNear = near;
-                        //glowPeg(glowingNear);
+
+                        // add on next piece
                         showPieceHint();
-
-//                                    root.getChildren().set(root.getChildren().indexOf(near), glowingNear);
-//                                    new KeyFrame(Duration.seconds(1));
-//                                    root.getChildren().set(root.getChildren().indexOf(glowingNear), near);final Timeline timeline = new Timeline();
-//                        final Timeline timeline = new Timeline();
-//                        timeline.setCycleCount(2);
-//                        timeline.setAutoReverse(true);
-//                        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000), ae -> {
-//                            glowPeg(near, true);
-//
-//                        }));
-//                        timeline.play();
-//                        glowPeg(near, false);
-//                        //timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue (near.translateYProperty(),  5)));
-//                        root.getChildren().set(root.getChildren().indexOf(near), near);
-
-
-
-                        //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                        //root.setEffect(glow);
-                        // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
-                    }
+                        }
                     }
             });
             setOnMousePressed(event -> {
@@ -324,27 +308,10 @@ public class Board extends Application {
                 mouseY = event.getSceneY();
             });
             setOnMouseReleased(event -> {
+                // using euclidian distance
                 placePiece(self);
-//                System.out.println(pieces);
-
-                //System.out.println("Layout x and y of nearest peg: x : "+ near.getCenterX() + " y :" + near.getCenterY());
-                //System.out.println("Layout x and y of piece after placing: x : " +getLayoutX() + " y :" + getLayoutY());
             });
         }
-    }
-
-    public void resetPiece(DraggablePiece p) {
-
-        if (p.flipped) {
-            ;
-        }
-        Character first = p.piece.pieceName.charAt(0);
-        p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
-        flipPiece(p);
-        flipPiece(p);
-        p.setLayoutX(p.homeX);
-        p.setLayoutX(p.homeY);
-        p.piece.pieceName= first + "A";
     }
 
     public void scrollPiece(DraggablePiece p){
@@ -353,22 +320,11 @@ public class Board extends Application {
             current =  new Label(Boolean.toString(p.placed));
             root.getChildren().add(current);
             String holder = p.piece.pieceName;
-            String holder2;
             int index = 0;
             Character current = ' ';
-            //piece.rotPiece();
-            //System.out.println("pieces : " + pieces);
-            //int index = pieces.indexOf()
-            //pieces = changePieceArray(piece.pieceName, pieces);
-            //System.out.println("pieces : " + pieces);
-            //take the piece from pieces and update it
-//            System.out.println("pieces before: " + pieces);
-            //piece.rotPiece();
 
             for (String s: pieces) {
                 if (s.contains(p.piece.pieceName)) {
-//                    System.out.println("s :" + s);
-                    holder2 = s;
                     index = pieces.indexOf(s);
                     current = s.charAt(2);
                     String currentPeg = s.charAt(2) + "";
@@ -379,21 +335,17 @@ public class Board extends Application {
 
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
-            //System.out.println("place" + placement);
             if (StepsGame.isPlacementSequenceValid(placement)) {
                 p.setRotate((p.getRotate() + 90) % 360);
             } else {
                 p.piece.pieceName = holder;
-//                System.out.println(holder);
                 pieces.set(index, p.piece.pieceName + current);
-//                System.out.println("pieces after: " + pieces);
             }
         } else {
             p.piece.rotPiece();
             p.setRotate((p.getRotate() + 90) % 360);
 
         }
-        //System.out.println(piece.pieceName)
 
     }
 
@@ -407,18 +359,12 @@ public class Board extends Application {
 
                 changePieceArray(p.piece.pieceName, pieces);
 
-//                System.out.println(pieces);
 
                 p.flipped = true;
                 p.mod1 = -70;
                 p.mod2 = 70;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "E.png").toString()));
-//                            setFitHeight(150);
-//                            setFitWidth(150);
-//                            setLayoutX(homeX);
-//                            setLayoutY(homeY);
-                //System.out.println(piece.pieceName);
 
             }
             else  {
@@ -431,50 +377,34 @@ public class Board extends Application {
                 p.mod2 = 0;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
-//                            setFitHeight(150);
-//                            setFitWidth(150);
-//                            setLayoutX(homeX);
-//                            setLayoutY(homeY);
-                //System.out.println(piece.pieceName);
             }
         }
 
+    // place draggable piece at calculated position
     public void placePiece(DraggablePiece p) {
         if (!p.placed) {
             pieces = changePieceArray(p.piece.pieceName, pieces);
-            if (p.piece.pieceName == "BE") {p.mod2=0;}
             Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY(), p.mod2);
-            System.out.println("p layoutX" + p.getLayoutX() + "p layout y" + p.getLayoutY());
-            //System.out.println("near:" + near.position);
 
             p.pos = near.position;
-            System.out.println(p.pos);
-            System.out.println(p.flipped);
             String fullpiece;
 
             if (p.flipped) {
                 fullpiece = p.piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(p.pos))-1);
             } else {
                 fullpiece = p.piece.pieceName + p.pos;}
-//            System.out.println("adding to pieces");
             pieces.add(fullpiece);
 
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
-            //System.out.println("place" + placement);
             System.out.println(StepsGame.isPlacementSequenceValid(placement));
             if (StepsGame.isPlacementSequenceValid(placement)) {
-                //System.out.println("Nearest peg: " + near.position);
-                //System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
-                //System.out.println("Layout x and y of piece before placing: x : "+getLayoutX() + " y :" + getLayoutY());
-                //setlayoutx is -140 if flipped
                 p.setLayoutX(near.getCenterX()-140+p.mod1);
                 p.setLayoutY(near.getCenterY()-140);
                 p.placed=true;
                 root.getChildren().remove(current);
                 current =  new Label(Boolean.toString(p.placed));
                 root.getChildren().add(current);
-//                System.out.println(p.placed);
                 if (pieces.size() == 8) {
                     isComplete.setLayoutY(452);
                     isComplete.setLayoutX((BOARD_WIDTH/2.20));
@@ -482,7 +412,7 @@ public class Board extends Application {
                     isComplete.setScaleY(3);
                     mediaPlayer.play();
 
-                    // set to image later
+                    // check if game is complete and set message
                     root.getChildren().add(isComplete);
 
                 }
@@ -498,13 +428,11 @@ public class Board extends Application {
                 p.setLayoutY(p.homeY);
             }
         }
-//        System.out.println(pieces);
 
     }
 
     public ArrayList<String> changePieceArray(String pieceName, ArrayList<String> pieces) {
         String pieceToRemove = "";
-        ArrayList<String> out = new ArrayList<>();
         for (String item : pieces) {
             Character itemPiece = item.charAt(0);
             if (itemPiece.equals(pieceName.charAt(0))) {
@@ -512,31 +440,26 @@ public class Board extends Application {
             }
         }
         pieces.remove(pieceToRemove);
-        //System.out.println("remove piece:" + pieceToRemove);
         return pieces;
     }
 
+    // calculate next possible piece using task 6 and 9
 
     public void showPieceHint() {
         String[] solutions = getSolutions(join(pieces));
         String p = join(pieces);
         DraggablePiece temp = new DraggablePiece(new PieceName("AA"), 0, 0);
         int index = 0;
-        Random ran = new Random();
-        //int i = ran.nextInt(solutions.length);
         Set<String> viable = getViablePiecePlacements(p, solutions[0]);     // Next viable pieceplacements found
-        //int j = ran.nextInt(viable.size()-1);
         ArrayList<String> viable2 = new ArrayList<>();
         viable2.addAll(viable);
         String piecee = viable2.get(0);
         System.out.println(piecee);
-        Character pegPos = piecee.charAt(2);
 
         for (DraggablePiece currentP : DraggablePieceList) {
             if (currentP.piece.pieceName.charAt(0) == piecee.charAt(0)) {
                 index = DraggablePieceList.indexOf(currentP);
                 temp = currentP;
-                //resetPiece(temp); //new DraggablePiece(new PieceName(currentP.piece.pieceName.charAt(0) + "A"), 0, 0);
                 temp.toFront();
                 System.out.println(temp.piece.pieceName);
                 setter(temp,piecee);
@@ -545,9 +468,8 @@ public class Board extends Application {
         }
         DraggablePieceList.set(index, temp);
     }
-        //setter(piecee, piecee.charAt(2));
-        //DraggablePiece piece = new DraggablePiece(piecee.PieceName, )
 
+    
 
     public void makePegs() {
         int x = 69;
