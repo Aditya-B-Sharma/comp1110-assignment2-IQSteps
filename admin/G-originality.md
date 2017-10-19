@@ -16,6 +16,8 @@ We declare that the work we have submitted for Stage G of this assignment and al
 
 * For the method in class <StepsGame (collector)> help was received from a friend (namely Muhammad Zubayr Khan) (noted in source code comments)
 
+* The implementation of music file <congratulations.wav> is based on code found in <http://www.java2s.com/Code/Java/JavaFX/Playmp3file.htm>
+
 * ....
 
 Signed: Aditya Sharma (u6051965), Stefan Louie (u6051635) and Khamis Buol (u6080028)
