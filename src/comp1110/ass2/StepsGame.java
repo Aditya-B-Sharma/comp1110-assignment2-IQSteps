@@ -95,6 +95,7 @@ public class StepsGame {
      * @param placement A string describing a placement of one or more pieces
      * @return True if the placement is well-formed
      */
+
     static boolean isPlacementWellFormed(String placement) {
         // FIXME Task 3: determine whether a placement is well-formed
         if (placement == null) {
@@ -105,6 +106,7 @@ public class StepsGame {
         return false;
     }
 
+    // Reference: Zubayr Khan
     // Method collects shapes in the placements.
     public static String collector(String in) {
         StringBuilder initial = new StringBuilder();
@@ -446,6 +448,7 @@ public class StepsGame {
         return out;
     }
 
+    // Reference: https://stackoverflow.com/questions/24460480/permutation-of-an-arraylist-of-numbers-using-recursion
     // Finds permutations of shapes
     private static ArrayList<List<String>> permute(List<String> unused, String placement) {
         ArrayList<List<String>> out = new ArrayList<>();
@@ -644,7 +647,6 @@ public class StepsGame {
             int[] placementEncoding = transposeAmount(piece);
             for (int x = 0; x < placementEncoding.length; x++) {
                 if (placementEncoding[x] != 0) {
-                    //System.out.println(piece);
                     output.add(all.charAt((all.indexOf(piece.charAt(2)))+locationIndices[x]));
                 }
             }
