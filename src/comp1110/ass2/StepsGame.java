@@ -119,9 +119,8 @@ public class StepsGame {
         return initial.toString();
     }
 
-
+    // Checks whether an input contains duplicates, i.e. whether a shape occurs more than once
     private static boolean containsDuplicates(String input) {
-        /* Checks whether an input contains duplicates, i.e. whether a shape occurs more than once */
 
         // Variables
         ArrayList<Character> charList = new ArrayList<>();
@@ -429,8 +428,6 @@ public class StepsGame {
         String[] posMoves = possibleMoves(permute(pos, placement));                                         // Array of first pieces of each permutation
 
         allowedPlacements.addAll(Arrays.asList(posMoves));
-
-        //System.out.println("placement string: " + placement + " | allowed placements: " + allowedPlacements + " | objective string: " + objective );
 
         return allowedPlacements;
     }
