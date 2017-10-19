@@ -424,7 +424,7 @@ public class StepsGame {
      * @return An set of viable piece placements
      */
 
-    static Set<String> getViablePiecePlacements(String placement, String objective) {
+    public static Set<String> getViablePiecePlacements(String placement, String objective) {
         Set<String> allowedPlacements = new HashSet<>();                                                    // The Set in which valid next moves are added to
 
         ArrayList<String> pos = new ArrayList<>(getPiecePlacements(getUnusedPieces(placement, objective))); // Possible viable pieces as an array
@@ -522,7 +522,7 @@ public class StepsGame {
      */
 
 
-    static String[] getSolutions(String placement) {
+    public static String[] getSolutions(String placement) {
         //FIXME Task 9: determine all solutions to the game, given a particular starting placement
         /* Determines all solutions to the game given a starting placement, with the help of methods: getPossibleMoves,
          updateRemainingMoves, buildTree and traverseTree */
