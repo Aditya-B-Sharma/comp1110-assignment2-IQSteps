@@ -1,10 +1,6 @@
 package comp1110.ass2;
 
-import com.sun.deploy.util.StringUtils;
-import gittest.C;
 
-import javax.print.DocFlavor;
-import java.lang.reflect.Array;
 import java.util.*;
 import comp1110.ass2.TestUtility;
 import static comp1110.ass2.TestUtility.normalize;
@@ -16,9 +12,12 @@ import static comp1110.ass2.TestUtility.normalize;
  * (http://www.smartgames.eu/en/smartgames/iq-steps)
  */
 
-/* Authorship: Class written by the group - Aditya Sharma, Khamis Buol, Stefan Louie */
+// Authorship: Class written by the group - Aditya Sharma, Khamis Buol, Stefan Louie
 
 public class StepsGame {
+
+    //Global variables
+
     public static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
     private static int[] AA = {1, 2, 0,
@@ -120,13 +119,20 @@ public class StepsGame {
         return initial.toString();
     }
 
-    // Checks whether an input contains duplicates, i.e. whether a shape occurs more than once
+
     private static boolean containsDuplicates(String input) {
+        /* Checks whether an input contains duplicates, i.e. whether a shape occurs more than once */
+
+        // Variables
         ArrayList<Character> charList = new ArrayList<>();
         HashSet<Character> letterSet = new HashSet<>();
+
+        // Add all characters in input to a list
         for (int i = 0; i < input.length(); i++) {
             charList.add(input.charAt(i));
         }
+
+        // Check if input string has duplicates
         for (Character i : charList) {
             if (!letterSet.add(i)) {
                 return false;
@@ -154,6 +160,7 @@ public class StepsGame {
         return true;
     }
 
+    //Maps isValid method onto each array list of placements
     private static boolean mapisValid(List<String> arrayOfPlacements) {
         for (String item : arrayOfPlacements) {
             if (!(isValid(item))) {
@@ -173,9 +180,10 @@ public class StepsGame {
      */
 
 
-    //transpose and flip will be used to respectively spin or flip the source image
-    // this uses our explicit definitions of the pieces and changes them to make the piece given in placements
-    // i.e to make AA -> AB or to make AA-> AE
+    /*transpose and flip will be used to respectively spin or flip the source image
+    **this uses our explicit definitions of the pieces and changes them to make the piece given in placements
+    **i.e to make AA -> AB or to make AA-> AE
+    */
     public static int[] transpose(int[] turn) {
         int[] output = new int[9];
         output[0] = turn[6];
@@ -215,16 +223,6 @@ public class StepsGame {
             }
         }
         return output;
-    }
-
-
-    // toString for debugging
-    static String toString(int[] list) {
-        StringBuilder out = new StringBuilder();
-        for (int i : list) {
-            out.append(i);
-        }
-        return out.toString();
     }
 
     // Transposes or flips a piece placement n number of times.
@@ -290,11 +288,12 @@ public class StepsGame {
         return root;
     }
 
-    //Checks whether the position of a piece placement is valid or not
-    // i.e if a position B has a piece placed upon it where the pieces coords
-    // for the piece directly above at (i.e piece origin - 10) would be invalid,
-    // we need to make a bounds checker
-    // this is explicit
+    /* Checks whether the position of a piece placement is valid or not
+     * i.e if a position B has a piece placed upon it where the pieces coords
+     * for the piece directly above at (i.e piece origin - 10) would be invalid,
+     * we need to make a bounds checker
+     * this is explicit
+     */
     private static boolean boundaryCheck(Character pos, int xyPointer) {
         String sideL = "KUf";
         String sideR = "Teo";
@@ -334,20 +333,19 @@ public class StepsGame {
     }
 
 
-    // check if a placement is valid by first checking wellformed and then transposing our variable root pieces as needed,
-    // the doing our boundary check wherever our piece has a 1 or 2, (meaning there would be a circle there)
-    // then look through our ALL string containing all positions and apply the relative index location indices
-    //to get the piece at j position from the middle of our piece.
-    // the indices work like this:
-    // -11 = top left , -10 = above, -9= top right
-    // -1 = left, 0 = middle piece (origin) , +1 = right
-    // +9 = bottom left, +10 = directly below, +11 = bottom right
+    /* Check if a placement is valid by first checking wellformed and then transposing our variable root pieces as needed,
+    ** the doing our boundary check wherever our piece has a 1 or 2, (meaning there would be a circle there)
+    ** then look through our ALL string containing all positions and apply the relative index location indices
+    ** to get the piece at j position from the middle of our piece.
+    ** the indices work like this:
+    ** -11 = top left , -10 = above, -9= top right
+    ** -1 = left, 0 = middle piece (origin) , +1 = right
+    ** +9 = bottom left, +10 = directly below, +11 = bottom right
+    * */
     public static boolean isPlacementSequenceValid(String placement) {
         // String of all possible positions on the board
         String pegs = "ACEGILNPRTUWYbdgikmoprtvx";
-        // Location from origin of piece - depends on indexing tis variable
-        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
-        //System.out.println(toString(flip(AA)));
+        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};  // Location from origin of piece - depends on indexing tis variable
         HashSet<Character> upperList = new HashSet<>();
         HashSet<Character> checkList = new HashSet<>();
         List<String> places = getPiecePlacements(placement);
@@ -403,7 +401,6 @@ public class StepsGame {
                     }
                 }
                 upperList.addAll(upChars);
-                //System.out.println("list of upper characters (in upperlist hashset , appended once piece checking is finished): " + upperList);
             }
         } else {
             return false;
@@ -451,8 +448,9 @@ public class StepsGame {
         return out;
     }
 
-    // Reference: https://stackoverflow.com/questions/24460480/permutation-of-an-arraylist-of-numbers-using-recursion
-    // Finds permutations of shapes
+    /* Reference: https://stackoverflow.com/questions/24460480/permutation-of-an-arraylist-of-numbers-using-recursion
+    ** Finds permutations of shapes
+    */
     private static ArrayList<List<String>> permute(List<String> unused, String placement) {
         ArrayList<List<String>> out = new ArrayList<>();
 
@@ -522,10 +520,11 @@ public class StepsGame {
      */
 
 
+    /**Determines all solutions to the game given a starting placement, with the help of methods: getPossibleMoves,
+      *updateRemainingMoves, buildTree and traverseTree
+      */
     public static String[] getSolutions(String placement) {
         //FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        /* Determines all solutions to the game given a starting placement, with the help of methods: getPossibleMoves,
-         updateRemainingMoves, buildTree and traverseTree */
 
         // Initialize variables
         ArrayList<String> outputList = new ArrayList<>();
@@ -565,8 +564,8 @@ public class StepsGame {
 
 
     // Reference: Sina Eghbal
+    // Builds tree with nodes that contain valid piece placements, using recursion and backtracking
     static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves, HashSet<String> placementInTree) {
-        /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
 
         for (String move : remainingMoves) {
             ArrayList<String> movesAvailable = new ArrayList<String>(remainingMoves);     // Temporary holder for available moves for each branch
@@ -578,8 +577,9 @@ public class StepsGame {
                 TreeNode childNormalized = new TreeNode((normalize(initialNode.data + move)));
                 ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
 
-               // Once tree nodes have placement strings of 3 or more shapes, there could be normalized duplicates
-               // We stop dealing with current branch if we determine that the current node has a normalized duplicate
+                /** Once tree nodes have placement strings of 3 or more shapes, there could be normalized duplicates
+                  * We stop dealing with current branch if we determine that the current node has a normalized duplicate
+                 */
                 if (child.data.length() >= 9) {
                     if (placementInTree.add(childNormalized.data)) {
                         initialNode.addChild(child);
@@ -587,8 +587,9 @@ public class StepsGame {
                     }
                 }
 
-                // The first two levels of the tree, i.e. node placement strings have less than 3 shapes, consist of unique nodes
-                // So we add such valid nodes to the tree
+                /* The first two levels of the tree, i.e. node placement strings have less than 3 shapes, consist of unique nodes
+                ** So we add such valid nodes to the tree
+                */
                 else {
                     initialNode.addChild(child);
                     buildTree(child, remainingMovesUpdate, placementInTree);
@@ -598,9 +599,8 @@ public class StepsGame {
     }
 
 
-
+    // Returns list of all possible valid moves each individual piece can take
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
-        /* Returns list of all possible valid moves each individual piece can take */
 
         // Variables
         ArrayList<String> possibleMoves = new ArrayList<>();
@@ -616,12 +616,11 @@ public class StepsGame {
         return possibleMoves;
     }
 
-
+    // Returns a list of available moves given a piece already place on the board
     static ArrayList<String> updateRemainingMoves(String placement, ArrayList<String> moves) {
-        /* Returns a list of available moves given a piece already place on the board */
 
         // Variables
-        HashSet<String> usedShapes = new HashSet<String>();
+        HashSet<String> usedShapes = new HashSet<>();
         char[] characters = placement.toCharArray();
         ArrayList<Character> usedLocations = updateUsedLocations(placement);
 
@@ -641,9 +640,8 @@ public class StepsGame {
         return moves;
     }
 
-
+    // Returns a list of locations characters that are already occupied on the board
     static ArrayList<Character> updateUsedLocations(String placement) {
-        /* Returns a list of locations characters that are already occupied on the board */
 
         // Variables
         ArrayList<Character> output = new ArrayList<Character>();

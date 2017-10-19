@@ -31,7 +31,7 @@ import static comp1110.ass2.StepsGame.join;
 import static comp1110.ass2.StepsGame.getViablePiecePlacements;
 
 
-/* Authorship: Written by Aditya Sharma, Khamis Buola */
+// Authorship: Written by Aditya Sharma, Khamis Buol
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
