@@ -518,6 +518,8 @@ public class StepsGame {
 
     static String[] getSolutions(String placement) {
         //FIXME Task 9: determine all solutions to the game, given a particular starting placement
+        /* Determines all solutions to the game given a starting placement, with the help of methods: getPossibleMoves,
+         updateRemainingMoves, buildTree and traverseTree */
 
         // Initialize variables
         ArrayList<String> output = new ArrayList<String>();
@@ -572,7 +574,6 @@ public class StepsGame {
                 if (child.data.length() >= 3) {
                     if (placementInTree.add(childNormalized.data)) {
                         initialNode.addChild(child);
-                        System.out.println(childNormalized.data + " " + childNormalized.data.length());
                         buildTree(child, remainingMovesUpdate, placementInTree);
                     }
                 }
@@ -581,7 +582,6 @@ public class StepsGame {
                 // So we add such valid nodes to the tree
                 else {
                     initialNode.addChild(child);
-                    System.out.println(childNormalized.data + " " + childNormalized.data.length());
                     buildTree(child, remainingMovesUpdate, placementInTree);
                 }
             }
