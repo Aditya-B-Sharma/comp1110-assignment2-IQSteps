@@ -269,6 +269,7 @@ public class StepsGame {
         switch (spinBy) {
             case 0:
                 break;
+
             case 1:
                 root = transpose(root);
                 break;
@@ -515,6 +516,24 @@ public class StepsGame {
      * the game given the starting point provided by placement.
      */
 
+    /*TreeNode solutionsPath;
+
+    ArrayList<String> possiblemoves = getPossibleMoves(shapesAndOrientations, locations);
+
+    //All possible moves each REMAINING piece can take
+    ArrayList<String> remainingmoves = updateRemainingMoves("BGSAHQEFBGCgCDN", possiblemoves);
+
+
+    solutionsPath = new TreeNode("BGSAHQEFBGCgCDN");
+    HashSet<String> testset = new HashSet<String>();
+    buildTree(solutionsPath, remainingMoves, testset);
+
+        System.out.println("");
+
+    ArrayList<String> testList2 = new ArrayList<>();
+    traverseTree(solutionsPath, testList2);
+        System.out.println(testList2);*/
+
 
     static String[] getSolutions(String placement) {
         //FIXME Task 9: determine all solutions to the game, given a particular starting placement
@@ -720,7 +739,7 @@ public class StepsGame {
         System.out.println(testList2);
 
 
-        /* Easy */
+    /*    *//* Easy *//*
         String e1 = "BGKADgHAiDHnEDkGFS";
         System.out.println("For e1: " + e1+ ": "+isPlacementSequenceValid(e1));
         String e2 = "BGKGCgDHnCElACiHHQFFO";
@@ -728,7 +747,7 @@ public class StepsGame {
         String e3 = "";
         System.out.println("For e3: " + e3+ ": "+ isPlacementSequenceValid(e3));
 
-        /* Medium */
+        *//* Medium *//*
         String m1 = "CEnAESHGlFAP";
         System.out.println("For m1: " + m1 + ": "+ isPlacementSequenceValid(m1));
         String m2 = "FBgBElEFBCCW";
@@ -736,15 +755,15 @@ public class StepsGame {
         String m3 = "BGKFCNCFl";
         System.out.println("For m3: " + m3+ ": "+ isPlacementSequenceValid(m3));
 
-        /* Hard */
+        *//* Hard *//*
         String h1 = "EFBHBR";
         System.out.println("For h1: " + h1+ ": "+isPlacementSequenceValid(h1));
         String h2 = "HHOFBg";
         System.out.println("For h2: " + h2+ ": "+ isPlacementSequenceValid(h2));
         String h3 = "EEfAEn";
         System.out.println("For h3: " + h3+ ": " + isPlacementSequenceValid(h3));
-
-        System.out.println(h1.length());
+*/
+//        System.out.println(h1.length());
 
         String[] solutions = getSolutions("BGSAHQEFBGCgCDN");
         for (String s : solutions) {
