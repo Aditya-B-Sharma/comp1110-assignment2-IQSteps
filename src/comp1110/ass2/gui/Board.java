@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,10 +22,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 import java.util.*;
 
-import static comp1110.ass2.StepsGame.getPiecePlacements;
 import static comp1110.ass2.StepsGame.getSolutions;
 import static comp1110.ass2.StepsGame.join;
 import static comp1110.ass2.StepsGame.getViablePiecePlacements;
@@ -469,7 +466,7 @@ public class Board extends Application {
         DraggablePieceList.set(index, temp);
     }
 
-    
+
 
     // Method to make pegs
     public void makePegs() {
