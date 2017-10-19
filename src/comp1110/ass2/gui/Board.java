@@ -471,6 +471,7 @@ public class Board extends Application {
 
     
 
+    // Method to make pegs
     public void makePegs() {
         int x = 69;
         int y = 13;
@@ -521,12 +522,13 @@ public class Board extends Application {
         }
     }
 
+    // ArrayList to add Draggable pieces into
     ArrayList<DraggablePiece> DraggablePieceList = new ArrayList<>();
-    // Authorship: Khamis Buol u6080028
+
+    // Method to make each piece
     private void makePieces() {
         String[] pieces = {"AA", "BA", "CA", "DA", "EA", "FA", "GA", "HA"};
         int x = 121;
-        //int xb = 121;
         int y = 406;
         int yb = 536;
         for (int i = 0; i < pieces.length; i++) {
@@ -536,7 +538,6 @@ public class Board extends Application {
                 piece.setFitHeight(150);
                 piece.setFitWidth(150);
                 DraggablePieceList.add(piece);
-                //System.out.println(piece.piece.pieceName);
                 root.getChildren().add(piece);
             } else {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), x, yb);
@@ -547,23 +548,17 @@ public class Board extends Application {
                 root.getChildren().add(piece);
             }
         }
-//        System.out.println(DraggablePieceList);
     }
 
+    // Finds x-coordinate of a specific piece
     private double returnX(Character pos, int mod2, boolean flipped) {
         if (flipped) {
             pos = (char) ((int) pos + 1);
         }
         for (Node node : root.getChildren()) {
             if (node.toString().contains("Circle")) {
-                //System.out.println("circle peg" + (((Circle) node).position));
                 if ((((Circle) node).position) == pos) {
-                    System.out.println("pos " + (((Circle) node).position));
-                    System.out.println("mod2 " + mod2);
-                    System.out.println("given x " + (((Circle) node).getCenterX()-140-mod2));
                     if (pos == 'd') {
-                        System.out.println(((Circle) node).getCenterX());
-                        System.out.println(((Circle) node).position);
                     }
                     return ((Circle) node).getCenterX()-140-mod2;
                 }
@@ -572,6 +567,7 @@ public class Board extends Application {
         return 0.0;
     }
 
+    // Finds the x-coordinate of a specific piece
     private double returnY(Character pos, boolean flipped) {
         if (flipped) {
             pos = (char) ((int) pos + 1);
@@ -586,9 +582,8 @@ public class Board extends Application {
         return 0.0;
     }
 
+    // Places draggable pieces on board depending
     public void setter(DraggablePiece p, String s) {
-        //System.out.println(p.mod1);
-        //flip piece
 
         if (s.charAt(1) >= 'A' && s.charAt(1) <= 'D') {
             if ((p.piece.pieceName.charAt(1) >= 'E' && p.piece.pieceName.charAt(1) <= 'H')) {
@@ -597,9 +592,7 @@ public class Board extends Application {
                 flipPiece(p);
                 flipPiece(p);
             }
-            System.out.println("piece name after flip:" + p.piece.pieceName);
-            //p.mod1 = 0;
-            //p.mod2 = 0;
+
         } else if (s.charAt(1) >= 'E' && s.charAt(1) <= 'H') {
             if ((p.piece.pieceName.charAt(1) >= 'A' && p.piece.pieceName.charAt(1) <= 'D')) {
                 flipPiece(p);
@@ -608,10 +601,7 @@ public class Board extends Application {
                 flipPiece(p);
                 flipPiece(p);
             }
-            //p.flipped = false;
-            System.out.println("piece name after flip:" + p.piece.pieceName);
         }
-        //System.out.println(p.mod1);
 
         if (p.piece.pieceName.charAt(1) >= 'A' && p.piece.pieceName.charAt(1) <= 'D') {
             while (p.piece.pieceName.charAt(1) != s.charAt(1)) {
@@ -623,54 +613,16 @@ public class Board extends Application {
             }
         }
 
-//        switch (s.charAt(1)) {
-//            case 'A':
-//                break;
-//            case 'B':
-//                scrollPiece(p);
-//                break;
-//            case 'C':
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                break;
-//            case 'D':
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                break;
-//            case 'E':
-//                break;
-//            case 'F':
-//                scrollPiece(p);
-//                break;
-//            case 'G':
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                break;
-//            case 'H':
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                scrollPiece(p);
-//                break;
-//        }
-        System.out.println("piece name after spin " + p.piece.pieceName);
-        //rotate piece
-        //place piece
         if (p.flipped) {
-            //System.out.println("flipped mod" + p.mod1);
             if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
                 p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
             } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, true));
-            System.out.println("flipped p piece's current x layout " + p.getLayoutX());
             p.setLayoutY(returnY(s.charAt(2), true));}
         } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, false));
-            System.out.println("2nd");
             p.setLayoutY(returnY(s.charAt(2), false));
         }
-        //p.setLayoutY(returnY(s.charAt(2)));
-        System.out.println("pieces current y " + p.getLayoutY());
         p.setFitWidth(280);
         p.setFitHeight(280);
         placePiece(p);
@@ -683,59 +635,33 @@ public class Board extends Application {
         for (String s : startPieces) {
             for (DraggablePiece p : DraggablePieceList) {
                 Character pieceCharOne = p.piece.pieceName.charAt(0);
-                Character pieceCharTwo = p.piece.pieceName.charAt(1);
                 if (pieceCharOne == s.charAt(0)) {
                     switch (s.charAt(0)) {
                         case 'A':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'B':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'C':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'D':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'E':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'F':
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'G':
                             System.out.println("before setter" + p.piece.pieceName);
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
                         case 'H':
                             pieces.add(s);
-                            //System.out.println("before setter" + p.piece.pieceName);
                             setter(p, s);
-                            //System.out.println(p.pos);
-                            //root.getChildren().add(p);
-                            //System.out.println(pieces);
                             break;
 
                     }
@@ -751,39 +677,12 @@ public class Board extends Application {
     // FIXME Task 10: Implement hints
 
     // FIXME Task 11: Generate interesting starting placements
-//    public void rootAdd() {
-//        root.getChildren().addAll(placements, button2, button3);
-//    }
 
-    public static String difficulty(double difficulty) {
-        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
-                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
-        Random ran = new Random();
-        int i = ran.nextInt(startingPieces.length);
-        startPieces.addAll(getPiecePlacements(startingPieces[i]));
-        // Task 8 starting placements
-        String[][] challenges = {
-                //Easy
-                {"BGKADgHAiDHnEDkGFS","BGKGCgDHnCElACiHHQFFO",""},
-                //Medium
-                {"CEnAESHGlFAP","FBgBElEFBCCW","BGKFCNCFl"},
-                //Hard
-                {"EFBHBR","HHOFBg","EEfAEn"}
-        };
-        Random rand = new Random();
-        //int i = rand.nextInt(3);
-        if (difficulty < 2.5) {
-            return challenges[0][i];
-        }
-        else if (difficulty < 5.0) {
-            return challenges[1][i];
-        }
-        else {
-            return challenges[2][i];
-        }
-    }
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
+                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
 
 //        startPieces.add("EGO");
 //        startPieces.add("CGQ");
@@ -796,15 +695,15 @@ public class Board extends Application {
 //        startPieces.add("FHn");
         ArrayList<String> poses = new ArrayList<>();
 
+        // Title of Window
         primaryStage.setTitle("IQ Steps");
         String first = "AAL";
 
-        //root.getChildren().add(difficulty);
         Scene scene = new Scene(startScreen, BOARD_WIDTH, BOARD_HEIGHT);
         Scene scene2 = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-//        Scene scene3 = new Scene(slider, BOARD_WIDTH, BOARD_HEIGHT);
 
 
+        //Home button to start the game
         Button button = new Button("Start Game");
         button.setLayoutY(200);
         button.setLayoutX((BOARD_WIDTH/2.25)-75);
@@ -822,11 +721,9 @@ public class Board extends Application {
             });
 
 
-
         Button button2 = new Button("Restart");
         button2.setLayoutY(25);
         button2.setLayoutX(25);
-        //button2.setGraphic(new ImageView(new Image(Board.class.getResource(URI_BASE + "BGSAHQEFBGCgCDNHFlDAiFHn.png").toString())));
         button2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -841,12 +738,9 @@ public class Board extends Application {
                     event.consume();
             }
         });
-
-
         startScreen.getChildren().addAll(button);
         root.getChildren().addAll(placements);
         makePegs();
-        //System.out.println(pegs);
         makePieces();
         primaryStage.setScene(scene);
         primaryStage.show();
