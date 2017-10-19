@@ -2,8 +2,6 @@ package comp1110.ass2.gui;
 
 
 import comp1110.ass2.StepsGame;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
@@ -19,10 +17,13 @@ import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
-import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 import java.util.*;
 
 import static comp1110.ass2.StepsGame.getPiecePlacements;
@@ -41,6 +42,7 @@ public class Board extends Application {
     private final Group root = new Group();
     private final Group placements = new Group();
     private final Group startScreen = new Group();
+    private final Group slider = new Group();
 
     /* Music for when game is finished */
     private final URL resource = getClass().getResource(URI_BASE+"congratulations.wav");
@@ -53,9 +55,10 @@ public class Board extends Application {
     private ArrayList<String> pieces = new ArrayList<>();
     Label isComplete = new Label("CONGRATULATIONS!!!!");
 
+
     Label current = new Label();
 
-    ArrayList<String> startPieces = new ArrayList<>();
+    private static ArrayList<String> startPieces = new ArrayList<>();
 
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
@@ -127,42 +130,9 @@ public class Board extends Application {
 
         }
 
-    void glowPiece(PieceName piece) {
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.YELLOW);
-        glow.setOffsetX(0f);
-        glow.setOffsetY(0f);
-        glow.setHeight(10);
-
-    }
-    public void glowPeg(Circle peg, Boolean toGlow) {
-        peg.getCenterX();
-        peg.getCenterY();
-        peg.getEffect();
-        DropShadow glow = new DropShadow();
-        if (!toGlow) {
-            glow.setColor(Color.GREEN);
-            glow.setBlurType(BlurType.GAUSSIAN);
-            glow.setSpread(20);
-            glow.setOffsetX(0f);
-            glow.setOffsetY(0f);
-            glow.setHeight(15);
-            peg.setEffect(glow);
-        } else {
-            peg.setEffect(null);
-//            glow.setColor(Color.rgb(255,255,255));
-//            glow.setOffsetX(0f);
-//            glow.setOffsetY(0f);
-//            glow.setHeight(10);
-//            peg.setEffect(glow);
-
-        }
 
 
-
-    }
-
-
+    //find closest peg to mouse cursor
 
     public Circle findNearestPeg(double x, double y, int mod) {
         ArrayList<Double> distances = new ArrayList<>();
@@ -170,14 +140,13 @@ public class Board extends Application {
             distances.add(peg.distance((x+mod),y));
         }
         double smallestDist = Collections.min(distances);
-//        System.out.println(distances);
-//        System.out.println(smallestDist);
         int index = distances.indexOf(smallestDist);
         Circle nearestCircle = pegs.get(index);
-//        System.out.println(nearestCircle.position);
         return nearestCircle;
 
     }
+
+    // extension of Circle class for pegs
 
 
     class Circle extends javafx.scene.shape.Circle {
@@ -214,13 +183,6 @@ public class Board extends Application {
 
     }
 
-    /*Inner class to display the shapes*/
-    class Piece extends ImageView {
-
-        Piece(String piece) {
-
-        }
-    }
 
     class DraggablePiece extends ImageView {
         int homeX, homeY;
@@ -369,6 +331,20 @@ public class Board extends Application {
         }
     }
 
+    public void resetPiece(DraggablePiece p) {
+
+        if (p.flipped) {
+            ;
+        }
+        Character first = p.piece.pieceName.charAt(0);
+        p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
+        flipPiece(p);
+        flipPiece(p);
+        p.setLayoutX(p.homeX);
+        p.setLayoutX(p.homeY);
+        p.piece.pieceName= first + "A";
+    }
+
     public void scrollPiece(DraggablePiece p){
         if (p.placed) {
             root.getChildren().remove(current);
@@ -464,11 +440,14 @@ public class Board extends Application {
     public void placePiece(DraggablePiece p) {
         if (!p.placed) {
             pieces = changePieceArray(p.piece.pieceName, pieces);
+            if (p.piece.pieceName == "BE") {p.mod2=0;}
             Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY(), p.mod2);
-            //System.out.println("p layoutX" + p.getLayoutX() + "p layout y" + p.getLayoutY());
+            System.out.println("p layoutX" + p.getLayoutX() + "p layout y" + p.getLayoutY());
             //System.out.println("near:" + near.position);
 
             p.pos = near.position;
+            System.out.println(p.pos);
+            System.out.println(p.flipped);
             String fullpiece;
 
             if (p.flipped) {
@@ -481,6 +460,7 @@ public class Board extends Application {
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
             //System.out.println("place" + placement);
+            System.out.println(StepsGame.isPlacementSequenceValid(placement));
             if (StepsGame.isPlacementSequenceValid(placement)) {
                 //System.out.println("Nearest peg: " + near.position);
                 //System.out.println("Mouse x and y : x : "+event.getSceneX() + " y :" + event.getSceneY());
@@ -494,8 +474,8 @@ public class Board extends Application {
                 root.getChildren().add(current);
 //                System.out.println(p.placed);
                 if (pieces.size() == 8) {
-                    isComplete.setLayoutY(150);
-                    isComplete.setLayoutX((BOARD_WIDTH/2.25)-75);
+                    isComplete.setLayoutY(452);
+                    isComplete.setLayoutX((BOARD_WIDTH/2.20));
                     isComplete.setScaleX(3);
                     isComplete.setScaleY(3);
                     mediaPlayer.play();
@@ -541,19 +521,23 @@ public class Board extends Application {
         DraggablePiece temp = new DraggablePiece(new PieceName("AA"), 0, 0);
         int index = 0;
         Random ran = new Random();
-        int i = ran.nextInt(solutions.length);
-        Set<String> viable = getViablePiecePlacements(p, solutions[i]);     // Next viable pieceplacements found
-        int j = ran.nextInt(viable.size());
+        //int i = ran.nextInt(solutions.length);
+        Set<String> viable = getViablePiecePlacements(p, solutions[0]);     // Next viable pieceplacements found
+        //int j = ran.nextInt(viable.size()-1);
         ArrayList<String> viable2 = new ArrayList<>();
         viable2.addAll(viable);
-        String piecee = viable2.get(j);
+        String piecee = viable2.get(0);
+        System.out.println(piecee);
         Character pegPos = piecee.charAt(2);
 
         for (DraggablePiece currentP : DraggablePieceList) {
             if (currentP.piece.pieceName.charAt(0) == piecee.charAt(0)) {
                 index = DraggablePieceList.indexOf(currentP);
                 temp = currentP;
-                setter(temp,pegPos+"");
+                //resetPiece(temp); //new DraggablePiece(new PieceName(currentP.piece.pieceName.charAt(0) + "A"), 0, 0);
+                temp.toFront();
+                System.out.println(temp.piece.pieceName);
+                setter(temp,piecee);
 
             }
         }
@@ -629,21 +613,23 @@ public class Board extends Application {
                 piece.setFitWidth(150);
                 DraggablePieceList.add(piece);
                 //System.out.println(piece.piece.pieceName);
+                root.getChildren().add(piece);
             } else {
                 DraggablePiece piece = new DraggablePiece(new PieceName(pieces[i]), x, yb);
                 x += 158;
                 piece.setFitHeight(150);
                 piece.setFitWidth(150);
                 DraggablePieceList.add(piece);
+                root.getChildren().add(piece);
             }
         }
 //        System.out.println(DraggablePieceList);
     }
 
     private double returnX(Character pos, int mod2, boolean flipped) {
-    if (flipped) {
-        pos = (char) ((int) pos + 1);
-    }
+        if (flipped) {
+            pos = (char) ((int) pos + 1);
+        }
         for (Node node : root.getChildren()) {
             if (node.toString().contains("Circle")) {
                 //System.out.println("circle peg" + (((Circle) node).position));
@@ -651,6 +637,10 @@ public class Board extends Application {
                     System.out.println("pos " + (((Circle) node).position));
                     System.out.println("mod2 " + mod2);
                     System.out.println("given x " + (((Circle) node).getCenterX()-140-mod2));
+                    if (pos == 'd') {
+                        System.out.println(((Circle) node).getCenterX());
+                        System.out.println(((Circle) node).position);
+                    }
                     return ((Circle) node).getCenterX()-140-mod2;
                 }
             }
@@ -675,59 +665,81 @@ public class Board extends Application {
     public void setter(DraggablePiece p, String s) {
         //System.out.println(p.mod1);
         //flip piece
+
         if (s.charAt(1) >= 'A' && s.charAt(1) <= 'D') {
-            flipPiece(p);
-            flipPiece(p);
+            if ((p.piece.pieceName.charAt(1) >= 'E' && p.piece.pieceName.charAt(1) <= 'H')) {
+                flipPiece(p);
+            } else {
+                flipPiece(p);
+                flipPiece(p);
+            }
             System.out.println("piece name after flip:" + p.piece.pieceName);
             //p.mod1 = 0;
             //p.mod2 = 0;
         } else if (s.charAt(1) >= 'E' && s.charAt(1) <= 'H') {
+            if ((p.piece.pieceName.charAt(1) >= 'A' && p.piece.pieceName.charAt(1) <= 'D')) {
+                flipPiece(p);
+            } else {
+                flipPiece(p);
+                flipPiece(p);
+                flipPiece(p);
+            }
             //p.flipped = false;
-            flipPiece(p);
-            flipPiece(p);
-            flipPiece(p);
             System.out.println("piece name after flip:" + p.piece.pieceName);
         }
         //System.out.println(p.mod1);
 
-        switch (s.charAt(1)) {
-            case 'A':
-                break;
-            case 'B':
+        if (p.piece.pieceName.charAt(1) >= 'A' && p.piece.pieceName.charAt(1) <= 'D') {
+            while (p.piece.pieceName.charAt(1) != s.charAt(1)) {
                 scrollPiece(p);
-                break;
-            case 'C':
+            }
+        } else {
+            while (p.piece.pieceName.charAt(1) != s.charAt(1)) {
                 scrollPiece(p);
-                scrollPiece(p);
-                break;
-            case 'D':
-                scrollPiece(p);
-                scrollPiece(p);
-                scrollPiece(p);
-                break;
-            case 'E':
-                break;
-            case 'F':
-                scrollPiece(p);
-                break;
-            case 'G':
-                scrollPiece(p);
-                scrollPiece(p);
-                break;
-            case 'H':
-                scrollPiece(p);
-                scrollPiece(p);
-                scrollPiece(p);
-                break;
+            }
         }
+
+//        switch (s.charAt(1)) {
+//            case 'A':
+//                break;
+//            case 'B':
+//                scrollPiece(p);
+//                break;
+//            case 'C':
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                break;
+//            case 'D':
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                break;
+//            case 'E':
+//                break;
+//            case 'F':
+//                scrollPiece(p);
+//                break;
+//            case 'G':
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                break;
+//            case 'H':
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                scrollPiece(p);
+//                break;
+//        }
         System.out.println("piece name after spin " + p.piece.pieceName);
         //rotate piece
         //place piece
         if (p.flipped) {
             //System.out.println("flipped mod" + p.mod1);
+            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
+                p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
+            } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, true));
             System.out.println("flipped p piece's current x layout " + p.getLayoutX());
-            p.setLayoutY(returnY(s.charAt(2), true));
+            p.setLayoutY(returnY(s.charAt(2), true));}
         } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, false));
             System.out.println("2nd");
@@ -742,6 +754,72 @@ public class Board extends Application {
     }
 
 
+
+    public void task8() {
+        for (String s : startPieces) {
+            for (DraggablePiece p : DraggablePieceList) {
+                Character pieceCharOne = p.piece.pieceName.charAt(0);
+                Character pieceCharTwo = p.piece.pieceName.charAt(1);
+                if (pieceCharOne == s.charAt(0)) {
+                    switch (s.charAt(0)) {
+                        case 'A':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'B':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'C':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'D':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'E':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'F':
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'G':
+                            System.out.println("before setter" + p.piece.pieceName);
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+                        case 'H':
+                            pieces.add(s);
+                            //System.out.println("before setter" + p.piece.pieceName);
+                            setter(p, s);
+                            //System.out.println(p.pos);
+                            //root.getChildren().add(p);
+                            //System.out.println(pieces);
+                            break;
+
+                    }
+                }
+            }
+        }
+    }
+
     // FIXME Task 7: Implement a basic playable Steps Game in JavaFX that only allows pieces to be placed in valid places
 
     // FIXME Task 8: Implement starting placements
@@ -749,8 +827,16 @@ public class Board extends Application {
     // FIXME Task 10: Implement hints
 
     // FIXME Task 11: Generate interesting starting placements
+//    public void rootAdd() {
+//        root.getChildren().addAll(placements, button2, button3);
+//    }
 
     public static String difficulty(double difficulty) {
+        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
+                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
+        Random ran = new Random();
+        int i = ran.nextInt(startingPieces.length);
+        startPieces.addAll(getPiecePlacements(startingPieces[i]));
         // Task 8 starting placements
         String[][] challenges = {
                 //Easy
@@ -760,8 +846,8 @@ public class Board extends Application {
                 //Hard
                 {"EFBHBR","HHOFBg","EEfAEn"}
         };
-        Random ran = new Random();
-        int i = ran.nextInt(3);
+        Random rand = new Random();
+        //int i = rand.nextInt(3);
         if (difficulty < 2.5) {
             return challenges[0][i];
         }
@@ -774,15 +860,11 @@ public class Board extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
-        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
-                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
-        Random ran = new Random();
-        int i = ran.nextInt(startingPieces.length);
-        startPieces.addAll(getPiecePlacements(startingPieces[i]));
 
-//        startPieces.add("BGS");
-//        startPieces.add("AHQ");
-//        startPieces.add("EFB");
+//        startPieces.add("EGO");
+//        startPieces.add("CGQ");
+        startPieces.add("BEe");
+//        startPieces.add("BEe");
 //        startPieces.add("GCg");
 //        startPieces.add("CDN");
 //        startPieces.add("HFl");
@@ -792,8 +874,13 @@ public class Board extends Application {
 
         primaryStage.setTitle("IQ Steps");
         String first = "AAL";
+
+        //root.getChildren().add(difficulty);
         Scene scene = new Scene(startScreen, BOARD_WIDTH, BOARD_HEIGHT);
         Scene scene2 = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
+//        Scene scene3 = new Scene(slider, BOARD_WIDTH, BOARD_HEIGHT);
+
+
         Button button = new Button("Start Game");
         button.setLayoutY(200);
         button.setLayoutX((BOARD_WIDTH/2.25)-75);
@@ -805,101 +892,33 @@ public class Board extends Application {
 
                 primaryStage.setScene(scene2);
                 primaryStage.show();
+                task8();
+                event.consume();
+            }
+            });
 
-            // get piece from list
-                for (String s : startPieces) {
-                    for (DraggablePiece p : DraggablePieceList) {
-                        Character pieceCharOne = p.piece.pieceName.charAt(0);
-                        Character pieceCharTwo = p.piece.pieceName.charAt(1);
-                        if (pieceCharOne == s.charAt(0)) {
-                            switch (s.charAt(0)) {
-                                case 'A':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'B':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'C':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'D':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'E':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'F':
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'G':
-                                    System.out.println("before setter" + p.piece.pieceName);
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
-                                case 'H':
-                                    pieces.add(s);
-                                    //System.out.println("before setter" + p.piece.pieceName);
-                                    setter(p, s);
-                                    //System.out.println(p.pos);
-                                    root.getChildren().add(p);
-                                    //System.out.println(pieces);
-                                    break;
 
-                            }
-                        }
-                    }
-                }
 
-            // match piece up with piece from list
-            // flip piece as needed
-            // rotate piece as needed
-            // place piece
-
-//                    System.out.println(p);
-//                    for (String s : startPieces) {
-//                        if (p.piece.pieceName == (s.charAt(0) + "" + s.charAt(1))) {
-//                            System.out.println(s.charAt(2));
-//                            System.out.println(p.piece.pieceName);
-//                            placePiece(p);     //not working
-//                            System.out.println(p.piece.pieceName);
-//                        }
-//                    }
-//                }
-//                root.getChildren().addAll(DraggablePieceList);
-//                for (String s : startPieces) {
-//                    String pieceVal = s.charAt(0) + "" + s.charAt(1) ;
-//                    Character posToCheck = s.charAt(2);
-//                    for (Node node : root.getChildren()) {
-//                        if (node.toString().contains("Circle")) {
-//                            if ((((Circle) node).position) == posToCheck) {
-//                                DraggablePieceList.removeIf(draggablePiece -> {draggablePiece.piece.pieceName = pieceVal; return true;});
-//                            }
-//                        }
-//                    }
-//                }
-                //System.out.println(DraggablePieceList);
+        Button button2 = new Button("Restart");
+        button2.setLayoutY(25);
+        button2.setLayoutX(25);
+        //button2.setGraphic(new ImageView(new Image(Board.class.getResource(URI_BASE + "BGSAHQEFBGCgCDNHFlDAiFHn.png").toString())));
+        button2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                    root.getChildren().clear();
+                    pegs.clear();
+                    pieces.clear();
+                    DraggablePieceList.clear();
+                    makePieces();
+                    makePegs();
+                    task8();
+                    root.getChildren().addAll(placements, button2);
+                    event.consume();
             }
         });
+
+
         startScreen.getChildren().addAll(button);
         root.getChildren().addAll(placements);
         makePegs();
@@ -907,7 +926,7 @@ public class Board extends Application {
         makePieces();
         primaryStage.setScene(scene);
         primaryStage.show();
+            }
+        }
 
-    }
 
-}
