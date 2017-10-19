@@ -717,6 +717,28 @@ public class Board extends Application {
 
     // FIXME Task 11: Generate interesting starting placements
 
+    public static String difficulty(double difficulty) {
+        // Task 8 starting placements
+        String[][] challenges = {
+                //Easy
+                {"BGKADgHAiDHnEDkGFS","BGKGCgDHnCElACiHHQFFO",""},
+                //Medium
+                {"CEnAESHGlFAP","FBgBElEFBCCW","BGKFCNCFl"},
+                //Hard
+                {"EFBHBR","HHOFBg","EEfAEn"}
+        };
+        Random ran = new Random();
+        int i = ran.nextInt(3);
+        if (difficulty < 2.5) {
+            return challenges[0][i];
+        }
+        else if (difficulty < 5.0) {
+            return challenges[1][i];
+        }
+        else {
+            return challenges[2][i];
+        }
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
 
