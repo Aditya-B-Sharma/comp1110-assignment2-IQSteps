@@ -1,12 +1,8 @@
 package comp1110.ass2.gui;
 
-import com.sun.org.apache.bcel.internal.generic.LADD;
-import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import comp1110.ass2.StepsGame;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -17,19 +13,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.event.EventHandler;
 import javafx.util.Duration;
-import org.omg.PortableInterceptor.NON_EXISTENT;
-
-import java.awt.*;
-
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -46,11 +39,17 @@ public class Board extends Application {
     private final Group placements = new Group();
     private final Group startScreen = new Group();
 
+    /* Music for when game is finished */
+    private final URL resource = getClass().getResource(URI_BASE+"congratulations.wav");
+    private final Media media = new Media(resource.toString());
+    private final MediaPlayer mediaPlayer = new MediaPlayer(media);
+
     //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
 
     private ArrayList<String> pieces = new ArrayList<>();
     Label isComplete = new Label("CONGRATULATIONS!!!!");
+
     Label current = new Label();
 
     ArrayList<String> startPieces = new ArrayList<>();
@@ -495,6 +494,8 @@ public class Board extends Application {
                     isComplete.setLayoutX((BOARD_WIDTH/2.25)-75);
                     isComplete.setScaleX(3);
                     isComplete.setScaleY(3);
+                    mediaPlayer.play();
+
                     // set to image later
                     root.getChildren().add(isComplete);
 
