@@ -6,6 +6,8 @@ import gittest.C;
 import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.*;
+import comp1110.ass2.TestUtility;
+import static comp1110.ass2.TestUtility.normalize;
 
 /**
  * This class provides the text interface for the Steps Game
@@ -515,85 +517,93 @@ public class StepsGame {
 
 
     static String[] getSolutions(String placement) {
-        // FIXME Task 9: determine all solutions to the game, given a particular starting placement
-        ArrayList<String> output;
+        //FIXME Task 9: determine all solutions to the game, given a particular starting placement
+
+        // Initialize variables
+        ArrayList<String> output = new ArrayList<String>();
         TreeNode solutionsPath;
-
-//        List<String> initialPieces = getPiecePlacements(placement);
-//        String latestPiece = initialPieces.get(initialPieces.size() - 1);
-
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
-
-        //All possible moves each REMAINING piece can take
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
 
-
+        // Construct tree to backtrack to solutions
         solutionsPath = new TreeNode(placement);
-        addNodes(solutionsPath, remainingMoves);
+        HashSet<String> alreadyInTree = new HashSet<String>();
+        buildTree(solutionsPath, remainingMoves);
 
-
-
-//        return output.toArray(new String[output.size()]);
-        return null;
-    }
-
-/*    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> remainingMovesTemp) {
-        for (String move : remainingMoves) {
-            if (isPlacementSequenceValid(initialNode.data + move)) {
-                TreeNode child = new TreeNode(initialNode.data + move);
-                ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, remainingMovesTemp);
-                initialNode.addChild(child);
-                System.out.println(child.toString());
-                addNodes(child, remainingMovesUpdate);
-            }
-        }
-    }*/
-
-    static ArrayList<String> traverseBranch(TreeNode node) {
-        ArrayList<String> output = new ArrayList<String>();
-        for (TreeNode child : node.children) {
-            if (child.children.size() == 0) {
-                output.add(child.data);
-            }
-            traverseBranch(child);
-        }
-        return output;
+        // Return string array of all possible solutions
+        traverseTree(solutionsPath, output);
+        return output.toArray(new String[output.size()]);
     }
 
 
-    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves) {
+    static void traverseTree(TreeNode node, ArrayList<String> list) {
+        /* Traverses tree to get solutions. If a node's string has 24 characters, it is a solution and is added to the argument list */
+
+        if (node.children.size() == 0 && node.toString().length() == 24) {
+            list.add(node.toString());
+            return;
+        }
+
+        else if (node.children.size() == 0) {
+            return;
+        }
+
+        else {
+            for (TreeNode child : node.children) {
+                traverseTree(child, list);
+            }
+        }
+
+    }
+
+    static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> availableMoves) {
+        /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
+
         for (String move : remainingMoves) {
-            ArrayList<String> movesAvailable = new ArrayList<String>();
+            ArrayList<String> movesAvailable = new ArrayList<String>();     // Temporary holder for available moves
             for (String s : remainingMoves) {
                 movesAvailable.add(s);
             }
+
+            // Add valid placement strings to tree and continue constructing the tree
             if (isPlacementSequenceValid(initialNode.data + move)) {
                 TreeNode child = new TreeNode(initialNode.data + move);
                 ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
                 initialNode.addChild(child);
-                System.out.println(child.toString());
-                addNodes(child, remainingMovesUpdate);
+                // System.out.println(child.data + " " + child.data.length());
+                buildTree(child, remainingMovesUpdate);
             }
         }
     }
 
-/*
-    static void addNodes(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> usedMoves) {
+
+
+    static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves) {
+        /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
+
+        // Builds temporary holder for moves available for the specific node the method is currently at
         for (String move : remainingMoves) {
-            if (!usedMoves.contains(move) && isPlacementSequenceValid(initialNode.data + move)) {
-                //TreeNode child = new TreeNode(move);
+            ArrayList<String> movesAvailable = new ArrayList<String>(remainingMoves);     // Temporary holder for available moves
+
+        // Add valid placement strings to tree and continue constructing the tree
+            if (isPlacementSequenceValid(initialNode.data + move)) {
                 TreeNode child = new TreeNode(initialNode.data + move);
-                usedMoves.add(move);
+                ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
                 initialNode.addChild(child);
-                System.out.println(child.toString());
-                addNodes(child, remainingMoves, usedMoves);
+                System.out.println(child.data + " " + child.data.length());
+                buildTree(child, remainingMovesUpdate);
             }
         }
-    }*/
+    }
+
 
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
-        /* RETURNS AN ARRAYLIST OF ALL POSSIBLE PLACEMENTS OF EACH INDIVIDUAL PIECE */
+        /* Returns list of all possible valid moves each individual piece can take */
+
+        // Variables
         ArrayList<String> possibleMoves = new ArrayList<>();
+
+        // Add all possible valid moves to the list to be returned
         for (String s : shapesAndOrientations) {
             for (String l : locations) {
                 if (isPlacementSequenceValid(s + l)) {
@@ -604,13 +614,20 @@ public class StepsGame {
         return possibleMoves;
     }
 
+
     static ArrayList<String> updateRemainingMoves(String placement, ArrayList<String> moves) {
-        /* RETURNS AN ARRAYLIST OF REMAINING MOVES GIVEN A PLACEMENT OF PIECES ALREADY PLACED */
+        /* Returns a list of available moves given a piece already place on the board */
+
+        // Variables
         HashSet<String> usedShapes = new HashSet<>();
         char[] characters = placement.toCharArray();
+
+        // Construct set of shapes already placed on board
         for (int i = 0; i < characters.length; i += 3) {
             usedShapes.add(String.valueOf((characters[i])));
         }
+
+        // Iterates through list of moves to determine if it is still available to use
         for (Iterator<String> iterator = moves.iterator(); iterator.hasNext();) {
             String piecePlacement = iterator.next();
             char[] chars = piecePlacement.toCharArray();
@@ -619,16 +636,6 @@ public class StepsGame {
             }
         }
         return moves;
-    }
-
-    static ArrayList<String> getUsedLocations(String placement) {
-        /* RETURNS A LIST OF ALL LOCATIONS THAT HAVE BEEN TAKEN BY THE CENTRE POSITIONS OF EACH SHAPE */
-        ArrayList<String> usedLocations = new ArrayList<>();
-        char[] characters = placement.toCharArray();
-        for (int i = 2; i < characters.length; i += 3) {
-            usedLocations.add(String.valueOf(characters[i]));
-        }
-        return usedLocations;
     }
 
 
@@ -653,7 +660,6 @@ public class StepsGame {
         ArrayList<String> remainingMoves = updateRemainingMoves("BGSGGM",possibleMoves);
         System.out.println(remainingMoves);
         System.out.println(remainingMoves.size());
-        System.out.println(getUsedLocations("BGSGGM"));
         System.out.println(getViablePiecePlacements("BGS", "BGSAHQEFBGCgCDNHFlDAiFHn"));
 
         System.out.println(isPlacementSequenceValid("AAM"));
@@ -672,28 +678,14 @@ public class StepsGame {
 
 
         solutionsPath = new TreeNode("BGSAHQEFBGCgCDN");
-        addNodes(solutionsPath, remainingMoves);
+        buildTree(solutionsPath, remainingMoves);
 
         System.out.println("");
 
-        ArrayList<ArrayList<String>> testList2 = new ArrayList<>();
-
-        for (TreeNode child : solutionsPath.children) {
-            System.out.println(child.data);
-            testList2.add(traverseBranch(child));
-        }
-        for (ArrayList<String> moveList : testList2) {
-            for (String s : moveList) {
-                if (s.length() == 24) {
-                    System.out.println(s);
-                }
-            }
-        }
+        ArrayList<String> testList2 = new ArrayList<>();
+        traverseTree(solutionsPath, testList2);
         System.out.println(testList2);
 
-//        for (String solution : traverseTest) {
-//            System.out.println(solution);
-//        }
 
         System.out.println(isPlacementSequenceValid("BGSAALCAgDCmEEjHDP"));
         System.out.println(isPlacementSequenceValid("BGSAHQEFBGCgCDNHFlDAiFHn"));
@@ -723,6 +715,10 @@ public class StepsGame {
         System.out.println("For h3: " + h3+ ": " + isPlacementSequenceValid(h3));
 
         System.out.println(h1.length());
+
+        for (String s : getSolutions("BGS")) {
+            System.out.println(s);
+        }
     }
 }
 
