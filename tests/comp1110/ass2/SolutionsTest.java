@@ -17,8 +17,8 @@ import static org.junit.Assert.assertTrue;
  * Return an array of all solutions given a starting placement.
  */
 public class SolutionsTest {
-    //@Rule
-   // public Timeout globalTimeout = Timeout.seconds(120);
+//    @Rule
+//    public Timeout globalTimeout = Timeout.seconds(120);
 
 
     public void testSingle(String placement, String reference) {

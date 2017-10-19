@@ -527,8 +527,8 @@ public class StepsGame {
 
         // Construct tree to backtrack to solutions
         solutionsPath = new TreeNode(placement);
-        HashSet<String> alreadyInTree = new HashSet<String>();
-        buildTree(solutionsPath, remainingMoves);
+        HashSet<String> treeContainsElem = new HashSet<String>();
+        buildTree(solutionsPath, remainingMoves, treeContainsElem);
 
         // Return string array of all possible solutions
         traverseTree(solutionsPath, output);
@@ -543,58 +543,51 @@ public class StepsGame {
             list.add(node.toString());
             return;
         }
-
         else if (node.children.size() == 0) {
             return;
         }
-
         else {
             for (TreeNode child : node.children) {
                 traverseTree(child, list);
             }
         }
-
     }
 
-    static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves, ArrayList<String> availableMoves) {
+
+    static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves, HashSet<String> placementInTree) {
         /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
 
         for (String move : remainingMoves) {
-            ArrayList<String> movesAvailable = new ArrayList<String>();     // Temporary holder for available moves
-            for (String s : remainingMoves) {
-                movesAvailable.add(s);
-            }
+            ArrayList<String> movesAvailable = new ArrayList<String>(remainingMoves);     // Temporary holder for available moves for each branch
 
-            // Add valid placement strings to tree and continue constructing the tree
             if (isPlacementSequenceValid(initialNode.data + move)) {
+
+                // Variables for tree construction
                 TreeNode child = new TreeNode(initialNode.data + move);
+                TreeNode childNormalized = new TreeNode((normalize(initialNode.data + move)));
                 ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
-                initialNode.addChild(child);
-                // System.out.println(child.data + " " + child.data.length());
-                buildTree(child, remainingMovesUpdate);
+
+               // Once tree nodes have placement strings of 3 or more shapes, there could be normalized duplicates
+               // We stop dealing with current branch if we determine that the current node has a normalized duplicate
+                if (child.data.length() >= 3) {
+                    if (placementInTree.add(childNormalized.data)) {
+                        initialNode.addChild(child);
+                        System.out.println(childNormalized.data + " " + childNormalized.data.length());
+                        buildTree(child, remainingMovesUpdate, placementInTree);
+                    }
+                }
+
+                // The first two levels of the tree, i.e. node placement strings have less than 3 shapes, consist of unique nodes
+                // So we add such valid nodes to the tree
+                else {
+                    initialNode.addChild(child);
+                    System.out.println(childNormalized.data + " " + childNormalized.data.length());
+                    buildTree(child, remainingMovesUpdate, placementInTree);
+                }
             }
         }
     }
 
-
-
-    static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves) {
-        /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
-
-        // Builds temporary holder for moves available for the specific node the method is currently at
-        for (String move : remainingMoves) {
-            ArrayList<String> movesAvailable = new ArrayList<String>(remainingMoves);     // Temporary holder for available moves
-
-        // Add valid placement strings to tree and continue constructing the tree
-            if (isPlacementSequenceValid(initialNode.data + move)) {
-                TreeNode child = new TreeNode(initialNode.data + move);
-                ArrayList<String> remainingMovesUpdate = updateRemainingMoves(initialNode.data + move, movesAvailable);
-                initialNode.addChild(child);
-                System.out.println(child.data + " " + child.data.length());
-                buildTree(child, remainingMovesUpdate);
-            }
-        }
-    }
 
 
     static ArrayList<String> getPossibleMoves(String[] shapesAndOrientations, String[] locations) {
@@ -678,7 +671,8 @@ public class StepsGame {
 
 
         solutionsPath = new TreeNode("BGSAHQEFBGCgCDN");
-        buildTree(solutionsPath, remainingMoves);
+        HashSet<String> testset = new HashSet<String>();
+        buildTree(solutionsPath, remainingMoves, testset);
 
         System.out.println("");
 
@@ -716,7 +710,7 @@ public class StepsGame {
 
         System.out.println(h1.length());
 
-        for (String s : getSolutions("BGS")) {
+        for (String s : getSolutions("BGSAHQEFBGCgCDN")) {
             System.out.println(s);
         }
     }
