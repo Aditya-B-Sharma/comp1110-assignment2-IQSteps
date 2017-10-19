@@ -522,7 +522,7 @@ public class StepsGame {
          updateRemainingMoves, buildTree and traverseTree */
 
         // Initialize variables
-        ArrayList<String> output = new ArrayList<String>();
+        ArrayList<String> outputList = new ArrayList<>();
         TreeNode solutionsPath;
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
         ArrayList<String> remainingMoves = updateRemainingMoves(placement, possibleMoves);
@@ -533,15 +533,19 @@ public class StepsGame {
         buildTree(solutionsPath, remainingMoves, treeContainsElem);
 
         // Return string array of all possible solutions
-        traverseTree(solutionsPath, output);
-        return output.toArray(new String[output.size()]);
+        traverseTree(solutionsPath, outputList);
+        String[] output = new String[outputList.size()];
+        for (int i = 0; i < outputList.size(); i++) {
+            output[i] = outputList.get(i);
+        }
+        return output;
     }
 
 
     static void traverseTree(TreeNode node, ArrayList<String> list) {
         /* Traverses tree to get solutions. If a node's string has 24 characters, it is a solution and is added to the argument list */
 
-        if (node.children.size() == 0 && node.toString().length() == 24) {
+        if (node.toString().length() == 24) {
             list.add(node.toString());
             return;
         }
@@ -556,6 +560,7 @@ public class StepsGame {
     }
 
 
+    // Reference: Sina Eghbal
     static void buildTree(TreeNode initialNode, ArrayList<String> remainingMoves, HashSet<String> placementInTree) {
         /* Builds tree with nodes that contain valid piece placements, using recursion and backtracking */
 
@@ -574,6 +579,7 @@ public class StepsGame {
                 if (child.data.length() >= 3) {
                     if (placementInTree.add(childNormalized.data)) {
                         initialNode.addChild(child);
+                        System.out.println(child.data + " " + child.data.length());
                         buildTree(child, remainingMovesUpdate, placementInTree);
                     }
                 }
@@ -582,6 +588,7 @@ public class StepsGame {
                 // So we add such valid nodes to the tree
                 else {
                     initialNode.addChild(child);
+                    System.out.println(child.data + " " + child.data.length());
                     buildTree(child, remainingMovesUpdate, placementInTree);
                 }
             }
@@ -612,8 +619,9 @@ public class StepsGame {
         /* Returns a list of available moves given a piece already place on the board */
 
         // Variables
-        HashSet<String> usedShapes = new HashSet<>();
+        HashSet<String> usedShapes = new HashSet<String>();
         char[] characters = placement.toCharArray();
+        ArrayList<Character> usedLocations = updateUsedLocations(placement);
 
         // Construct set of shapes already placed on board
         for (int i = 0; i < characters.length; i += 3) {
@@ -624,7 +632,7 @@ public class StepsGame {
         for (Iterator<String> iterator = moves.iterator(); iterator.hasNext();) {
             String piecePlacement = iterator.next();
             char[] chars = piecePlacement.toCharArray();
-            if (usedShapes.contains(String.valueOf(chars[0]))) {
+            if (usedShapes.contains(String.valueOf(chars[0])) || usedLocations.contains(chars[2])) {
                 iterator.remove();
             }
         }
@@ -632,18 +640,49 @@ public class StepsGame {
     }
 
 
+    static ArrayList<Character> updateUsedLocations(String placement) {
+        ArrayList<Character> output = new ArrayList<Character>();
+        int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
+        ArrayList<String> pieces = new ArrayList<String>(getPiecePlacements(placement));
+        for (String piece : pieces) {
+            char[] placementChars = piece.toCharArray();
+            int[] placementEncoding = transposeAmount(piece);
+            for (int i = 0; i < locationIndices.length; i++) {
+                if (placementEncoding[i] > 0) {
+                    int asciiLocationChar = (placementChars[2] + locationIndices[i]);
+                    if (asciiLocationChar > 89 && locationIndices[i] > 0) {
+                        //char locationChar = (char) (96 + (asciiLocationChar - 89));
+                        char locationChar = (char) (96 + locationIndices[i]);
+                        output.add(locationChar);
+                    }
+                    else if (asciiLocationChar < 97 && locationIndices[i] < 0) {
+                        //char locationChar = (char) (90 - (97 - asciiLocationChar));
+                        char locationChar = (char) (90 + locationIndices[i]);
+                        output.add(locationChar);
+                    }
+                    else {
+                        char locationChar = (char) (placementChars[2] + locationIndices[i]);
+                        output.add(locationChar);
+                    }
+                }
+            }
+        }
+        return output;
+    }
+
+
     public static void main(String[] args) {
-        String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
-                "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
-                "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
-                "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
-                "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
-                "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
-                "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
-                "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
-        // All locations
-        String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
-                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
+//        String[] shapesAndOrientations = {"AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH",
+//                "BA", "BB", "BC", "BD", "BE", "BF", "BG", "BH",
+//                "CA", "CB", "CC", "CD", "CE", "CF", "CG", "CH",
+//                "DA", "DB", "DC", "DD", "DE", "DF", "DG", "DH",
+//                "EA", "EB", "EC", "ED", "EE", "EF", "EG", "EH",
+//                "FA", "FB", "FC", "FD", "FE", "FF", "FG", "FH",
+//                "GA", "GB", "GC", "GD", "GE", "GF", "GG", "GH",
+//                "HA", "HB", "HC", "HD", "HE", "HF", "HG", "HH"};
+//        // All locations
+//        String[] locations = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
+//                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y"};
         // All possible moves each piece can take
         ArrayList<String> possibleMoves = getPossibleMoves(shapesAndOrientations, locations);
         System.out.println(possibleMoves.size());
@@ -681,9 +720,6 @@ public class StepsGame {
         System.out.println(testList2);
 
 
-        System.out.println(isPlacementSequenceValid("BGSAALCAgDCmEEjHDP"));
-        System.out.println(isPlacementSequenceValid("BGSAHQEFBGCgCDNHFlDAiFHn"));
-
         /* Easy */
         String e1 = "BGKADgHAiDHnEDkGFS";
         System.out.println("For e1: " + e1+ ": "+isPlacementSequenceValid(e1));
@@ -710,10 +746,27 @@ public class StepsGame {
 
         System.out.println(h1.length());
 
-        for (String s : getSolutions("BGSAHQEFBGCgCDN")) {
+        String[] solutions = getSolutions("BGSAHQEFBGCgCDN");
+        for (String s : solutions) {
             System.out.println(s);
         }
-    }
-}
+
+/*        int counterTest = 0;
+        for (String s : possibleMoves) {
+            if (s.charAt(2) == 'A' | s.charAt(2) == 'B' | s.charAt(2) == 'K' | s.charAt(2) == 'L' | s.charAt(2) == 'M' | s.charAt(2) == 'U' | s.charAt(2) == 'c' | s.charAt(2) == 'd' | s.charAt(2) == 'l' | s.charAt(2) == 'm' | s.charAt(2) == 'w' ) {
+                System.out.println(s);
+                counterTest ++;
+            }
+        }
+//        System.out.println(counterTest);*/
+//        ArrayList<Character> usedLocations = updateUsedLocations("BGS");
+//        System.out.println(usedLocations);
+//        ArrayList<Character> usedLocations2 = updateUsedLocations("BGSAHQ");
+//        System.out.println(usedLocations2);
+//
+//        ArrayList<String> remaining2 = updateRemainingMoves("BGS", possiblemoves);
+//        System.out.println(possiblemoves.size());
+//        System.out.println(remaining2.size());
+}}
 
 
