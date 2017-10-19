@@ -15,6 +15,9 @@ import static comp1110.ass2.TestUtility.normalize;
  * The game is based directly on Smart Games' IQ-Steps game
  * (http://www.smartgames.eu/en/smartgames/iq-steps)
  */
+
+/* Authorship: Class written by the group - Aditya Sharma, Khamis Buol, Stefan Louie */
+
 public class StepsGame {
     public static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
 
