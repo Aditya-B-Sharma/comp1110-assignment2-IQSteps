@@ -640,9 +640,14 @@ public class StepsGame {
 
 
     static ArrayList<Character> updateUsedLocations(String placement) {
+        /* Returns a list of locations characters that are already occupied on the board */
+
+        // Variables
         ArrayList<Character> output = new ArrayList<Character>();
         int[] locationIndices = {-11, -10, -9, -1, 0, 1, 9, 10, 11};
         ArrayList<String> pieces = new ArrayList<String>(getPiecePlacements(placement));
+
+        // Determine all locations occupied by pieces (not just centre location)
         for (String piece : pieces) {
             int[] placementEncoding = transposeAmount(piece);
             for (int x = 0; x < placementEncoding.length; x++) {
