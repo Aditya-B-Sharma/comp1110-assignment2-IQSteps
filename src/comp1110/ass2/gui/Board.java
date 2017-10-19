@@ -23,10 +23,13 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
+
+import static comp1110.ass2.StepsGame.getPiecePlacements;
+import static comp1110.ass2.StepsGame.getSolutions;
+import static comp1110.ass2.StepsGame.join;
+import static comp1110.ass2.StepsGame.getViablePiecePlacements;
+
 
 public class Board extends Application {
     private static final int BOARD_WIDTH = 933;
@@ -311,21 +314,22 @@ public class Board extends Application {
                         Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
                         //Circle glowingNear = near;
                         //glowPeg(glowingNear);
+                        showPieceHint();
 
 //                                    root.getChildren().set(root.getChildren().indexOf(near), glowingNear);
 //                                    new KeyFrame(Duration.seconds(1));
 //                                    root.getChildren().set(root.getChildren().indexOf(glowingNear), near);final Timeline timeline = new Timeline();
-                        final Timeline timeline = new Timeline();
-                        timeline.setCycleCount(2);
-                        timeline.setAutoReverse(true);
-                        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000), ae -> {
-                            glowPeg(near, true);
-
-                        }));
-                        timeline.play();
-                        glowPeg(near, false);
-                        //timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue (near.translateYProperty(),  5)));
-                        root.getChildren().set(root.getChildren().indexOf(near), near);
+//                        final Timeline timeline = new Timeline();
+//                        timeline.setCycleCount(2);
+//                        timeline.setAutoReverse(true);
+//                        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1000), ae -> {
+//                            glowPeg(near, true);
+//
+//                        }));
+//                        timeline.play();
+//                        glowPeg(near, false);
+//                        //timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue (near.translateYProperty(),  5)));
+//                        root.getChildren().set(root.getChildren().indexOf(near), near);
 
 
 
@@ -529,6 +533,35 @@ public class Board extends Application {
         //System.out.println("remove piece:" + pieceToRemove);
         return pieces;
     }
+
+
+    public void showPieceHint() {
+        String[] solutions = getSolutions(join(pieces));
+        String p = join(pieces);
+        DraggablePiece temp = new DraggablePiece(new PieceName("AA"), 0, 0);
+        int index = 0;
+        Random ran = new Random();
+        int i = ran.nextInt(solutions.length);
+        Set<String> viable = getViablePiecePlacements(p, solutions[i]);     // Next viable pieceplacements found
+        int j = ran.nextInt(viable.size());
+        ArrayList<String> viable2 = new ArrayList<>();
+        viable2.addAll(viable);
+        String piecee = viable2.get(j);
+        Character pegPos = piecee.charAt(2);
+
+        for (DraggablePiece currentP : DraggablePieceList) {
+            if (currentP.piece.pieceName.charAt(0) == piecee.charAt(0)) {
+                index = DraggablePieceList.indexOf(currentP);
+                temp = currentP;
+                setter(temp,pegPos+"");
+
+            }
+        }
+        DraggablePieceList.set(index, temp);
+    }
+        //setter(piecee, piecee.charAt(2));
+        //DraggablePiece piece = new DraggablePiece(piecee.PieceName, )
+
 
     public void makePegs() {
         int x = 69;
@@ -741,15 +774,20 @@ public class Board extends Application {
     }
     @Override
     public void start(Stage primaryStage) throws Exception {
+        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
+                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
+        Random ran = new Random();
+        int i = ran.nextInt(startingPieces.length);
+        startPieces.addAll(getPiecePlacements(startingPieces[i]));
 
-        startPieces.add("BGS");
-        startPieces.add("AHQ");
-        startPieces.add("EFB");
-        startPieces.add("GCg");
-        startPieces.add("CDN");
-        startPieces.add("HFl");
-        startPieces.add("DAi");
-        startPieces.add("FHn");
+//        startPieces.add("BGS");
+//        startPieces.add("AHQ");
+//        startPieces.add("EFB");
+//        startPieces.add("GCg");
+//        startPieces.add("CDN");
+//        startPieces.add("HFl");
+//        startPieces.add("DAi");
+//        startPieces.add("FHn");
         ArrayList<String> poses = new ArrayList<>();
 
         primaryStage.setTitle("IQ Steps");
@@ -871,4 +909,5 @@ public class Board extends Application {
         primaryStage.show();
 
     }
+
 }
