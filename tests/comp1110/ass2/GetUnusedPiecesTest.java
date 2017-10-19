@@ -10,6 +10,8 @@ import static junit.framework.TestCase.assertTrue;
 /**
  * Created by Khamis on 24/09/2017.
  */
+
+// Reference: Lecture Material
 public class GetUnusedPiecesTest {
 
     /*Empty placement but non-empty objective*/

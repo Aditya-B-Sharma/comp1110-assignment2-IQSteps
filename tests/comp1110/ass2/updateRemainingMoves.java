@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by Stefan on 26/09/2017.
  */
+
+// Reference: Lecture Material
 public class updateRemainingMoves {
 
     /* Sample test cases and their solutions */
