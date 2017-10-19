@@ -101,6 +101,25 @@ public class Board extends Application {
 
                 }
             }
+            void glowPiece(PieceName piece) {
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.LIGHTBLUE);
+                glow.setOffsetX(0f);
+                glow.setOffsetY(0f);
+                glow.setHeight(10);
+
+            }
+            public void glowPeg(Circle peg) {
+                peg.getCenterX();
+                peg.getCenterY();
+                peg.getEffect();
+                DropShadow glow = new DropShadow();
+                glow.setColor(Color.LIGHTBLUE);
+                glow.setOffsetX(0f);
+                glow.setOffsetY(0f);
+                glow.setHeight(10);
+                peg.setEffect(glow);
+            }
 
         }
 
@@ -171,6 +190,7 @@ public class Board extends Application {
         boolean flipped;
         PieceName piece;
         boolean placed;
+        Character pos;
 
 
         DraggablePiece(PieceName piece, double x, double y) {
@@ -327,8 +347,9 @@ public class Board extends Application {
                         }
                         // Key event to give hints
                         else if (event.getCode().equals(KeyCode.H)) {
+                        Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod1);
                         //setImage(new Image(Board.class.getResource(URI_BASE + piece.pieceName + ".png").toString()));
-                        root.setEffect(glow);
+                        //root.setEffect(glow);
                         // HIGHLIGHT SPECIFIC PIECE AND SET TO PROPER ROTATION...THEN FLASH THE CENTER NODE IT NEEDS TO GO ONTO
                     }
                 }
@@ -359,7 +380,7 @@ public class Board extends Application {
                     pieces = changePieceArray(piece.pieceName, pieces);
                 Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
 
-                Character pos = near.position;
+                pos = near.position;
                 String fullpiece;
 
                 if (flipped) {
