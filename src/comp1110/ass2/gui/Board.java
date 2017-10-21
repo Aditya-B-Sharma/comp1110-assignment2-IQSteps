@@ -220,7 +220,7 @@ public class Board extends Application {
         DraggablePiece self = this;
             this.piece = piece;
             root.getChildren().remove(current);
-            current =  new Label(Boolean.toString(placed));
+            current =  new Label(piece.pieceName + (placed ? " : Placed at position " + pos + "." : " : Not Placed"));
             root.getChildren().add(current);
 
             String toFetch = "";
@@ -281,7 +281,6 @@ public class Board extends Application {
                 }
             });
 
-
             setOnKeyPressed(new EventHandler<KeyEvent>() {
             // on space, flip
                 @Override
@@ -303,7 +302,7 @@ public class Board extends Application {
                 setFitWidth(280);
                 placed=false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(placed));
+                current =  new Label(piece.pieceName + (placed ? " : Placed at position " + pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 requestFocus();
             });
@@ -326,9 +325,6 @@ public class Board extends Application {
     public void scrollPiece(DraggablePiece p){
         p.requestFocus();
         if (p.placed) {
-            root.getChildren().remove(current);
-            current =  new Label(Boolean.toString(p.placed));
-            root.getChildren().add(current);
             String holder = p.piece.pieceName;
             int index = 0;
             Character current = ' ';
@@ -356,16 +352,15 @@ public class Board extends Application {
             p.setRotate((p.getRotate() + 90) % 360);
 
         }
+        root.getChildren().remove(current);
+        current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
+        root.getChildren().add(current);
 
     }
 
     public void flipPiece(DraggablePiece p){
             if (!p.flipped) {
                 p.placed = false;
-
-                root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
-                root.getChildren().add(current);
 
                 changePieceArray(p.piece.pieceName, pieces);
 
@@ -379,13 +374,16 @@ public class Board extends Application {
             else  {
                 p.placed = false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 p.flipped = false;
                 p.mod = 0;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
             }
+            root.getChildren().remove(current);
+            current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
+            root.getChildren().add(current);
 
 
         }
@@ -412,7 +410,7 @@ public class Board extends Application {
                 p.setLayoutY(near.getCenterY()-140);
                 p.placed=true;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 if (pieces.size() == 8) {
                     isComplete.setLayoutY(452);
@@ -430,7 +428,7 @@ public class Board extends Application {
                 pieces.remove(fullpiece);
                 p.placed = false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 p.setFitHeight(150);
                 p.setFitWidth(150);
