@@ -141,7 +141,6 @@ public class Board extends Application {
             distances.add(peg.distance(x,y));
         }
         double smallestDist = Collections.min(distances);
-        System.out.println(distances.indexOf(smallestDist));
         int index = distances.indexOf(smallestDist);
         Circle nearestCircle = pegs.get(index);
         return nearestCircle;
@@ -177,9 +176,7 @@ public class Board extends Application {
 
         //x is +140 if flipped
             double xDistance = getCenterX() - (x+140);
-            //System.out.println(xDistance);
             double yDistance = getCenterY() - (y+140);
-            //System.out.println(yDistance);
             return Math.sqrt((Math.pow(Math.abs(xDistance), 2) + Math.pow(Math.abs(yDistance), 2)));
         }
 
@@ -390,7 +387,6 @@ public class Board extends Application {
             //p.mod2
 
             p.pos = near.position;
-            System.out.println(near.position);
             //String fullpiece;
 
 //            if (p.flipped) {
@@ -400,7 +396,6 @@ public class Board extends Application {
 
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
-            System.out.println(StepsGame.isPlacementSequenceValid(placement));
             if (StepsGame.isPlacementSequenceValid(placement)) {
                 p.setLayoutX(near.getCenterX()-140);
                 p.setLayoutY(near.getCenterY()-140);
@@ -458,14 +453,12 @@ public class Board extends Application {
         ArrayList<String> viable2 = new ArrayList<>();
         viable2.addAll(viable);
         String piecee = viable2.get(0);
-        System.out.println(piecee);
 
         for (DraggablePiece currentP : DraggablePieceList) {
             if (currentP.piece.pieceName.charAt(0) == piecee.charAt(0)) {
                 index = DraggablePieceList.indexOf(currentP);
                 temp = currentP;
                 temp.toFront();
-                System.out.println(temp.piece.pieceName);
                 setter(temp,piecee);
 
             }
@@ -568,7 +561,6 @@ public class Board extends Application {
                 pos = 97;
             }
         }
-        System.out.println(pegs);
     }
 
     // ArrayList to add Draggable pieces into
@@ -703,27 +695,38 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
-                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
+        String[] startingPieces = {
+                "CEQEHu",
+                "CEQEHuGEO",
+                "FDNCGQBAk",
+                "BGKEGOCGQAGl",
+                "BHFFCLHBNAGl",
+                "CHSAHQGFjHCNBGK",
+                "GDLADgHAiEFFCGc",
+                "DFOCGQGDLADgHFjBGS",
+                "HBLADgBHnCGODAiGEl",
+                "BGKFCNCHSAHQHFnEBvGAi",
+                "DFOAALHHnGAkFGQCAiBBg",
+                "DFOGGQEDI",
+                "EGOCGQGGS",
+                "CGOGGQEDI",
+                "GFSEAoBBG",
+                "DFQFDNGGS",
+                "GHSEAoBBG",
+                "EGOCGQGEn"
 
-        startPieces.add("EGO");
-        startPieces.add("CGQ");
-        startPieces.add("GEn");
-//        startPieces.add("BEe");
-//        startPieces.add("GCg");
-//        startPieces.add("CDN");
-//        startPieces.add("HFl");
-//        startPieces.add("DAi");
-//        startPieces.add("FHn");
-        ArrayList<String> poses = new ArrayList<>();
+        };
+        Random ran = new Random();
+        int i = ran.nextInt(startingPieces.length);
+
+        // Randomly selects starting piece placement
+        startPieces.addAll(getPiecePlacements(startingPieces[i]));
 
         // Title of Window
         primaryStage.setTitle("IQ Steps");
-        String first = "AAL";
 
         Scene scene = new Scene(startScreen, BOARD_WIDTH, BOARD_HEIGHT);
         Scene scene2 = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-
 
         //Home button to start the game
         Button button = new Button("Start Game");
