@@ -24,9 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.*;
 
-import static comp1110.ass2.StepsGame.getSolutions;
-import static comp1110.ass2.StepsGame.join;
-import static comp1110.ass2.StepsGame.getViablePiecePlacements;
+import static comp1110.ass2.StepsGame.*;
 
 
 // Authorship: Written by Aditya Sharma, Khamis Buol
@@ -58,6 +56,8 @@ public class Board extends Application {
     Label current = new Label();
 
     private static ArrayList<String> startPieces = new ArrayList<>();
+
+    String invisiblePegs = "BDFHJKMOQSVXacefhjlnqsuwy";
 
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
@@ -133,12 +133,13 @@ public class Board extends Application {
 
     //find closest peg to mouse cursor
 
-    public Circle findNearestPeg(double x, double y, int mod) {
+    public Circle findNearestPeg(double x, double y) {
         ArrayList<Double> distances = new ArrayList<>();
         for (Circle peg : pegs) {
-            distances.add(peg.distance((x+mod),y));
+            distances.add(peg.distance(x,y));
         }
         double smallestDist = Collections.min(distances);
+        System.out.println(distances.indexOf(smallestDist));
         int index = distances.indexOf(smallestDist);
         Circle nearestCircle = pegs.get(index);
         return nearestCircle;
@@ -164,10 +165,10 @@ public class Board extends Application {
             setOpacity(opacity);
             setCenterX(centerX+70);
             setCenterY(centerY+70);
-            Label pos = new Label(Character.toString(position));
-            pos.setLayoutX(centerX+70);
-            pos.setLayoutY(centerY+70);
-            root.getChildren().add(pos);
+            //Label pos = new Label(Character.toString(position));
+            //pos.setLayoutX(centerX+70);
+            //pos.setLayoutY(centerY+70);
+            //root.getChildren().add(pos);
         }
 
         public double distance(double x, double y){
@@ -277,7 +278,7 @@ public class Board extends Application {
                         }
                         // Key event to give hints
                         else if (event.getCode().equals(KeyCode.H)) {
-                        Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
+                        Circle near = findNearestPeg(getLayoutX(), getLayoutY());
 
                         // add on next piece
                         showPieceHint();
@@ -381,22 +382,23 @@ public class Board extends Application {
     public void placePiece(DraggablePiece p) {
         if (!p.placed) {
             pieces = changePieceArray(p.piece.pieceName, pieces);
-            Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY(), p.mod2);
+            Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY());
+            //p.mod2
 
             p.pos = near.position;
-            String fullpiece;
+            System.out.println(near.position);
+            //String fullpiece;
 
-            if (p.flipped) {
-                fullpiece = p.piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(p.pos))-1);
-            } else {
-                fullpiece = p.piece.pieceName + p.pos;}
+//            if (p.flipped) {
+//                fullpiece = p.piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(p.pos)));
+            String fullpiece = p.piece.pieceName + p.pos;
             pieces.add(fullpiece);
 
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
             System.out.println(StepsGame.isPlacementSequenceValid(placement));
             if (StepsGame.isPlacementSequenceValid(placement)) {
-                p.setLayoutX(near.getCenterX()-140+p.mod1);
+                p.setLayoutX(near.getCenterX()-140);
                 p.setLayoutY(near.getCenterY()-140);
                 p.placed=true;
                 root.getChildren().remove(current);
@@ -482,41 +484,86 @@ public class Board extends Application {
         int ye = 293;
         char pos = 'A';
         for (int i = 0; i < 50; i++) {
-            if (i<=9 && i%2 == 0) {
+            if (pos == 'J') {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, x, y);
+                xb-=70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            } else if (pos == 'e') {
+                    Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xc, yc);
+                    xd-=70;
+                    root.getChildren().add(peg);
+                    pegs.add(peg);
+            } else if (i<=9 && i%2 == 0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, x, y);
-                x += 140;
+                x += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 9 && i <= 19 && i%2==1) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xb, yb);
-                xb += 140;
+                xb += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 19 && i <= 29 && i%2 == 0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xc, yc);
-                xc += 140;
+                xc += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 29 && i <= 39 && i%2==1) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xd, yd);
-                xd += 140;
+                xd += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 39 && i <= 49 && i%2==0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xe, ye);
-                xe += 140;
+                xe += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
+
+            else if (i<=9 && i%2 != 0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, x, y);
+                x += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 9 && i <= 19 && i%2==0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xb, yb);
+                xb += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 19 && i <= 29 && i%2 != 0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xc, yc);
+                xc += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 29 && i <= 39 && i%2!=1) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xd, yd);
+                xd += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 39 && i <= 49 && i%2!=0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xe, ye);
+                xe += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+
+
+
             pos += 1;
             if (pos >= 90 && pos <= 96){
                 pos = 97;
             }
         }
+        System.out.println(pegs);
     }
 
     // ArrayList to add Draggable pieces into
@@ -566,9 +613,9 @@ public class Board extends Application {
 
     // Finds the x-coordinate of a specific piece
     private double returnY(Character pos, boolean flipped) {
-        if (flipped) {
-            pos = (char) ((int) pos + 1);
-        }
+//        if (flipped) {
+//            pos = (char) ((int) pos + 1);
+//        }
         for (Node node : root.getChildren()) {
             if (node.toString().contains("Circle")) {
                 if ((((Circle) node).position) == pos) {
@@ -611,11 +658,11 @@ public class Board extends Application {
         }
 
         if (p.flipped) {
-            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
-                p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
-            } else {
+//            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
+//                p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
+//            } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, true));
-            p.setLayoutY(returnY(s.charAt(2), true));}
+            p.setLayoutY(returnY(s.charAt(2), true));
         } else {
             p.setLayoutX(returnX(s.charAt(2), p.mod2, false));
             p.setLayoutY(returnY(s.charAt(2), false));
@@ -623,6 +670,7 @@ public class Board extends Application {
         p.setFitWidth(280);
         p.setFitHeight(280);
         placePiece(p);
+        p.toFront();
 
     }
 
@@ -633,35 +681,7 @@ public class Board extends Application {
             for (DraggablePiece p : DraggablePieceList) {
                 Character pieceCharOne = p.piece.pieceName.charAt(0);
                 if (pieceCharOne == s.charAt(0)) {
-                    switch (s.charAt(0)) {
-                        case 'A':
-                            setter(p, s);
-                            break;
-                        case 'B':
-                            setter(p, s);
-                            break;
-                        case 'C':
-                            setter(p, s);
-                            break;
-                        case 'D':
-                            setter(p, s);
-                            break;
-                        case 'E':
-                            setter(p, s);
-                            break;
-                        case 'F':
-                            setter(p, s);
-                            break;
-                        case 'G':
-                            System.out.println("before setter" + p.piece.pieceName);
-                            setter(p, s);
-                            break;
-                        case 'H':
-                            pieces.add(s);
-                            setter(p, s);
-                            break;
-
-                    }
+                    setter(p, s);
                 }
             }
         }
@@ -681,9 +701,9 @@ public class Board extends Application {
         String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
                 "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
 
-//        startPieces.add("EGO");
-//        startPieces.add("CGQ");
-        startPieces.add("BEe");
+        startPieces.add("EGO");
+        startPieces.add("CGQ");
+        startPieces.add("GEn");
 //        startPieces.add("BEe");
 //        startPieces.add("GCg");
 //        startPieces.add("CDN");
