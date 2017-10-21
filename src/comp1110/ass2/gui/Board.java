@@ -692,6 +692,7 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
+        // Possible starting pieces
         String[] startingPieces = {
                 "CEQEHu",
                 "CEQEHuGEO",
@@ -713,6 +714,7 @@ public class Board extends Application {
                 "EGOCGQGEn"
 
         };
+        // Generates int to select random piece placement sequence
         Random ran = new Random();
         int i = ran.nextInt(startingPieces.length);
 
