@@ -57,7 +57,27 @@ public class Board extends Application {
 
     Label current = new Label();
 
-    private static ArrayList<String> startPieces = new ArrayList<>();
+    private static String[] startPieces = {
+                "CEQEHu",
+                "CEQEHuGEO",
+                "FDNCGQBAk",
+                "BGKEGOCGQAGl",
+                "BHFFCLHBNAGl",
+                "CHSAHQGFj",
+                "GDLADgHAi",
+                "DFOCGQGDL",
+                "HBLADgBHn",
+                "BGKFCNCHS",
+                "DFOAALHHn",
+                "DFOGGQEDI",
+                "EGOCGQGGS",
+                "CGOGGQEDI",
+                "GFSEAoBBG",
+                "DFQFDNGGS",
+                "GHSEAoBBG",
+                "EGOCGQGEn"
+
+    };
 
     String invisiblePegs = "BDFHJKMOQSVXacefhjlnqsuwy";
 
@@ -671,7 +691,11 @@ public class Board extends Application {
 
 
     public void task8() {
-        for (String s : startPieces) {
+        Random ran = new Random();
+        int i = ran.nextInt(startPieces.length);
+        String place = startPieces[i];
+        List<String> toPlace = getPiecePlacements(place);
+        for (String s : toPlace) {
             for (DraggablePiece p : DraggablePieceList) {
                 Character pieceCharOne = p.piece.pieceName.charAt(0);
                 if (pieceCharOne == s.charAt(0)) {
@@ -692,34 +716,11 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        // Possible starting pieces
-        String[] startingPieces = {
-                "CEQEHu",
-                "CEQEHuGEO",
-                "FDNCGQBAk",
-                "BGKEGOCGQAGl",
-                "BHFFCLHBNAGl",
-                "CHSAHQGFjHCNBGK",
-                "GDLADgHAiEFFCGc",
-                "DFOCGQGDLADgHFjBGS",
-                "HBLADgBHnCGODAiGEl",
-                "BGKFCNCHSAHQHFnEBvGAi",
-                "DFOAALHHnGAkFGQCAiBBg",
-                "DFOGGQEDI",
-                "EGOCGQGGS",
-                "CGOGGQEDI",
-                "GFSEAoBBG",
-                "DFQFDNGGS",
-                "GHSEAoBBG",
-                "EGOCGQGEn"
-
-        };
+        // Possible starting pieces;
         // Generates int to select random piece placement sequence
-        Random ran = new Random();
-        int i = ran.nextInt(startingPieces.length);
+
 
         // Randomly selects starting piece placement
-        startPieces.addAll(getPiecePlacements(startingPieces[i]));
 
         // Title of Window
         primaryStage.setTitle("IQ Steps");
@@ -753,10 +754,14 @@ public class Board extends Application {
             public void handle(ActionEvent event) {
                     root.getChildren().clear();
                     pieces.clear();
-                    startPieces.clear();
                     DraggablePieceList.clear();
                     makePegs();
                     makePieces();
+
+                // Randomly selects starting piece placement
+
+                    task8();
+                    System.out.println(pieces);
                     //task8();
                     root.getChildren().addAll(button2);
                     event.consume();
