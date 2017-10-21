@@ -324,6 +324,7 @@ public class Board extends Application {
     }
 
     public void scrollPiece(DraggablePiece p){
+        p.requestFocus();
         if (p.placed) {
             root.getChildren().remove(current);
             current =  new Label(Boolean.toString(p.placed));
