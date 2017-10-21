@@ -189,8 +189,7 @@ public class Board extends Application {
     class DraggablePiece extends ImageView {
         int homeX, homeY;
         double mouseX, mouseY;
-        int mod1;
-        int mod2;
+        int mod;
         boolean flipped;
         PieceName piece;
         boolean placed;
@@ -361,8 +360,7 @@ public class Board extends Application {
 
 
                 p.flipped = true;
-                p.mod1 = -70;
-                p.mod2 = 70;
+                p.mod = 70;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "E.png").toString()));
 
@@ -373,8 +371,7 @@ public class Board extends Application {
                 current =  new Label(Boolean.toString(p.placed));
                 root.getChildren().add(current);
                 p.flipped = false;
-                p.mod1 = 0;
-                p.mod2 = 0;
+                p.mod = 0;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
             }
@@ -387,7 +384,7 @@ public class Board extends Application {
         if (!p.placed) {
             pieces = changePieceArray(p.piece.pieceName, pieces);
             Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY());
-            //p.mod2
+            //p.mod
 
             p.pos = near.position;
             System.out.println(near.position);
@@ -600,7 +597,7 @@ public class Board extends Application {
     }
 
     // Finds x-coordinate of a specific piece
-    private double returnX(Character pos, int mod2, boolean flipped) {
+    private double returnX(Character pos, int mod, boolean flipped) {
         if (flipped) {
             pos = (char) ((int) pos + 1);
         }
@@ -609,7 +606,7 @@ public class Board extends Application {
                 if ((((Circle) node).position) == pos) {
                     if (pos == 'd') {
                     }
-                    return ((Circle) node).getCenterX()-140-mod2;
+                    return ((Circle) node).getCenterX()-140-mod;
                 }
             }
         }
@@ -664,12 +661,12 @@ public class Board extends Application {
 
         if (p.flipped) {
 //            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
-//                p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
+//                p.setLayoutX(returnX(s.charAt(2), p.mod, true) + 70);
 //            } else {
-            p.setLayoutX(returnX(s.charAt(2), p.mod2, true));
+            p.setLayoutX(returnX(s.charAt(2), p.mod, true));
             p.setLayoutY(returnY(s.charAt(2), true));
         } else {
-            p.setLayoutX(returnX(s.charAt(2), p.mod2, false));
+            p.setLayoutX(returnX(s.charAt(2), p.mod, false));
             p.setLayoutY(returnY(s.charAt(2), false));
         }
         p.setFitWidth(280);
@@ -750,18 +747,18 @@ public class Board extends Application {
             @Override
             public void handle(ActionEvent event) {
                     root.getChildren().clear();
-                    pegs.clear();
                     pieces.clear();
+                    startPieces.clear();
                     DraggablePieceList.clear();
-                    makePieces();
                     makePegs();
-                    task8();
-                    root.getChildren().addAll(placements, button2);
+                    makePieces();
+                    //task8();
+                    root.getChildren().addAll(button2);
                     event.consume();
             }
         });
         startScreen.getChildren().addAll(button);
-        root.getChildren().addAll(placements);
+        root.getChildren().addAll(placements, button2);
         makePegs();
         makePieces();
         primaryStage.setScene(scene);
