@@ -294,13 +294,6 @@ public class Board extends Application {
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         flipPiece(self);
                         }
-                        // Key event to give hints
-                        else if (event.getCode().equals(KeyCode.H)) {
-                        Circle near = findNearestPeg(getLayoutX(), getLayoutY());
-
-                        // add on next piece
-                        showPieceHint();
-                        }
                     }
             });
             setOnMousePressed(event -> {
@@ -481,6 +474,8 @@ public class Board extends Application {
             }
         }
         DraggablePieceList.set(index, temp);
+        placePiece(temp);
+        System.out.println(pieces);
     }
 
 
@@ -752,6 +747,7 @@ public class Board extends Application {
         button2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                    mediaPlayer.stop();
                     root.getChildren().clear();
                     pieces.clear();
                     DraggablePieceList.clear();
@@ -771,6 +767,14 @@ public class Board extends Application {
         root.getChildren().addAll(placements, button2);
         makePegs();
         makePieces();
+        scene2.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.H)){
+                    showPieceHint();
+                }
+            }
+        });
         primaryStage.setScene(scene);
         primaryStage.show();
             }
