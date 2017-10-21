@@ -19,6 +19,7 @@ import javafx.event.EventHandler;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
+import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,10 +42,11 @@ public class Board extends Application {
     private final Group startScreen = new Group();
     private final Group slider = new Group();
 
+
     /* Music for when game is finished */
-    private final URL resource = getClass().getResource(URI_BASE+"congratulations.wav");
-    private final Media media = new Media(resource.toString());
-    private final MediaPlayer mediaPlayer = new MediaPlayer(media);
+    private static URL resource = Board.class.getResource(URI_BASE+"congratulations.wav");
+    private static Media media = new Media(resource.toString());
+    private static MediaPlayer mediaPlayer = new MediaPlayer(media);
 
     //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
@@ -376,6 +378,8 @@ public class Board extends Application {
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
             }
+
+
         }
 
     // place draggable piece at calculated position
@@ -409,6 +413,7 @@ public class Board extends Application {
                     isComplete.setLayoutX((BOARD_WIDTH/2.20));
                     isComplete.setScaleX(3);
                     isComplete.setScaleY(3);
+                    mediaPlayer.setStartTime(new Duration(32700));
                     mediaPlayer.play();
 
                     // check if game is complete and set message
