@@ -535,7 +535,9 @@ public class StepsGame {
         buildTree(solutionsPath, remainingMoves, treeContainsElem);
 
         // Return string array of all possible solutions
+        System.out.println(System.currentTimeMillis());
         traverseTree(solutionsPath, outputList);
+        System.out.println(System.currentTimeMillis());
         String[] output = new String[outputList.size()];
         for (int i = 0; i < outputList.size(); i++) {
             output[i] = outputList.get(i);
@@ -577,7 +579,7 @@ public class StepsGame {
                 /** Once tree nodes have placement strings of 3 or more shapes, there could be normalized duplicates
                   * We stop dealing with current branch if we determine that the current node has a normalized duplicate
                  */
-                if (child.data.length() >= 9) {
+                if (child.data.length() >= 7) {
                     if (placementInTree.add(childNormalized.data)) {
                         initialNode.addChild(child);
                         buildTree(child, remainingMovesUpdate, placementInTree);
@@ -639,6 +641,7 @@ public class StepsGame {
 
     // Returns a list of locations characters that are already occupied on the board
     static ArrayList<Character> updateUsedLocations(String placement) {
+        System.out.println(System.currentTimeMillis());
 
         // Variables
         ArrayList<Character> output = new ArrayList<Character>();
@@ -654,6 +657,7 @@ public class StepsGame {
                 }
             }
         }
+        System.out.println(System.currentTimeMillis());
         return output;
     }
 
