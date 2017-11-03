@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class SolutionsTest {
 //    @Rule
-//    public Timeout globalTimeout = Timeout.seconds(120);
+    public Timeout globalTimeout = Timeout.seconds(120);
 
 
     public void testSingle(String placement, String reference) {

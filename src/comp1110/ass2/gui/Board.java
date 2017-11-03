@@ -19,14 +19,13 @@ import javafx.event.EventHandler;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
+import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.*;
 
-import static comp1110.ass2.StepsGame.getSolutions;
-import static comp1110.ass2.StepsGame.join;
-import static comp1110.ass2.StepsGame.getViablePiecePlacements;
+import static comp1110.ass2.StepsGame.*;
 
 
 // Authorship: Written by Aditya Sharma, Khamis Buol
@@ -43,10 +42,11 @@ public class Board extends Application {
     private final Group startScreen = new Group();
     private final Group slider = new Group();
 
+
     /* Music for when game is finished */
-    private final URL resource = getClass().getResource(URI_BASE+"congratulations.wav");
-    private final Media media = new Media(resource.toString());
-    private final MediaPlayer mediaPlayer = new MediaPlayer(media);
+    private static URL resource = Board.class.getResource(URI_BASE+"congratulations.wav");
+    private static Media media = new Media(resource.toString());
+    private static MediaPlayer mediaPlayer = new MediaPlayer(media);
 
     //List to hold pegs
     private ArrayList<Circle> pegs = new ArrayList<>();
@@ -57,7 +57,29 @@ public class Board extends Application {
 
     Label current = new Label();
 
-    private static ArrayList<String> startPieces = new ArrayList<>();
+    private static String[] startPieces = {
+                "CEQEHu",
+                "CEQEHuGEO",
+                "FDNCGQBAk",
+                "BGKEGOCGQAGl",
+                "BHFFCLHBNAGl",
+                "CHSAHQGFj",
+                "GDLADgHAi",
+                "DFOCGQGDL",
+                "HBLADgBHn",
+                "BGKFCNCHS",
+                "DFOAALHHn",
+                "DFOGGQEDI",
+                "EGOCGQGGS",
+                "CGOGGQEDI",
+                "GFSEAoBBG",
+                "DFQFDNGGS",
+                "GHSEAoBBG",
+                "EGOCGQGEn"
+
+    };
+
+    String invisiblePegs = "BDFHJKMOQSVXacefhjlnqsuwy";
 
 
     //Class to define pieceName since inner class instance variables for DraggablePiece cannot be changed
@@ -133,10 +155,10 @@ public class Board extends Application {
 
     //find closest peg to mouse cursor
 
-    public Circle findNearestPeg(double x, double y, int mod) {
+    public Circle findNearestPeg(double x, double y) {
         ArrayList<Double> distances = new ArrayList<>();
         for (Circle peg : pegs) {
-            distances.add(peg.distance((x+mod),y));
+            distances.add(peg.distance(x,y));
         }
         double smallestDist = Collections.min(distances);
         int index = distances.indexOf(smallestDist);
@@ -164,19 +186,17 @@ public class Board extends Application {
             setOpacity(opacity);
             setCenterX(centerX+70);
             setCenterY(centerY+70);
-            Label pos = new Label(Character.toString(position));
-            pos.setLayoutX(centerX+70);
-            pos.setLayoutY(centerY+70);
-            root.getChildren().add(pos);
+            //Label pos = new Label(Character.toString(position));
+            //pos.setLayoutX(centerX+70);
+            //pos.setLayoutY(centerY+70);
+            //root.getChildren().add(pos);
         }
 
         public double distance(double x, double y){
 
         //x is +140 if flipped
             double xDistance = getCenterX() - (x+140);
-            //System.out.println(xDistance);
             double yDistance = getCenterY() - (y+140);
-            //System.out.println(yDistance);
             return Math.sqrt((Math.pow(Math.abs(xDistance), 2) + Math.pow(Math.abs(yDistance), 2)));
         }
 
@@ -186,8 +206,7 @@ public class Board extends Application {
     class DraggablePiece extends ImageView {
         int homeX, homeY;
         double mouseX, mouseY;
-        int mod1;
-        int mod2;
+        int mod;
         boolean flipped;
         PieceName piece;
         boolean placed;
@@ -201,7 +220,7 @@ public class Board extends Application {
         DraggablePiece self = this;
             this.piece = piece;
             root.getChildren().remove(current);
-            current =  new Label(Boolean.toString(placed));
+            current =  new Label(piece.pieceName + (placed ? " : Placed at position " + pos + "." : " : Not Placed"));
             root.getChildren().add(current);
 
             String toFetch = "";
@@ -262,7 +281,6 @@ public class Board extends Application {
                 }
             });
 
-
             setOnKeyPressed(new EventHandler<KeyEvent>() {
             // on space, flip
                 @Override
@@ -275,13 +293,6 @@ public class Board extends Application {
                     if (event.getCode().equals(KeyCode.SPACE)) {
                         flipPiece(self);
                         }
-                        // Key event to give hints
-                        else if (event.getCode().equals(KeyCode.H)) {
-                        Circle near = findNearestPeg(getLayoutX(), getLayoutY(), mod2);
-
-                        // add on next piece
-                        showPieceHint();
-                        }
                     }
             });
             setOnMousePressed(event -> {
@@ -291,7 +302,7 @@ public class Board extends Application {
                 setFitWidth(280);
                 placed=false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(placed));
+                current =  new Label(piece.pieceName + (placed ? " : Placed at position " + pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 requestFocus();
             });
@@ -312,10 +323,8 @@ public class Board extends Application {
     }
 
     public void scrollPiece(DraggablePiece p){
+        p.requestFocus();
         if (p.placed) {
-            root.getChildren().remove(current);
-            current =  new Label(Boolean.toString(p.placed));
-            root.getChildren().add(current);
             String holder = p.piece.pieceName;
             int index = 0;
             Character current = ' ';
@@ -343,6 +352,9 @@ public class Board extends Application {
             p.setRotate((p.getRotate() + 90) % 360);
 
         }
+        root.getChildren().remove(current);
+        current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
+        root.getChildren().add(current);
 
     }
 
@@ -350,16 +362,11 @@ public class Board extends Application {
             if (!p.flipped) {
                 p.placed = false;
 
-                root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
-                root.getChildren().add(current);
-
                 changePieceArray(p.piece.pieceName, pieces);
 
 
                 p.flipped = true;
-                p.mod1 = -70;
-                p.mod2 = 70;
+                p.mod = 70;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "E.png").toString()));
 
@@ -367,46 +374,50 @@ public class Board extends Application {
             else  {
                 p.placed = false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 p.flipped = false;
-                p.mod1 = 0;
-                p.mod2 = 0;
+                p.mod = 0;
                 p.piece.flipPiece();
                 p.setImage(new Image(Board.class.getResource(URI_BASE + p.piece.pieceName.charAt(0) + "A.png").toString()));
             }
+            root.getChildren().remove(current);
+            current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
+            root.getChildren().add(current);
+
+
         }
 
     // place draggable piece at calculated position
     public void placePiece(DraggablePiece p) {
         if (!p.placed) {
             pieces = changePieceArray(p.piece.pieceName, pieces);
-            Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY(), p.mod2);
+            Circle near = findNearestPeg(p.getLayoutX(), p.getLayoutY());
+            //p.mod
 
             p.pos = near.position;
-            String fullpiece;
+            //String fullpiece;
 
-            if (p.flipped) {
-                fullpiece = p.piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(p.pos))-1);
-            } else {
-                fullpiece = p.piece.pieceName + p.pos;}
+//            if (p.flipped) {
+//                fullpiece = p.piece.pieceName + StepsGame.all.charAt((StepsGame.all.indexOf(p.pos)));
+            String fullpiece = p.piece.pieceName + p.pos;
             pieces.add(fullpiece);
 
             String placement = StepsGame.join(Arrays.asList(pieces.toString())).replaceAll("[\\s\\,\\[\\]]","");
 
-            System.out.println(StepsGame.isPlacementSequenceValid(placement));
             if (StepsGame.isPlacementSequenceValid(placement)) {
-                p.setLayoutX(near.getCenterX()-140+p.mod1);
+                p.setLayoutX(near.getCenterX()-140);
                 p.setLayoutY(near.getCenterY()-140);
                 p.placed=true;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 if (pieces.size() == 8) {
                     isComplete.setLayoutY(452);
                     isComplete.setLayoutX((BOARD_WIDTH/2.20));
                     isComplete.setScaleX(3);
                     isComplete.setScaleY(3);
+                    mediaPlayer.setStartTime(new Duration(32700));
                     mediaPlayer.play();
 
                     // check if game is complete and set message
@@ -417,7 +428,7 @@ public class Board extends Application {
                 pieces.remove(fullpiece);
                 p.placed = false;
                 root.getChildren().remove(current);
-                current =  new Label(Boolean.toString(p.placed));
+                current =  new Label(p.piece.pieceName + (p.placed ? " : Placed at position " + p.pos + "." : " : Not Placed"));
                 root.getChildren().add(current);
                 p.setFitHeight(150);
                 p.setFitWidth(150);
@@ -451,19 +462,19 @@ public class Board extends Application {
         ArrayList<String> viable2 = new ArrayList<>();
         viable2.addAll(viable);
         String piecee = viable2.get(0);
-        System.out.println(piecee);
 
         for (DraggablePiece currentP : DraggablePieceList) {
             if (currentP.piece.pieceName.charAt(0) == piecee.charAt(0)) {
                 index = DraggablePieceList.indexOf(currentP);
                 temp = currentP;
                 temp.toFront();
-                System.out.println(temp.piece.pieceName);
                 setter(temp,piecee);
 
             }
         }
         DraggablePieceList.set(index, temp);
+        placePiece(temp);
+        System.out.println(pieces);
     }
 
 
@@ -482,36 +493,80 @@ public class Board extends Application {
         int ye = 293;
         char pos = 'A';
         for (int i = 0; i < 50; i++) {
-            if (i<=9 && i%2 == 0) {
+            if (pos == 'J') {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, x, y);
+                xb-=70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            } else if (pos == 'e') {
+                    Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xc, yc);
+                    xd-=70;
+                    root.getChildren().add(peg);
+                    pegs.add(peg);
+            } else if (i<=9 && i%2 == 0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, x, y);
-                x += 140;
+                x += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 9 && i <= 19 && i%2==1) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xb, yb);
-                xb += 140;
+                xb += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 19 && i <= 29 && i%2 == 0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xc, yc);
-                xc += 140;
+                xc += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 29 && i <= 39 && i%2==1) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xd, yd);
-                xd += 140;
+                xd += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
             else if (i > 39 && i <= 49 && i%2==0) {
                 Circle peg = new Circle(pos, CIRCLE_SIZE, 0.3, xe, ye);
-                xe += 140;
+                xe += 70;
                 root.getChildren().add(peg);
                 pegs.add(peg);
             }
+
+            else if (i<=9 && i%2 != 0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, x, y);
+                x += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 9 && i <= 19 && i%2==0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xb, yb);
+                xb += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 19 && i <= 29 && i%2 != 0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xc, yc);
+                xc += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 29 && i <= 39 && i%2!=1) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xd, yd);
+                xd += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+            else if (i > 39 && i <= 49 && i%2!=0) {
+                Circle peg = new Circle(pos, CIRCLE_SIZE, 0, xe, ye);
+                xe += 70;
+                root.getChildren().add(peg);
+                pegs.add(peg);
+            }
+
+
+
             pos += 1;
             if (pos >= 90 && pos <= 96){
                 pos = 97;
@@ -548,7 +603,7 @@ public class Board extends Application {
     }
 
     // Finds x-coordinate of a specific piece
-    private double returnX(Character pos, int mod2, boolean flipped) {
+    private double returnX(Character pos, int mod, boolean flipped) {
         if (flipped) {
             pos = (char) ((int) pos + 1);
         }
@@ -557,7 +612,7 @@ public class Board extends Application {
                 if ((((Circle) node).position) == pos) {
                     if (pos == 'd') {
                     }
-                    return ((Circle) node).getCenterX()-140-mod2;
+                    return ((Circle) node).getCenterX()-140-mod;
                 }
             }
         }
@@ -566,9 +621,9 @@ public class Board extends Application {
 
     // Finds the x-coordinate of a specific piece
     private double returnY(Character pos, boolean flipped) {
-        if (flipped) {
-            pos = (char) ((int) pos + 1);
-        }
+//        if (flipped) {
+//            pos = (char) ((int) pos + 1);
+//        }
         for (Node node : root.getChildren()) {
             if (node.toString().contains("Circle")) {
                 if ((((Circle) node).position) == pos) {
@@ -611,57 +666,34 @@ public class Board extends Application {
         }
 
         if (p.flipped) {
-            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
-                p.setLayoutX(returnX(s.charAt(2), p.mod2, true) + 70);
-            } else {
-            p.setLayoutX(returnX(s.charAt(2), p.mod2, true));
-            p.setLayoutY(returnY(s.charAt(2), true));}
+//            if (p.piece.pieceName == "BE" && s.charAt(2) == 'e') {
+//                p.setLayoutX(returnX(s.charAt(2), p.mod, true) + 70);
+//            } else {
+            p.setLayoutX(returnX(s.charAt(2), p.mod, true));
+            p.setLayoutY(returnY(s.charAt(2), true));
         } else {
-            p.setLayoutX(returnX(s.charAt(2), p.mod2, false));
+            p.setLayoutX(returnX(s.charAt(2), p.mod, false));
             p.setLayoutY(returnY(s.charAt(2), false));
         }
         p.setFitWidth(280);
         p.setFitHeight(280);
         placePiece(p);
+        p.toFront();
 
     }
 
 
 
     public void task8() {
-        for (String s : startPieces) {
+        Random ran = new Random();
+        int i = ran.nextInt(startPieces.length);
+        String place = startPieces[i];
+        List<String> toPlace = getPiecePlacements(place);
+        for (String s : toPlace) {
             for (DraggablePiece p : DraggablePieceList) {
                 Character pieceCharOne = p.piece.pieceName.charAt(0);
                 if (pieceCharOne == s.charAt(0)) {
-                    switch (s.charAt(0)) {
-                        case 'A':
-                            setter(p, s);
-                            break;
-                        case 'B':
-                            setter(p, s);
-                            break;
-                        case 'C':
-                            setter(p, s);
-                            break;
-                        case 'D':
-                            setter(p, s);
-                            break;
-                        case 'E':
-                            setter(p, s);
-                            break;
-                        case 'F':
-                            setter(p, s);
-                            break;
-                        case 'G':
-                            System.out.println("before setter" + p.piece.pieceName);
-                            setter(p, s);
-                            break;
-                        case 'H':
-                            pieces.add(s);
-                            setter(p, s);
-                            break;
-
-                    }
+                    setter(p, s);
                 }
             }
         }
@@ -678,27 +710,17 @@ public class Board extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        String[] startingPieces = {"BGKADgHAiDHnEDkGFS", "BGKGCgDHnCElACiHHQFFO", "CEnAESHGlFAP",
-                "FBgBElEFBCCW","BGKFCNCFl", "EFBHBR","HHOFBg","EEfAEn"};
+        // Possible starting pieces;
+        // Generates int to select random piece placement sequence
 
-//        startPieces.add("EGO");
-//        startPieces.add("CGQ");
-        startPieces.add("BEe");
-//        startPieces.add("BEe");
-//        startPieces.add("GCg");
-//        startPieces.add("CDN");
-//        startPieces.add("HFl");
-//        startPieces.add("DAi");
-//        startPieces.add("FHn");
-        ArrayList<String> poses = new ArrayList<>();
+
+        // Randomly selects starting piece placement
 
         // Title of Window
         primaryStage.setTitle("IQ Steps");
-        String first = "AAL";
 
         Scene scene = new Scene(startScreen, BOARD_WIDTH, BOARD_HEIGHT);
         Scene scene2 = new Scene(root, BOARD_WIDTH, BOARD_HEIGHT);
-
 
         //Home button to start the game
         Button button = new Button("Start Game");
@@ -724,21 +746,34 @@ public class Board extends Application {
         button2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                    mediaPlayer.stop();
                     root.getChildren().clear();
-                    pegs.clear();
                     pieces.clear();
                     DraggablePieceList.clear();
-                    makePieces();
                     makePegs();
+                    makePieces();
+
+                // Randomly selects starting piece placement
+
                     task8();
-                    root.getChildren().addAll(placements, button2);
+                    System.out.println(pieces);
+                    //task8();
+                    root.getChildren().addAll(button2);
                     event.consume();
             }
         });
         startScreen.getChildren().addAll(button);
-        root.getChildren().addAll(placements);
+        root.getChildren().addAll(placements, button2);
         makePegs();
         makePieces();
+        scene2.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode().equals(KeyCode.H)){
+                    showPieceHint();
+                }
+            }
+        });
         primaryStage.setScene(scene);
         primaryStage.show();
             }

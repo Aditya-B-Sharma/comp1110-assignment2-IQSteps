@@ -3,6 +3,8 @@ package comp1110.ass2;
 
 import java.util.*;
 import comp1110.ass2.TestUtility;
+import sun.text.normalizer.Trie;
+
 import static comp1110.ass2.TestUtility.normalize;
 
 /**
@@ -19,6 +21,7 @@ public class StepsGame {
     //Global variables
 
     public static String all = "ABCDEFGHIJKLMNOPQRSTUVWXYabcdefghijklmnopqrstuvwxy";
+    public static String outer = "ABCDEFGHIJKTUefopqrstuvwxy";
 
     private static int[] AA = {1, 2, 0,
             2, 1, 2,
@@ -547,6 +550,7 @@ public class StepsGame {
     static void traverseTree(TreeNode node, ArrayList<String> list) {
         /* Traverses tree to get solutions. If a node's string has 24 characters, it is a solution and is added to the argument list */
 
+
         if (node.toString().length() == 24) {
             list.add(node.toString());
             return;
@@ -558,6 +562,7 @@ public class StepsGame {
             }
         }
     }
+
 
 
     // Reference: Sina Eghbal
@@ -577,7 +582,7 @@ public class StepsGame {
                 /** Once tree nodes have placement strings of 3 or more shapes, there could be normalized duplicates
                   * We stop dealing with current branch if we determine that the current node has a normalized duplicate
                  */
-                if (child.data.length() >= 9) {
+                if (child.data.length() >= 7) {
                     if (placementInTree.add(childNormalized.data)) {
                         initialNode.addChild(child);
                         buildTree(child, remainingMovesUpdate, placementInTree);
@@ -601,13 +606,25 @@ public class StepsGame {
 
         // Variables
         ArrayList<String> possibleMoves = new ArrayList<>();
+//        boolean leaveOut;
 
         // Add all possible valid moves to the list to be returned
         for (String s : shapesAndOrientations) {
+//            leaveOut = false;
+//            Character p = s.charAt(0);
+//            if (p == 'A' | p == 'C' | p == 'D' | p == 'F' | p == 'G' | p == 'H') {
+//                leaveOut = true;
+//            }
             for (String l : locations) {
-                if (isPlacementSequenceValid(s + l)) {
-                    possibleMoves.add(s + l);
-                }
+//                if (leaveOut) {
+//                    if (outer.contains(l)){
+//                        continue;
+//                    } else {
+                        if (isPlacementSequenceValid(s + l)) {
+                            possibleMoves.add(s + l);
+                        }
+                   // }
+               // }
             }
         }
         return possibleMoves;
@@ -615,7 +632,9 @@ public class StepsGame {
 
     // Returns a list of available moves given a piece already place on the board
     static ArrayList<String> updateRemainingMoves(String placement, ArrayList<String> moves) {
-
+//        System.out.println(moves);
+// if placement.length/3 = 7
+        //
         // Variables
         HashSet<String> usedShapes = new HashSet<>();
         char[] characters = placement.toCharArray();
@@ -634,11 +653,14 @@ public class StepsGame {
                 iterator.remove();
             }
         }
+        //System.out.println(placement.length());
+        moves.remove(placement.substring(placement.length()-3, placement.length()));
         return moves;
     }
 
     // Returns a list of locations characters that are already occupied on the board
     static ArrayList<Character> updateUsedLocations(String placement) {
+
 
         // Variables
         ArrayList<Character> output = new ArrayList<Character>();
@@ -656,6 +678,8 @@ public class StepsGame {
         }
         return output;
     }
+
+
 }
 
 
